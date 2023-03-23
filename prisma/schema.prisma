@@ -1,4 +1,4 @@
-//* @authors Ben Pritchard
+//* @author Ben Pritchard
 //*
 //* @description This file contains the schema for the database. The database is generated using this schema.
 
@@ -25,7 +25,7 @@ model User {
   role           Role         @default(EMPLOYEE)
   receivedInvite ChatInvite[]
   sentMessages   Message[]
-  chatGroups     ChatGroup[]
+  chatGroups     Chatroom[]
   profileImage   String?      @db.VarChar(500)
   teams          UserOnTeam[]
 }
@@ -36,7 +36,7 @@ enum Role {
   TEAMLEADER
 }
 
-model ChatGroup {
+model Chatroom {
   id          Int          @id @default(autoincrement())
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -56,7 +56,7 @@ model Message {
   updatedAt   DateTime  @updatedAt
   sender      User      @relation(fields: [senderId], references: [userId], onDelete: Cascade)
   senderId    String
-  chatGroup   ChatGroup @relation(fields: [chatGroupId], references: [id], onDelete: Cascade)
+  chatGroup   Chatroom @relation(fields: [chatGroupId], references: [id], onDelete: Cascade)
   chatGroupId Int
   body        String
   seenById    String
@@ -66,7 +66,7 @@ model Message {
 
 model ChatInvite {
   chatId Int
-  chat   ChatGroup @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chat   Chatroom @relation(fields: [chatId], references: [id], onDelete: Cascade)
   userId String
   user   User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
 

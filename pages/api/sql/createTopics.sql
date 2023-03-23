@@ -1,0 +1,5 @@
+CREATE TABLE Topics (
+    Topic_ID INT NOT NULL AUTO_INCREMENT,
+    Topic_Name VARCHAR(50),
+    PRIMARY KEY(Topic_ID)
+)

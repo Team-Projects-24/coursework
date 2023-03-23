@@ -1,0 +1,95 @@
+//* @authors Ben Pritchard
+//*
+//* @description This file contains the schema for the database. The database is generated using this schema.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+//generate the ERD diagram
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  userId         String       @id @unique
+  name           String
+  password       String
+  role           Role         @default(EMPLOYEE)
+  receivedInvite ChatInvite[]
+  sentMessages   Message[]
+  chatGroups     ChatGroup[]
+  profileImage   String?      @db.VarChar(500)
+  teams          UserOnTeam[]
+}
+
+enum Role {
+  EMPLOYEE
+  MANAGER
+  TEAMLEADER
+}
+
+model ChatGroup {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  name        String
+  chatImage   String?      @db.VarChar(500)
+  description String
+  private     Boolean      @default(true)
+  sentInvite  ChatInvite[]
+  creatorId   String
+  members     User[]
+  messages    Message[]
+}
+
+model Message {
+  id          Int       @id @default(autoincrement())
+  sentAt      DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  sender      User      @relation(fields: [senderId], references: [userId], onDelete: Cascade)
+  senderId    String
+  chatGroup   ChatGroup @relation(fields: [chatGroupId], references: [id], onDelete: Cascade)
+  chatGroupId Int
+  body        String
+  seenById    String
+  // isImage          Boolean          @default(false)
+  // imageURL         String? @db.VarChar(500)
+}
+
+model ChatInvite {
+  chatId Int
+  chat   ChatGroup @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId String
+  user   User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@id([chatId, userId])
+}
+
+model UserOnTeam {
+  userId String
+  user   User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  teamId Int
+  team   Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([userId, teamId])
+}
+
+model Team {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  name        String
+  teamImage   String?      @db.VarChar(500)
+  members     UserOnTeam[]
+}
+
+
+// for handling images, place image tag containing url within the body of the message, backend fetches image and displays within the message

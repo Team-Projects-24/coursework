@@ -25,7 +25,7 @@ model User {
   role           Role         @default(EMPLOYEE)
   receivedInvite ChatInvite[]
   sentMessages   Message[]
-  chatGroups     Chatroom[]
+  chatrooms     Chatroom[]
   profileImage   String?      @db.VarChar(500)
   teams          UserOnTeam[]
 }
@@ -56,8 +56,8 @@ model Message {
   updatedAt   DateTime  @updatedAt
   sender      User      @relation(fields: [senderId], references: [userId], onDelete: Cascade)
   senderId    String
-  chatGroup   Chatroom @relation(fields: [chatGroupId], references: [id], onDelete: Cascade)
-  chatGroupId Int
+  chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
+  chatroomId Int
   body        String
   seenById    String
   // isImage          Boolean          @default(false)

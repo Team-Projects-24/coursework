@@ -11,7 +11,7 @@ export interface IChatMessage {
   id: number;
   chatroomId: number;
   senderId: number;
-  body: string;
+  content: string;
   timestamp: Date;
   sender: IUser;
   chatroom: IChatroom;

@@ -58,7 +58,7 @@ model Message {
   senderId    String
   chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
   chatroomId Int
-  body        String
+  content        String
   seenById    String
   // isImage          Boolean          @default(false)
   // imageURL         String? @db.VarChar(500)

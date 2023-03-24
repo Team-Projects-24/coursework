@@ -59,5 +59,7 @@ export default async function handler(
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error getting chat" });
+  } finally {
+    await prisma.$disconnect();
   }
 }

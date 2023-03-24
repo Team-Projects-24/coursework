@@ -1,7 +1,15 @@
-export default function ChatContainer() {
-  const message = "Hello World!";
+import { Box, DialogContent, DialogContentText } from "@mui/material";
+import { IChatMessage } from "types/ChatMessage.d";
 
-  return {
-    message,
-  };
+export default function ChatContainer(props: IChatMessage) {
+  const { body, timestamp } = props;
+  return (
+    <>
+      <Box>
+        <DialogContent>
+          <DialogContentText>{body}</DialogContentText>
+        </DialogContent>
+      </Box>
+    </>
+  );
 }

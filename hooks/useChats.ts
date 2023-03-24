@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export function useChat(id: string) {
-  const [chat, setChat] = useState();
+  const [chats, setChats] = useState();
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
 
@@ -10,9 +10,9 @@ export function useChat(id: string) {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await axios.post("/api/chats/getChat", { id });
+        const response = await axios.post("/api/chats/getChats", { id });
         const { data } = response;
-        setChat(data);
+        setChats(data);
       } catch (error) {
         console.error(error);
       }
@@ -23,5 +23,5 @@ export function useChat(id: string) {
 
   const reloadChat = () => setReload(reload + 1);
 
-  return { chat, loading, reloadChat };
+  return { chats, loading, reloadChat };
 }

@@ -1,6 +1,6 @@
 // import ChatContainer from "../components/chat/ChatContainer";
 import { useRouter } from "next/router";
-import { ChatContainer } from "components/chat/ChatContainer";
+import ChatContainer from "components/chat/ChatContainer";
 
 const message = "Hello World! page";
 

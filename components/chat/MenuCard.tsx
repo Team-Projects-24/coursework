@@ -1,9 +1,12 @@
 import { Grid, Typography } from "@mui/material";
-import { Chatroom } from "@prisma/client";
 import PersonIcon from '@mui/icons-material/Person';
 import { Box } from "@mui/system";
+import { useChat } from "hooks/useChats";
+import { Chatroom } from "@prisma/client";
+import { useEffect } from "react";
 
-export default function MenuCard({ chat }: { chat: Chatroom }) {
+export default function MenuCard({ chatId }: { chatId: number }) {
+    const chat = useChat(chatId);
     const chatActivityDate = new Date(chat.updatedAt);
     const now = new Date();
     var lastUpdated: string;

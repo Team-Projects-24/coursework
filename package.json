@@ -62,6 +62,7 @@
     "socket.io": "^4.6.1",
     "suneditor": "^2.44.3",
     "suneditor-react": "^3.4.1",
+    "swr": "^2.1.1",
     "typescript": "4.8.4",
     "zod": "^3.20.6",
     "zod-validation-error": "^0.3.1",

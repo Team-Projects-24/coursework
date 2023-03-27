@@ -1,27 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { IChatroom } from "types/Chatroom.d";
 
-export function useChat(id: string) {
-  const [chat, setChat] = useState();
-  const [loading, setLoading] = useState(true);
-  const [reload, setReload] = useState(0);
+export function useChat(id: number) {
+  const [chat, setChat] = useState<IChatroom>();
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const response = await axios.post("/api/chats/getChat", { id });
-        const { data } = response;
-        setChat(data);
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    }
-    fetchData();
-  }, [reload]);
-
-  const reloadChat = () => setReload(reload + 1);
-
-  return { chat, loading, reloadChat };
+  const f = async () => {
+    const { data, status } = await axios.post("/api/chat/getChatInfo", {
+       id,
+    });
+    setChat(data as IChatroom);
+    return data;
+  }
+  console.log(f());
+  // console.log(chat);
 }

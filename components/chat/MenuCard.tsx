@@ -1,20 +1,23 @@
 import { Grid, Typography } from "@mui/material";
 import PersonIcon from '@mui/icons-material/Person';
 import { Box } from "@mui/system";
-import { useChat } from "hooks/useChats";
+import useChat from "hooks/useChats";
 import { Chatroom } from "@prisma/client";
 import { useEffect } from "react";
+import { useUsers } from "hooks/useUsers";
+import useUserStore from "stores/userStore";
 
 export default function MenuCard({ chatId }: { chatId: number }) {
-    const chat = useChat(chatId);
+    const { user } = useUserStore();
+    const chat = useUsers(user!.userId);
     const chatActivityDate = new Date(chat.updatedAt);
     const now = new Date();
     var lastUpdated: string;
+    
     if (now.getDate() == chatActivityDate.getDate()) {
         lastUpdated = chatActivityDate.toLocaleString(
             "en-uk", { timeStyle: "short" }
         );
-        console.log(lastUpdated);
     } else if (now.getDay() - chatActivityDate.getDay() < 7) {
         lastUpdated = chatActivityDate.toLocaleString(
             "en-uk", {  weekday: "long" }
@@ -22,6 +25,7 @@ export default function MenuCard({ chatId }: { chatId: number }) {
     } else {
         lastUpdated = chatActivityDate.toLocaleDateString("en-uk");
     }
+
     return (
         <>
             <Grid container className="menu-card" paddingX={3}>

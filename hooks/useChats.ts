@@ -10,7 +10,7 @@ export function useChat(id: string) {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await axios.post("/api/chats/getChats", { id });
+        const response = await axios.post("/api/chats/getChatMessages", { id });
         const { data } = response;
         setChats(data);
       } catch (error) {

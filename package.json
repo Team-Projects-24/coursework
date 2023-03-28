@@ -22,7 +22,7 @@
     "@nivo/bar": "^0.80.0",
     "@nivo/core": "^0.80.0",
     "@nivo/pie": "^0.80.0",
-    "@prisma/client": "^4.10.1",
+    "@prisma/client": "^4.11.0",
     "@react-icons/all-files": "^4.1.0",
     "@sendgrid/mail": "^7.7.0",
     "@tremor/react": "^1.8.0",

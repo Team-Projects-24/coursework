@@ -1,30 +1,27 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { IChatroom } from "types/Chatroom.d";
 
-export default function useChat(id: number) {
-  const [chat, setChat] = useState<IChatroom>();
+export function useChat(id: string) {
+  const [chat, setChat] = useState();
+  const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
-    const fetchChatData = async () => {
-      console.log(99);
+    async function fetchData() {
+      setLoading(true);
       try {
-        const res = await axios.post("/api/chat/getChatInfo", {
-          id,
-        });
-        if (res.status === 200) {
-          const { data } = res;
-          setChat(data as IChatroom);
-        } else {
-          throw new Error("Unable to set user.");
-        }
-      } catch (err) {
-        console.error(err);
+        const response = await axios.post("/api/chats/getChat", { id });
+        const { data } = response;
+        setChat(data);
+      } catch (error) {
+        console.error(error);
       }
-    };
-    fetchChatData();
-  });
+      setLoading(false);
+    }
+    fetchData();
+  }, [reload]);
 
-  console.log(chat);
-  return chat;
+  const reloadChat = () => setReload(reload + 1);
+
+  return { chat, loading, reloadChat };
 }

@@ -10,6 +10,7 @@ import { Chatroom } from "@prisma/client";
 
 function BottomMenu({ selecting }: { selecting: boolean }) {
   const user = useUserStore((state) => state.user);
+  var count = 0;
   return (
     <>
       <Grid
@@ -43,7 +44,7 @@ function BottomMenu({ selecting }: { selecting: boolean }) {
         </Grid>
         {
           user?.chatrooms.map(
-            (chat: Chatroom) => <MenuCard chatId={chat.id} />
+            (chat: Chatroom) => <MenuCard key={count++} chatId={chat.id} userId={user.userId} />
           )
         }
       </Grid>

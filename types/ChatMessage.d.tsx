@@ -10,10 +10,10 @@ import { IChatroom } from "./Chatroom.d";
 export interface IChatMessage {
   id: number;
   chatroomId: number;
-  senderId: number;
+  senderId: string;
   content: string;
   timestamp: Date;
   sender: IUser;
   chatroom: IChatroom;
-  seenByIds: string[];
+  seenById: string;
 }

@@ -49,6 +49,14 @@ hr {
     background-color: #00a884;
 }
 
+.menu-card .tick {
+    color: #8696a0;
+}
+
+.menu-card .tick.active {
+    color: #00a884;
+}
+
 #chat-search {
     width: 100%;
     color: #ffffff;

@@ -12,8 +12,8 @@ generator erd {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL") //env variable for database url
 }
 
 model User {
@@ -25,9 +25,10 @@ model User {
   role           Role         @default(EMPLOYEE)
   receivedInvite ChatInvite[]
   sentMessages   Message[]
-  chatrooms     Chatroom[]
+  chatrooms      Chatroom[]
   profileImage   String?      @db.VarChar(500)
   teams          UserOnTeam[]
+  seenMessages   SeenBy[]
 }
 
 enum Role {
@@ -51,45 +52,53 @@ model Chatroom {
 }
 
 model Message {
-  id          Int       @id @default(autoincrement())
-  sentAt      DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  sender      User      @relation(fields: [senderId], references: [userId], onDelete: Cascade)
-  senderId    String
+  id         Int      @id @default(autoincrement())
+  sentAt     DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  sender     User     @relation(fields: [senderId], references: [userId], onDelete: Cascade)
+  senderId   String
   chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
   chatroomId Int
-  content        String
-  seenById    String[]
+  content    String
+  seenBy     SeenBy[]
   // isImage          Boolean          @default(false)
   // imageURL         String? @db.VarChar(500)
+}
+
+model SeenBy {
+  messageId Int
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@id([messageId, userId])
 }
 
 model ChatInvite {
   chatId Int
   chat   Chatroom @relation(fields: [chatId], references: [id], onDelete: Cascade)
   userId String
-  user   User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  user   User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
 
   @@id([chatId, userId])
 }
 
 model UserOnTeam {
   userId String
-  user   User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
   teamId Int
-  team   Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@id([userId, teamId])
 }
 
 model Team {
-  id          Int          @id @default(autoincrement())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  name        String
-  teamImage   String?      @db.VarChar(500)
-  members     UserOnTeam[]
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  name      String
+  teamImage String?      @db.VarChar(500)
+  members   UserOnTeam[]
 }
-
 
 // for handling images, place image tag containing url within the body of the message, backend fetches image and displays within the message

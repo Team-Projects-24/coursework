@@ -2,7 +2,7 @@ import { IUser } from "types/User.d";
 import { create } from "zustand";
 
 /**
- * @author Tom Whitticase
+ * @author Ben Pritchard
  *
  * @description A store for managing the current user logged in throughout the application.
  */

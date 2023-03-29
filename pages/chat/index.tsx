@@ -30,7 +30,7 @@ function BottomMenu({ selecting }: { selecting: boolean }) {
             </Grid>
             <Grid item paddingLeft={4} xs={11}>
               <input
-                type={"search"} id="chat-search"
+                type="search" id="chat-search"
                 placeholder="Search or start new chat"
                 className="main-colour"
               />
@@ -44,7 +44,9 @@ function BottomMenu({ selecting }: { selecting: boolean }) {
         </Grid>
         {
           user?.chatrooms.map(
-            (chat: Chatroom) => <MenuCard key={count++} chatId={chat.id} userId={user.userId} />
+            (chat: Chatroom) => <MenuCard
+              key={count++} chatId={chat.id} userId={user.userId}
+            />
           )
         }
       </Grid>
@@ -54,6 +56,7 @@ function BottomMenu({ selecting }: { selecting: boolean }) {
 
 export default function Chat() {
   const [url, setUrl] = useState<string>("");
+  const [className, setClass] = useState<string>("icon-container dropdown");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -71,8 +74,19 @@ export default function Chat() {
             </div>
           </Grid>
           <Grid item>
-            <div className="icon-container">
-              <MoreVertIcon className="icon"/>
+            <div
+              className={className}
+              onClick={
+                () => setClass("icon-container dropdown active")
+              }
+              onAuxClick={
+                () => setClass("icon-container dropdown")
+              }
+            >
+              <MoreVertIcon className="icon" />
+              <div className="dropdown-content">
+                <a>New Chatroom</a>
+              </div>
             </div>
           </Grid>
         </Grid>

@@ -16,6 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import useUserStore from "../stores/userStore";
 import UserAvatar from "components/user/UserAvatar";
 import "styles/ChatMenu.css";
+import axios from "axios";
 
 //page loading bar
 Router.events.on("routeChangeStart", nProgress.start);

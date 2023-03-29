@@ -23,6 +23,7 @@ import DoneIcon from "@mui/icons-material/Done";
  */
 function getChatDate(updatedAt: Date) {
     const now = new Date();
+    console.log(updatedAt.getDate());
     
     if (now.getDate() == updatedAt.getDate()) {
         return updatedAt.toLocaleString(
@@ -146,7 +147,11 @@ export default function MenuCard({ chatId, userId }: { chatId: number, userId: s
                                 }</Typography>
                             </Grid>
                         </Grid>
-                        {getChatLastMessage(chat.messages, chat.private, userId)}
+                        {
+                            getChatLastMessage(
+                                chat.messages, chat.private, userId
+                            )
+                        }
                     </Grid>
                     <hr />
                 </Grid>

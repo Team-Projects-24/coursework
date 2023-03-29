@@ -33,15 +33,21 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   //if user is null and not on login page or register page, redirect to login page
-  // useEffect(() => {
-  //   if (
-  //     !user &&
-  //     router.pathname !== "/login" &&
-  //     router.pathname !== "/register"
-  //   ) {
-  //     router.push("/login");
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (
+      !user &&
+      router.pathname !== "/login" &&
+      router.pathname !== "/register"
+    ) {
+      router.push("/login");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && router.pathname === "/") {
+      router.push("/dashboard");
+    }
+  })
 
   //when alerts change, loop through them and display and remove them
   useEffect(() => {

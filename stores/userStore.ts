@@ -1,5 +1,5 @@
 import { IUser } from "types/User.d";
-import create from "zustand";
+import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 interface IUserStore {

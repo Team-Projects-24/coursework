@@ -13,6 +13,7 @@ import { IChatroom } from "types/Chatroom.d";
 import axios from "axios";
 import { IChatMessage } from "types/ChatMessage.d";
 import DoneIcon from "@mui/icons-material/Done";
+import { Message } from "@prisma/client";
 
 
 /**
@@ -23,7 +24,6 @@ import DoneIcon from "@mui/icons-material/Done";
  */
 function getChatDate(updatedAt: Date) {
     const now = new Date();
-    console.log(updatedAt.getDate());
     
     if (now.getDate() == updatedAt.getDate()) {
         return updatedAt.toLocaleString(
@@ -41,15 +41,15 @@ function getChatDate(updatedAt: Date) {
 /**
  * @author Ade Osindero
  * 
- * @param messages - Messages sent on the current chat.
+ * @param lastMessage - Last message sent on the chat.
  * @param isPrivate - Boolean confirming if the current chat is private.
  * @param id - The id of the current user.
  * @returns A react component which formats the display of the last message sent in the chat.
  */
 function getChatLastMessage(
-    messages: IChatMessage[], isPrivate: boolean, id: string
+    lastMessage: IChatMessage | undefined, isPrivate: boolean, id: string
 ) {
-    if (messages.length === 0) {
+    if (!lastMessage) {
         return (
             <Grid item>
                 <Typography className="menu-card-text">
@@ -58,9 +58,6 @@ function getChatLastMessage(
             </Grid>
         );
     }
-
-    const lastMessage = messages.at(-1)!;
-    console.log(lastMessage);
     
     if (lastMessage.senderId === id) {
         return (
@@ -69,7 +66,7 @@ function getChatLastMessage(
                     <DoneIcon
                         fontSize="small"
                         className={
-                            `tick ${lastMessage.seenById? "active" : ""}`
+                            `tick ${lastMessage.seenBy? "active" : ""}`
                         }
                     />
                 </Grid>
@@ -101,19 +98,26 @@ function getChatLastMessage(
  * @param userId - The id of the current user.
  * @returns A react component (the card) detailing information of the chat.
  */
-export default function MenuCard({ chatId, userId }: { chatId: number, userId: string }) {
+export default function MenuCard(
+    { chatId, userId }: { chatId: number, userId: string }
+) {
+    const [lastMessage, setLastMessage] = useState<IChatMessage>();
     const [chat, setChat] = useState<IChatroom>();
 
     useEffect(() => {
-        async function getChat() {
-            const { data } =
+        async function getData() {
+            const { data: chat } =
                 await axios.post("/api/chat/getChatInfo", { id: chatId });
-            setChat(data as IChatroom);
+            setChat(chat as IChatroom);
+            const { data: lastMessage } = await axios.post(
+                "/api/chat/getChatMessage", { id: chat.messages.at(-1)!.id }
+            );
+            setLastMessage(lastMessage as IChatMessage);
         }
-        getChat();
+        getData();
     }, []);
     
-    if (!chat || chat.private && chat.messages.length === 0) {
+    if (!chat || chat.private && !chat.messages.length) {
         return <></>;
     }
 
@@ -149,7 +153,7 @@ export default function MenuCard({ chatId, userId }: { chatId: number, userId: s
                         </Grid>
                         {
                             getChatLastMessage(
-                                chat.messages, chat.private, userId
+                                lastMessage, chat.private, userId
                             )
                         }
                     </Grid>

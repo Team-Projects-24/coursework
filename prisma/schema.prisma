@@ -12,8 +12,8 @@ generator erd {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL") //env variable for database url
 }
 
 model User {
@@ -28,6 +28,7 @@ model User {
   chatrooms      Chatroom[]
   profileImage   String?      @db.VarChar(500)
   teams          UserOnTeam[]
+  seenMessages   SeenBy[]
 }
 
 enum Role {
@@ -59,9 +60,18 @@ model Message {
   chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
   chatroomId Int
   content    String
-  seenById   String[]
+  seenBy     SeenBy[]
   // isImage          Boolean          @default(false)
   // imageURL         String? @db.VarChar(500)
+}
+
+model SeenBy {
+  messageId Int
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@id([messageId, userId])
 }
 
 model ChatInvite {

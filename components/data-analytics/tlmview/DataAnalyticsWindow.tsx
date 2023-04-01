@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";

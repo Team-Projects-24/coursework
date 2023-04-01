@@ -16,6 +16,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import useUserStore from "../stores/userStore";
 import UserAvatar from "components/user/UserAvatar";
 
+import "../styles/tlmstyles.css";
+
 //page loading bar
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);

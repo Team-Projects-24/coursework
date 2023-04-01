@@ -1,7 +1,7 @@
 import { useState } from "react";
 import React, { Fragment } from "react";
 import UserList from "./UserList";
-import "./TeamList.css";
+
 
 interface Props {
   teams: string[];

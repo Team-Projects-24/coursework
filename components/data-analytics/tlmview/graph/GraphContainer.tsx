@@ -1,7 +1,6 @@
 import BarGraph from "./BarGraph";
 import EmptyGraph from "./EmptyGraph";
 import ProgressBar from "./ProgressBar";
-import "../styles.css";
 import LineGraph from "./LineGraph";
 
 /* LOGIC:

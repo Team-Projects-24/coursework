@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import GraphContainer from "./graph/GraphContainer";
-import TeamUserList from "./TeamUserList";
+import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 
 function DataAnalyticsWindow() {
@@ -42,7 +42,7 @@ function DataAnalyticsWindow() {
   });
 
   return (
-    <div className="container text-center">
+    <div className="tlm container text-center">
       <div className="row">
         <div className="col">
           <TeamUserList onSelectTeamUser={handleTeamUser} />

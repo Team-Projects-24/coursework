@@ -2,6 +2,7 @@ import BarGraph from "./BarGraph";
 import EmptyGraph from "./EmptyGraph";
 import ProgressBar from "./ProgressBar";
 import LineGraph from "./LineGraph";
+import styles from "styles/analytics.module.css";
 
 /* LOGIC:
     Display progress bar for single employee/team (0)
@@ -28,7 +29,7 @@ function GraphContainer({ graphState }: Props) {
 
   return (
     <div className="containerComp" style={{ height: "100%" }}>
-      <div style={{ justifyContent: "center" }}>{graph}</div>
+      <div className="graphContainer" >{graph}</div>
     </div>
   );
 }

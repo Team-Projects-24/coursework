@@ -6,15 +6,12 @@ nav .icon-container {
     padding: 7px;
 }
 
-hr {
-    border-color: #222d34;
-}
-
 .main-colour {
     background-color: #202c33;
 }
 
-.second-colour {
+.second-colour,
+.dropdown-content > li:hover {
     background-color: #111b21;
 }
 
@@ -45,6 +42,14 @@ hr {
     color: #e9edef;
 }
 
+.menu-card-right {
+    border-style: solid;
+    border-bottom-width: 1.2px;
+    border-color: #222d34;
+    display: flex;
+    align-items: center;
+}
+
 .menu-card .icon-container {
     background-color: #00a884;
 }
@@ -54,32 +59,31 @@ hr {
 }
 
 .menu-card .tick.active {
-    color: #00a884;
+    color: #53bdeb;
+}
+
+.menu-card .down-arrow {
+    display: none;
+    color: #8696a0;
+    animation-name: menu-card-dropdown;
+    animation-duration: .1s;
+}
+
+.menu-card:hover .down-arrow {
+    display: block;
 }
 
 .dropdown-content {
     display: none;
-    position: absolute;
-    background-color: #233138;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    border-radius: 3px;
+    padding-block: 5px;
 }
 
-.dropdown-content a {
-    float: none;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-  }
-  
-.dropdown-content a:hover {
-    background-color: #ddd;
+.dropdown-content > li {
+    text-align: center;
 }
 
-.dropdown.active .dropdown-content {
+.dropdown-content.active {
     display: block;
 }
 
@@ -91,4 +95,15 @@ hr {
 
 #top-bar .icon-container:active {
     background-color: #00a884;
+}
+
+@keyframes menu-card-dropdown {
+    from {
+        margin-right: -12px;
+        color: transparent;
+    }
+    to {
+        margin-right: 0px;
+        color: auto;
+    }
 }

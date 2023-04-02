@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import ChatIcon from '@mui/icons-material/Chat';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import GroupsIcon from '@mui/icons-material/Groups';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import MenuCard from "components/chat/MenuCard";
 import useUserStore from "stores/userStore";
 import { Chatroom } from "@prisma/client";
 
-function BottomMenu({ selecting }: { selecting: boolean }) {
+function BottomMenu() {
   const user = useUserStore((state) => state.user);
   var count = 0;
   return (
@@ -56,7 +56,6 @@ function BottomMenu({ selecting }: { selecting: boolean }) {
 
 export default function Chat() {
   const [url, setUrl] = useState<string>("");
-  const [className, setClass] = useState<string>("icon-container dropdown");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -74,24 +73,13 @@ export default function Chat() {
             </div>
           </Grid>
           <Grid item>
-            <div
-              className={className}
-              onClick={
-                () => setClass("icon-container dropdown active")
-              }
-              onAuxClick={
-                () => setClass("icon-container dropdown")
-              }
-            >
-              <MoreVertIcon className="icon" />
-              <div className="dropdown-content">
-                <a>New Chatroom</a>
-              </div>
+            <div className="icon-container">
+              <GroupsIcon className="icon" />
             </div>
           </Grid>
         </Grid>
       </nav>
-      <BottomMenu selecting={false} />
+      <BottomMenu />
     </>
   );
 }

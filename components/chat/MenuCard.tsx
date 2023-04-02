@@ -13,7 +13,10 @@ import { IChatroom } from "types/Chatroom.d";
 import axios from "axios";
 import { IChatMessage } from "types/ChatMessage.d";
 import DoneIcon from "@mui/icons-material/Done";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import GroupIcon from '@mui/icons-material/Group';
 import { Message } from "@prisma/client";
+import { difference } from "lodash";
 
 
 /**
@@ -23,13 +26,15 @@ import { Message } from "@prisma/client";
  * @returns A formatted string depiction of the last time the chat was updated.
  */
 function getChatDate(updatedAt: Date) {
-    const now = new Date();
+    const dateDifference = (new Date()).getDay() - updatedAt.getDay();
     
-    if (now.getDate() == updatedAt.getDate()) {
+    if (dateDifference === 0) {
         return updatedAt.toLocaleString(
             "en-uk", { timeStyle: "short" }
         );
-    } else if (now.getDay() - updatedAt.getDay() < 7) {
+    } else if (dateDifference === 1) {
+        return "Yesterday";
+    } else if (dateDifference < 7) {
         return updatedAt.toLocaleString(
             "en-uk", {  weekday: "long" }
         );
@@ -51,7 +56,7 @@ function getChatLastMessage(
 ) {
     if (!lastMessage) {
         return (
-            <Grid item>
+            <Grid item xs={11}>
                 <Typography className="menu-card-text">
                     Start a conversation
                 </Typography>
@@ -61,7 +66,7 @@ function getChatLastMessage(
     
     if (lastMessage.senderId === id) {
         return (
-            <Grid item container>
+            <Grid item container xs={11}>
                 <Grid item paddingRight={.5}>
                     <DoneIcon
                         fontSize="small"
@@ -70,8 +75,8 @@ function getChatLastMessage(
                         }
                     />
                 </Grid>
-                <Grid item>
-                    <Typography className="menu-card-text">
+                <Grid item xs zeroMinWidth>
+                    <Typography className="menu-card-text" noWrap>
                         {lastMessage.content}
                     </Typography>
                 </Grid>
@@ -79,7 +84,7 @@ function getChatLastMessage(
         );
     }
     return (
-        <Grid item>
+        <Grid item xs={11}>
             <Typography className="menu-card-text">
                 {
                     `${
@@ -87,6 +92,23 @@ function getChatLastMessage(
                     }${lastMessage.content}`
                 }
             </Typography>
+        </Grid>
+    );
+}
+
+function getImage(isPrivate: boolean, image: string | null) {
+    if (image) {
+        return <></>;
+    }
+
+    return (
+        <Grid item padding={2}>
+            <Box padding={1} className="icon-container">
+                {
+                    isPrivate? <PersonIcon className="icon" />:
+                    <GroupIcon className="icon" />
+                }
+            </Box>
         </Grid>
     );
 }
@@ -123,14 +145,12 @@ export default function MenuCard(
 
     return (
         <>
-            <Grid container className="menu-card" paddingX={3}>
-                <Grid item xs="auto" padding={1}>
-                    <Box padding={1} className="icon-container">
-                        <PersonIcon className="icon"/>
-                    </Box>
-                </Grid>
-                <Grid item paddingLeft={2} xs={11}>
-                    <Grid container padding={1} direction={"column"}>
+            <Grid
+                container className="menu-card" paddingX={2}
+            >
+                {getImage(chat.private, chat.chatImage)}
+                <Grid item className="menu-card-right" xs={11}>
+                    <Grid container direction="column">
                         <Grid
                             item container xs={12}
                             justifyContent="space-between"
@@ -151,13 +171,19 @@ export default function MenuCard(
                                 }</Typography>
                             </Grid>
                         </Grid>
-                        {
-                            getChatLastMessage(
-                                lastMessage, chat.private, userId
-                            )
-                        }
+                        <Grid item container justifyContent="space-between">
+                            {
+                                getChatLastMessage(
+                                    lastMessage, chat.private, userId
+                                )
+                            }
+                            <Grid item className="dropdown" xs="auto">
+                                <KeyboardArrowDownIcon
+                                    className="down-arrow"
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <hr />
                 </Grid>
             </Grid>
         </>

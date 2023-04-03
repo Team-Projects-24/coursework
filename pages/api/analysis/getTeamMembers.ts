@@ -1,3 +1,4 @@
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
 import { IUser } from "types/User.d";
@@ -36,7 +37,7 @@ export default async function handler(
       }));
       res.status(200).json(users);
     } else {
-      res.status(404).json({ message: "Chat not found" });
+      res.status(404).json({ message: "Users not found" });
     }
   } catch (error) {
     console.error(error);

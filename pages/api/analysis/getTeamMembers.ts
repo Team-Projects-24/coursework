@@ -1,7 +1,7 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
-import { IUser } from "types/User.d";
+import { IEmployee } from "types/analysis/Employee.d";
 
 const prisma = new PrismaClient();
 
@@ -29,19 +29,18 @@ export default async function handler(
     });
 
     if (mems) {
-      const users: IUser[] = mems.members.map((user: User) => ({
+      const users: IEmployee[] = mems.members.map((user: User) => ({
         userId: user.userId,
         name: user.name,
-        profileImage: user.profileImage as string,
         role: user.role,
       }));
       res.status(200).json(users);
     } else {
-      res.status(404).json({ message: "Users not found" });
+      res.status(404).json({ message: "Members not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error getting chat" });
+    res.status(500).json({ message: "Error getting members" });
   } finally {
     await prisma.$disconnect();
   }

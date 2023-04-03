@@ -1,5 +1,12 @@
+/**
+ * 
+ * @author Olivia Gray 
+ * 
+ * @description puts all tlm components together to create the view for team leaders and managers
+ * 
+ */
+
 import { useEffect, useState } from "react";
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";

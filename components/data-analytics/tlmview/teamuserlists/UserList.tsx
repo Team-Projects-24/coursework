@@ -1,4 +1,12 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+/**
+ * 
+ * @author Olivia Gray 
+ * 
+ * @description creates and displays list of employees
+ * 
+ */
+
+import { useState } from "react";
 
 interface Props {
   users: string[];

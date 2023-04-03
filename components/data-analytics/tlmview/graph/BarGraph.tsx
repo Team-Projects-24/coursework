@@ -1,3 +1,10 @@
+/**
+ * @author Olivia Gray
+ * 
+ * @description provides template for bar chart (for comparing individuals' and teams' performance)
+ * 
+ */
+
 import {
   Chart as ChartJS,
   CategoryScale,

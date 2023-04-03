@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray
+ * 
+ * @description provides template for line graph for analysing performance over a given time frame
+ * 
+ */
+
 import {
   Chart as ChartJS,
   CategoryScale,

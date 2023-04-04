@@ -1,16 +1,16 @@
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 export function useTeamMembers(id: string) {
   const [members, setMembers] = useState();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await axios.post("/api/analyis/getTeamMembers", { id });
+        const response = await axios.post("/api/analysis/getTeamMembers", { id });
         const { data } = response;
         setMembers(data);
       } catch (error) {
@@ -19,10 +19,9 @@ export function useTeamMembers(id: string) {
       setLoading(false);
     }
     fetchData();
-  });
+  }, [reload]);
 
+  const reloadChat = () => setReload(reload + 1);
 
-  console.log(members);
-
-  return { members, loading };
+  return { members, loading, reloadChat };
 }

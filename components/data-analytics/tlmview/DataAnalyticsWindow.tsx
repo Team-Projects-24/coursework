@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
+import { useTeamMembers } from "hooks/analysis/useTeamMembers";
 
 function DataAnalyticsWindow() {
   const [teamUserState, setTeamUserState] = useState(-1);
@@ -47,6 +48,10 @@ function DataAnalyticsWindow() {
   useEffect(() => {
     determineGraphState();
   });
+
+  useTeamMembers("0");
+  //console.log(members);
+
 
   return (
     <div className="tlm container text-center">

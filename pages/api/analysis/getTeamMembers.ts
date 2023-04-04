@@ -10,7 +10,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { id } = req.body;
+    //const { id } = req.body;
+    let id = 1;
+
 
     if (!id) {
       res

@@ -6,8 +6,10 @@ import { useChatroom } from "hooks/useChatroom";
 import { IChatMessage } from "types/ChatMessage.d";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
+import { Typography } from "@mui/material";
+import InputBar from "components/chat/InputBar";
 
-const message = "Hello World! page";
+// const message = "Hello World! page";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -23,14 +25,18 @@ export default function ChatPage() {
     }
   }, []);
 
-  return (
-    <>
-      {loading ? <div>Loading...</div> : <div></div>}
-      {
-        <p> No messages in this chat</p>
+  const loadingMessage = "loading...";
 
-        // <MessageContainer id={0} chatroomId={0} senderId={0} content={""} sentAt={undefined} sender={undefined} chatroom={undefined} seenByIds={[]}/>
-      }
-    </>
+  return (
+    //       {loading ? <Typography>loadingMessage</Typography> : <div></div>}
+    //       {
+    //         <p> No messages in this chat</p>
+    // }
+    //       { messages.map((message: IChatMessage) => (
+    //         <MessageContainer {message} />
+    //       ))
+
+    // }
+    <InputBar />
   );
 }

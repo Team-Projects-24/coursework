@@ -1,15 +1,22 @@
-import { Box, DialogContent, DialogContentText } from "@mui/material";
+import {
+  Box,
+  DialogContent,
+  DialogContentText,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { IChatMessage } from "types/ChatMessage.d";
 
 export default function MessageContainer(props: IChatMessage) {
   const { content, sentAt } = props;
   return (
     <>
-      <Box>
-        <DialogContent>
-          <DialogContentText>{content}</DialogContentText>
-        </DialogContent>
-      </Box>
+      <Grid container className="message-box" padding={2}>
+        <Typography>{content}</Typography>
+      </Grid>
+      <div>
+        <DialogContent>{sentAt.toDateString()}</DialogContent>
+      </div>
     </>
   );
 }

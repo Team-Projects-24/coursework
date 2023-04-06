@@ -26,7 +26,13 @@ export default async function handler(
         chatroomId: id,
       },
       include: {
-        sender: true,
+        sender: {
+          select: {
+            userId: true,
+            name: true,
+            profileImage: true,
+          },
+        },
       },
     });
     if (messages) {

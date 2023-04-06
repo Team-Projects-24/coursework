@@ -29,7 +29,7 @@ export default async function handler(
         members: true,
         sentInvite: {
           include: {
-            user: true,
+            user: { select: { userId: true, name: true, profileImage: true } },
           },
         },
       },

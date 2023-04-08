@@ -3,7 +3,12 @@ import { createElement } from "react";
 import { AiOutlinePaperClip, AiOutlineSend } from "react-icons/ai";
 import { IconType } from "react-icons";
 
-export default function InputBar() {
+interface IInputBarProps {
+  onSend: () => void;
+  onAttach: () => void;
+}
+
+export default function InputBar({ onSend, onAttach }: IInputBarProps) {
   return (
     <Grid
       container
@@ -14,7 +19,7 @@ export default function InputBar() {
       padding={1}
     >
       <Grid width="5%" alignContent="center">
-        <Button fullWidth>
+        <Button fullWidth onClick={onAttach}>
           <AiOutlinePaperClip size={30} />
         </Button>
       </Grid>
@@ -22,7 +27,7 @@ export default function InputBar() {
         <TextField id="message" variant="outlined" fullWidth size="small" />
       </Grid>
       <Grid width="5%" alignContent="center">
-        <Button fullWidth>
+        <Button fullWidth onClick={onSend}>
           {" "}
           <AiOutlineSend size={30} />
         </Button>

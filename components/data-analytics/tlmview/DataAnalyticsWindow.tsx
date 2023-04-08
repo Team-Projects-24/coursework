@@ -64,7 +64,9 @@ function DataAnalyticsWindow() {
           <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
         </div>
       </div>
+      {/* <button onClick={}> Go to Admin Page </button> */}
     </div>
+
   );
 }
 

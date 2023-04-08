@@ -1,7 +1,11 @@
-import DataAnalyticsWindow from "components/data-analytics/tlmview/DataAnalyticsWindow";
 
-function Analytics () {
-    return (<DataAnalyticsWindow></DataAnalyticsWindow>);
+// need to change the name of this file to admin.tsx and make the appropriate button to link to this page
+
+import TaskForm from "components/data-analytics/tlmview/AdminWindow";
+
+
+function Admin () {
+    return (<TaskForm></TaskForm>);
 }
 
-export default Analytics;
+export default Admin;

@@ -1,8 +1,16 @@
+/**
+ *
+ * @author Olivia Gray
+ *
+ * @description puts all tlm components together to create the view for team leaders and managers
+ *
+ */
+
 import { useEffect, useState } from "react";
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
+import { useTeamMembers } from "hooks/analysis/useTeamMembers";
 
 function DataAnalyticsWindow() {
   const [teamUserState, setTeamUserState] = useState(-1);
@@ -40,6 +48,9 @@ function DataAnalyticsWindow() {
   useEffect(() => {
     determineGraphState();
   });
+
+  let members = useTeamMembers("Olivia");
+  console.log(members);
 
   return (
     <div className="tlm container text-center">

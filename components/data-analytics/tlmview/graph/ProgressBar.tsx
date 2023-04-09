@@ -1,3 +1,12 @@
+/**
+ * 
+ * @author Olivia Gray 
+ * 
+ * @description provides template for progress bar for analysing an individual's or team's performance 
+ * 
+ */
+
+
 function ProgressBar() {
   return (
     <div

@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray 
+ * 
+ * @description creates and displays a list of all teams (manager) or teams that the team leader manages (team leader)
+ * 
+ */
+
 import { useState } from "react";
 import React, { Fragment } from "react";
 import UserList from "./UserList";

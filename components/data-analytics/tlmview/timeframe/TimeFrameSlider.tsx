@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray  
+ * 
+ * @description slider that allows the user to select a timeframe to analyse
+ * 
+ */
+
 function TimeFrameSlider() {
   return (
     <>

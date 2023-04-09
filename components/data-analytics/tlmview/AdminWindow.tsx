@@ -136,6 +136,8 @@
 
 import { useState } from 'react';
 
+
+
 interface Task {
     task_id: number;
     name: string;
@@ -209,91 +211,102 @@ export function TaskForm() {
         console.log('Updating task:', selectedTask);
     }
 
+    // code for navigating to the admin page
     // const handleAdminClick = () => {
     //     history.push("/admin");
     // };
 
     return (
-        <div>
-            <h1>Task Form</h1>
-            <label>
-                Select a task:
-                <select value={selectedTaskId} onChange={handleTaskSelection}>
-                    <option value="">Select a task</option>
-                    {hardcodedTasks.map((task) => (
-                        <option key={task.task_id} value={task.task_id.toString()}>
-                            {task.name}
-                        </option>
-                    ))}
-                </select>
-            </label>
-            {selectedTask && (
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Name:
-                        <input
-                            type="text"
-                            name="name"
-                            value={selectedTask.name}
-                            onChange={handleInputChange}
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Description:
-                        <input
-                            type="text"
-                            name="description"
-                            value={selectedTask.description}
-                            onChange={handleInputChange}
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Start date:
-                        <input
-                            type="date"
-                            name="start_date"
-                            value={selectedTask.start_date}
-                            onChange={handleInputChange}
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Due date:
-                        <input
-                            type="date"
-                            name="due_date"
-                            value={selectedTask.due_date}
-                            onChange={handleInputChange}
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Man hours:
-                        <input
-                            type="number"
-                            name="man_hours"
-                            value={selectedTask.man_hours}
-                            onChange={handleInputChange}
-                        />
-                    </label>
-                    <br />
-                    <label>
-                        Completed man hours:
-                        <input
-                            type="number"
-                            name="completed_man_hours"
-                            value={selectedTask.completed_man_hours}
-                            onChange={handleInputChange}
-                        />
-                    </label>
-                    <br />
-                    <button type="submit">Update task</button>
-                </form>
-            )}
+        <div className="task-form-container">
+          <h1 className="task-form-header">Task Form</h1>
+          <label>
+            Select a task:
+            <select value={selectedTaskId} onChange={handleTaskSelection}>
+              <option value="">Select a task</option>
+              {hardcodedTasks.map((task) => (
+                <option key={task.task_id} value={task.task_id.toString()}>
+                  {task.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          {selectedTask && (
+            <form onSubmit={handleSubmit}>
+              <div className="task-form-row">
+                <label>
+                  Name:
+                  <input
+                    type="text"
+                    name="name"
+                    value={selectedTask.name}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="task-form-row task-form-row-alt">
+                <label>
+                  Description:
+                  <input
+                    type="text"
+                    name="description"
+                    value={selectedTask.description}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="task-form-row">
+                <label>
+                  Start date:
+                  <input
+                    type="date"
+                    name="start_date"
+                    value={selectedTask.start_date}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="task-form-row task-form-row-alt">
+                <label>
+                  Due date:
+                  <input
+                    type="date"
+                    name="due_date"
+                    value={selectedTask.due_date}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="task-form-row">
+                <label>
+                  Man hours:
+                  <input
+                    type="number"
+                    name="man_hours"
+                    value={selectedTask.man_hours}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="task-form-row task-form-row-alt">
+                <label>
+                  Completed man hours:
+                  <input
+                    type="number"
+                    name="completed_man_hours"
+                    value={selectedTask.completed_man_hours}
+                    onChange={handleInputChange}
+                  />
+                </label>
+              </div>
+              <div className="task-form-row task-form-row-last">
+                <button type="submit" className="task-form-completion-btn">
+                  Update task
+                </button>
+              </div>
+            </form>
+          )}
         </div>
-    );
+      );
 
 }
 

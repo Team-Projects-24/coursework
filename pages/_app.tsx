@@ -1,3 +1,6 @@
+
+import "../styles/RESET.css";
+
 import type { AppProps } from "next/app";
 import Layout from "../components/layout/Layout";
 import "../styles/globals.css";
@@ -17,6 +20,7 @@ import useUserStore from "../stores/userStore";
 import UserAvatar from "components/user/UserAvatar";
 
 import "../styles/tlmstyles.css";
+import "../styles/TaskForm.css";
 
 //page loading bar
 Router.events.on("routeChangeStart", nProgress.start);

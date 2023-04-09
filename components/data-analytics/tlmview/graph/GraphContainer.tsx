@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray
+ * 
+ * @description provides container for graphs and contains logic for selecting graph type
+ * 
+ */
+
 import BarGraph from "./BarGraph";
 import EmptyGraph from "./EmptyGraph";
 import ProgressBar from "./ProgressBar";

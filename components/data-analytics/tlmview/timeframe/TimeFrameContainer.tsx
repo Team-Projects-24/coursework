@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray 
+ * 
+ * @description container for all timeframe components
+ * 
+ */
+
 import TimeFrameSlider from "./TimeFrameSlider";
 import TimeFrameToggle from "./TimeFrameToggle";
 

@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray 
+ * 
+ * @description combines TeamList and UserList so that employees within a team are displayed under their team list item
+ * 
+ */
+
 import TeamList from "./TeamList";
 
 interface Props {

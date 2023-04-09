@@ -1,3 +1,11 @@
+/**
+ * 
+ * @author Olivia Gray
+ * 
+ * @description checkbox that (de)selects analysing performance over a timeframe
+ * 
+ */
+
 import { useState } from "react";
 
 interface Props {

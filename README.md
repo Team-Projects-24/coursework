@@ -7,10 +7,9 @@ The Make-it-All Staff Portal is a web-based application that allows staff to tra
 
 ## Features
 
-- Task management system for staff and managers
-- Document creation, reading, and sharing capabilities
-- Dashboard for data visualization and analytics
-- Clean and intuitive user interface
+- Subsystem containing a Text-Chat
+- Subsystem containing data analysical software
+
 
 ## Technologies Used
 
@@ -18,15 +17,6 @@ Built using NextJS and Typescript
 - Front-end: React, Material-UI, TailwindCSS, Zustand
 - Back-end: Node.js, Prisma, MySQL
 - Deployment: Google Cloud Platform
-
-## Development Team Members (Team 16)
-
-- Tom Whitticase
-- Ben Pritchard
-- Luke Chester
-- Julia Lum
-- Matthew Fuller
-- Mihir Pindolia
 
 ## Getting Started
 

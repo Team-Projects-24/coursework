@@ -1,19 +1,24 @@
 // import ChatContainer from "../components/chat/ChatContainer";
 import { useRouter } from "next/router";
-import ChatContainer from "components/chat/ChatContainer";
+import MessageContainer from "components/chat/MessageContainer";
 import { useEffect, useState } from "react";
-import { useChatrooms } from "hooks/useChatrooms";
+import { useChatroom } from "hooks/useChatroom";
+import { IChatMessage } from "types/ChatMessage.d";
+// import { Box, DialogContent, DialogContentText } from "@material-ui/core";
+import useUserStore from "stores/userStore";
+import { Typography } from "@mui/material";
+import InputBar from "components/chat/InputBar";
+import ChatHeader from "components/chat/ChatHeader";
 
-const message = "Hello World! page";
+// const message = "Hello World! page";
 
 export default function ChatPage() {
   const router = useRouter();
   const { id } = router.query;
   const [url, setUrl] = useState<string>("");
+  const chatroomId = parseInt(id as string);
 
-  const { loading, messages, members, sendMessage } = useChatrooms(
-    parseInt(id as string)
-  );
+  const { loading, messages, members, sendMessage } = useChatroom(chatroomId);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -21,5 +26,36 @@ export default function ChatPage() {
     }
   }, []);
 
-  return <>{ChatContainer}</>;
+  const loadingMessage = "loading...";
+
+  return (
+    //       {loading ? <Typography>loadingMessage</Typography> : <div></div>}
+    //       {
+    //         <p> No messages in this chat</p>
+    // }
+    //       { messages.map((message: IChatMessage) => (
+    //         <MessageContainer {message} />
+    //       ))
+
+    // }
+    <>
+      <ChatHeader
+        chatName={"Name"}
+        chatImage={""}
+        description={"This is a description"}
+      />
+      <InputBar
+        onSend={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+        onAttach={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    </>
+  );
+}
+
+function onSendMessage(message: string) {
+  //api call in here to send message
 }

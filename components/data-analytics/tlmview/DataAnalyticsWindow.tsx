@@ -1,9 +1,9 @@
 /**
- * 
- * @author Olivia Gray 
- * 
+ *
+ * @author Olivia Gray
+ *
  * @description puts all tlm components together to create the view for team leaders and managers
- * 
+ *
  */
 
 import { useEffect, useState } from "react";
@@ -49,9 +49,8 @@ function DataAnalyticsWindow() {
     determineGraphState();
   });
 
-  useTeamMembers("0");
-  //console.log(members);
-
+  let members = useTeamMembers("Olivia");
+  console.log(members);
 
   return (
     <div className="tlm container text-center">

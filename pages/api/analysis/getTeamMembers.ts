@@ -1,6 +1,6 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, Team, User } from "@prisma/client";
 import { IEmployee } from "types/analysis/Employee.d";
 
 const prisma = new PrismaClient();
@@ -10,33 +10,39 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //const { id } = req.body;
-    let id = 1;
+    //const { teamID } = req.body;
+    let teamID = [1,2];
 
 
-    if (!id) {
+    if (!teamID) {
       res
         .status(400)
         .json({ message: "Required fields are missing in the request." });
       return;
     }
 
-    const mems = await prisma.chatroom.findFirst({
-      where: {
-        id: id,
-      },
+    const members = await prisma.user.findMany({
       include: {
-        members: true,
-      },
-    });
+        teams: true
+      }
+    })
 
-    if (mems) {
-      const users: IEmployee[] = mems.members.map((user: User) => ({
-        userId: user.userId,
-        name: user.name,
-        role: user.role,
-      }));
-      res.status(200).json(users);
+    if (members) {
+
+      let employees: any[] = [];
+
+      // Pre-processing before sending back to client
+      members.forEach(member => {
+        // Only pass back members of specified teams
+        teamID.forEach(team => {
+          if (team in member.teams) {
+            // Put into Employee datatype so its easy to use client-side
+            let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:team}
+            employees.push(employee);
+          }}); 
+      });
+
+      res.status(200).json(employees);
     } else {
       res.status(404).json({ message: "Members not found" });
     }

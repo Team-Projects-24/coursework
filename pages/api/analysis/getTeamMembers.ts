@@ -29,18 +29,19 @@ export default async function handler(
 
     if (members) {
 
-      let employees: any[] = [];
+      let employees: IEmployee[] = [];
 
-      // Pre-processing before sending back to client
       members.forEach(member => {
-        // Only pass back members of specified teams
-        teamID.forEach(team => {
-          if (team in member.teams) {
-            // Put into Employee datatype so its easy to use client-side
-            let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:team}
-            employees.push(employee);
-          }}); 
-      });
+        (member.teams).forEach(team => {
+          teamID.forEach(id => {
+            if (id === team.teamId){
+              // Put into Employee datatype so its easy to use client-side
+              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:id}
+              employees.push(employee);
+            }
+          })
+        })
+      })
 
       res.status(200).json(employees);
     } else {

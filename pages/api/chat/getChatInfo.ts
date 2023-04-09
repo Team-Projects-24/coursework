@@ -50,6 +50,7 @@ export default async function handler(
         private: chat.private,
         creatorId: chat.creatorId,
         chatUsers: users,
+        chatImage: chat.chatImage as string,
       };
 
       res.status(200).json(chatData);

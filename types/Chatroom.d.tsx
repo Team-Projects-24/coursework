@@ -19,5 +19,6 @@ export interface IChatroomInfo {
   description: string;
   private: boolean;
   creatorId: string;
+  chatImage: string;
   chatUsers: IUser[];
 }

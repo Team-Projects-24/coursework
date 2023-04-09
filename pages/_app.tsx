@@ -18,6 +18,8 @@ import UserAvatar from "components/user/UserAvatar";
 import "styles/ChatMenu.css";
 import axios from "axios";
 
+import "../styles/tlmstyles.css";
+
 //page loading bar
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);

@@ -1,11 +1,15 @@
+import { User, Chatroom } from "@prisma/client";
+
 /**
  * @author Ben Pritchard
  *
  * @description This is the user interface. It is used to define the user object.
  */
 
-import { User, Chatroom } from "@prisma/client";
-
-export type IUser = User & {
-  chatrooms: Chatroom[]
-};
+export interface IUser {
+  userId: string;
+  name: string;
+  profileImage: string;
+  role: "EMPLOYEE" | "MANAGER" | "TEAMLEADER";
+  chatrooms: Chatroom[];
+}

@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
-import { IUser } from "types/User.d";
-import { IChatroomInfo } from "types/Chatroom.d";
 
 const prisma = new PrismaClient();
 
@@ -25,33 +23,13 @@ export default async function handler(
       },
       include: {
         members: true,
-        sentInvite: {
-          include: {
-            user: { select: { userId: true, name: true, profileImage: true } },
-          },
-        },
+        sentInvite: true,
+        messages: true,
       },
     });
 
     if (chat) {
-      const users: IUser[] = chat.members.map((user: User) => ({
-        userId: user.userId,
-        name: user.name,
-        profileImage: user.profileImage as string,
-        role: user.role,
-      }));
-
-      const chatData: IChatroomInfo = {
-        id: chat.id,
-        name: chat.name,
-        description: chat.description,
-        private: chat.private,
-        creatorId: chat.creatorId,
-        chatUsers: users,
-        chatImage: chat.chatImage as string,
-      };
-
-      res.status(200).json(chatData);
+      res.status(200).json(chat);
     } else {
       res.status(404).json({ message: "Chat not found" });
     }

@@ -9,12 +9,10 @@ interface IUserStore {
 
 const useUserStore = create(
   persist(
-    devtools<IUserStore>(
-      (set) => ({
-        user: null,
-        setUser: (user: IUser | null) => set({ user }),
-      }),
-    ),
+    devtools<IUserStore>((set) => ({
+      user: null,
+      setUser: (user: IUser | null) => set({ user }),
+    })),
     {
       name: "user-storage",
     }

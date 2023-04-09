@@ -1,3 +1,5 @@
+
+// the following may have some use in the future when making it work with the backend 
 // import React, { useState, useEffect } from 'react';
 
 // function TaskForm() {
@@ -174,7 +176,7 @@ const hardcodedTasks: Task[] = [
     },
 ];
 
-function TaskForm() {
+export function TaskForm() {
     const [selectedTaskId, setSelectedTaskId] = useState('');
     const [selectedTask, setSelectedTask] = useState<Task | undefined>();
 
@@ -293,9 +295,140 @@ function TaskForm() {
         </div>
     );
 
-
-
 }
+
+
+
+interface Employee {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    position: string;
+    department: string;
+    completed: boolean;
+}
+
+const hardcodedEmployees: Employee[] = [
+    {
+        id: 1,
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'johndoe@example.com',
+        position: 'Manager',
+        department: 'Sales',
+        completed: false,
+    },
+    {
+        id: 2,
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'janedoe@example.com',
+        position: 'Engineer',
+        department: 'IT',
+        completed: false,
+    },
+    {
+        id: 3,
+        firstName: 'Bob',
+        lastName: 'Smith',
+        email: 'bobsmith@example.com',
+        position: 'Designer',
+        department: 'Marketing',
+        completed: false,
+    },
+];
+
+export function EmployeeForm() {
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | undefined>();
+
+    function handleEmployeeSelection(event: React.ChangeEvent<HTMLSelectElement>) {
+        const employeeId = event.target.value;
+        const employee = hardcodedEmployees.find((e) => e.id.toString() === employeeId);
+        setSelectedEmployeeId(employeeId);
+        setSelectedEmployee(employee);
+    }
+
+    function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
+        if (selectedEmployee) {
+            setSelectedEmployee({
+                ...selectedEmployee,
+                completed: event.target.checked,
+            });
+        }
+    }
+
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        if (selectedEmployee) {
+            console.log('Updating employee:', selectedEmployee);
+        }
+    }
+
+    return (
+        <div>
+            <h2>Update Employee</h2>
+            <label>
+                Select an employee:
+                <select value={selectedEmployeeId} onChange={handleEmployeeSelection}>
+                    <option value="">Select an employee</option>
+                    {hardcodedEmployees.map((employee) => (
+                        <option key={employee.id} value={employee.id.toString()}>
+                            {employee.firstName} {employee.lastName}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            {selectedEmployee && (
+                <div>
+                    <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>First Name:</label>
+                        <span>{selectedEmployee.firstName}</span>
+                    </div>
+                    <div>
+                        <label>Last Name:</label>
+                        <span>{selectedEmployee.lastName}</span>
+                    </div>
+                    <div>
+                        <label>Email:</label>
+                        <span>{selectedEmployee.email}</span>
+                    </div>
+                    <div>
+                        <label>Position:</label>
+                        <span>{selectedEmployee.position}</span>
+                    </div>
+                    <div>
+                        <label>Department:</label>
+                        <span>{selectedEmployee.department}</span>
+                    </div>
+                    <div>
+                        
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="completed"
+                                checked={selectedEmployee.completed}
+                                onChange={handleCheckboxChange}
+                            />
+                            Set progress to complete
+                        </label>
+                        
+                    </div>
+                    <div>
+                        <button type="submit" >
+                            Update Details
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            )}
+        </div>
+    );
+}
+
 
 export default TaskForm;
 

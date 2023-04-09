@@ -8,6 +8,7 @@ import { IChatMessage } from "types/ChatMessage.d";
 import useUserStore from "stores/userStore";
 import { Typography } from "@mui/material";
 import InputBar from "components/chat/InputBar";
+import ChatHeader from "components/chat/ChatHeader";
 
 // const message = "Hello World! page";
 
@@ -37,6 +38,24 @@ export default function ChatPage() {
     //       ))
 
     // }
-    <InputBar />
+    <>
+      <ChatHeader
+        chatName={"Name"}
+        chatImage={""}
+        description={"This is a description"}
+      />
+      <InputBar
+        onSend={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+        onAttach={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    </>
   );
+}
+
+function onSendMessage(message: string) {
+  //api call in here to send message
 }

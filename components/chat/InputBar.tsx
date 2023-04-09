@@ -13,10 +13,16 @@ export default function InputBar({ onSend, onAttach }: IInputBarProps) {
     <Grid
       container
       className="input-bar"
-      // position="fixed"
+      position="fixed"
       bottom={0}
       height={"7.5%"}
       padding={1}
+      width={"90%"}
+      border-top={1}
+      flexDirection={"row"}
+      alignItems={"center"}
+      justifyContent={"space-between"}
+      border={1}
     >
       <Grid width="5%" alignContent="center">
         <Button fullWidth onClick={onAttach}>

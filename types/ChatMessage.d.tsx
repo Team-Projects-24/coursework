@@ -1,5 +1,6 @@
 import { IUser } from "./User.d";
 import { IChatroom } from "./Chatroom.d";
+import { Chatroom, SeenBy } from "@prisma/client";
 
 /**
  * @author Ben Pritchard
@@ -10,10 +11,10 @@ import { IChatroom } from "./Chatroom.d";
 export interface IChatMessage {
   id: number;
   chatroomId: number;
-  senderId: number;
+  senderId: string;
   content: string;
   sentAt: Date;
   sender: IUser;
-  chatroom: IChatroom;
-  seenByIds: string[];
+  chatroom: Chatroom;
+  seenBy: SeenBy;
 }

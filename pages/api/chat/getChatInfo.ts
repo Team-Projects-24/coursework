@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
-// import { IChat } from "types/Chat.d";
 import { IUser } from "types/User.d";
-import { IChatroom, IChatroomInfo } from "types/Chatroom.d";
-import { includes } from "lodash";
 
 const prisma = new PrismaClient();
 

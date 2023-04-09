@@ -17,18 +17,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const user = await prisma.user.findMany({});
-    if (user) {
-      const usersArray: IUser[] = user.map((user) => {
-        const newUser: IUser = {
-          userId: user.userId,
-          name: user.name,
-          role: user.role.toLowerCase() as "employee" | "manager" | "admin",
-          profileImage: user.profileImage as string,
-        };
-        return newUser;
-      });
-      sendSuccessResponse(res, usersArray);
+    const users = await prisma.user.findMany({
+      include: {
+        chatrooms: true,
+      }
+    });
+    if (users) {
+      sendSuccessResponse(res, users);
     }
   } catch (e) {
     sendErrorResponse(res, e);

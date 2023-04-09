@@ -11,8 +11,5 @@ export interface IUser {
   name: string;
   profileImage: string;
   role: "EMPLOYEE" | "MANAGER" | "TEAMLEADER";
+  chatrooms: Chatroom[];
 }
-
-export type IChatUser = User & {
-  chatrooms: Chatroom[]
-};

@@ -124,7 +124,7 @@ export default function MenuCard({
 
   useEffect(() => {
     async function getData() {
-      const { data: chat } = await axios.post("/api/chat/getChatInfo", {
+      const { data: chat } = await axios.post("/api/chat/getAllChatInfo", {
         id: chatId,
       });
       setChat(chat as IChatMenu);

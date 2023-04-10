@@ -61,8 +61,8 @@ function TeamUserList({ onSelectTeamUser, teams, users }: Props) {
     }
   };
 
-  console.log(teams);
-  console.log(users);
+  //console.log(teams);
+  //console.log(users);
 
   return (
     <>

@@ -10,8 +10,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //const { teamID } = req.body;
-    let teamID = [1,2,3,4,5];
+    const { teamID } = req.body;
+    //let teamID = [1,2,3,4,5];
 
 
     if (!teamID) {
@@ -28,22 +28,8 @@ export default async function handler(
     })
 
     if (members) {
-      /*
-      let employees: IEmployee[] = [];
 
-      members.forEach(member => {
-        (member.teams).forEach(team => {
-          for (let i = 0; i < teamID.length; i++){
-            if (teamID[i] === team.teamId){
-              // Put into Employee datatype so its easy to use client-side
-              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:teamID[i]}
-              employees.push(employee);
-            }
-          }
-        })
-      })
-      */
-      
+      // Pre-process data so each member is placed in a sub-array for their team      
       let employees : IEmployee[][] = [];
 
       for (let i = 0; i < teamID.length; i++){
@@ -51,6 +37,7 @@ export default async function handler(
         let teamMembers: IEmployee[] = [];
         members.forEach(member => {
           member.teams.forEach(team => {
+            // Only return employees that belong to queried teams
             if (teamID[i] === team.teamId){
               let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:teamID[i]}
               teamMembers.push(employee);

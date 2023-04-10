@@ -10,8 +10,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //const { teamID } = req.body;
-    let teamID = [1,2];
+    const { teamID } = req.body;
+    console.log(teamID);
+    //let teamID = [1,2];
 
 
     if (!teamID) {
@@ -22,7 +23,9 @@ export default async function handler(
     }
 
     const results = await prisma.team.findMany({
-    
+      where: {
+        id: {in: teamID}
+      }
     })
 
     if (results) {

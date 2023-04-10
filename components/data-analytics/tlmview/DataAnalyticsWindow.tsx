@@ -52,11 +52,15 @@ function DataAnalyticsWindow() {
     determineGraphState();
   });
 
-  let teams = useTeams("1").teams;
-  console.log(teams);
+  // Get the currently logged in user
 
-  let members = useTeamMembers("Olivia").members;
-  console.log(members);
+  // The API should only return teams and team members that this user manages
+
+  let teams = useTeams([1, 2, 3]).teams;
+  //console.log(teams);
+
+  let members = useTeamMembers([1, 2, 3]).members;
+  //console.log(members);
 
   return (
     <div className="tlm container text-center">

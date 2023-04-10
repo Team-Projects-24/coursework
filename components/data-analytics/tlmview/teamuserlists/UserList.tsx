@@ -23,9 +23,8 @@ function UserList({ users, teamIndex, onSelectUser }: Props) {
     setSelectedUsers([false, false, false]);
   };
 
-  let users2 = ["Bob", "Anna"];
+  //console.log(users);
 
-  console.log(users);
   if (users) {
     return (
       <ul className="list-group">
@@ -53,6 +52,8 @@ function UserList({ users, teamIndex, onSelectUser }: Props) {
         ))}
       </ul>
     );
+  } else {
+    return <div></div>;
   }
 }
 

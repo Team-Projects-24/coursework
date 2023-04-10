@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export function useTeamMembers(id: string) {
+export function useTeamMembers(id: number[]) {
   const [members, setMembers] = useState();
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
-
-  let result: never[] = [];
 
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await axios.post("/api/analysis/getTeamMembers", { id });
+        const response = await axios.post("/api/analysis/getTeamMembers", { teamID: id });
         const { data } = response;
         setMembers(data);
       } catch (error) {

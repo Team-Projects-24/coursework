@@ -60,7 +60,11 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
           />
         </Grid>
         <Grid width="5%" alignContent="center">
-          <Button fullWidth onClick={onSendMessage}>
+          <Button
+            fullWidth
+            onClick={onSendMessage}
+            disabled={message ? false : true}
+          >
             <AiOutlineSend size={30} />
           </Button>
         </Grid>

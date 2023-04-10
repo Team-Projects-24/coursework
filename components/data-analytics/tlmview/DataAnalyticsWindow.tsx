@@ -11,6 +11,9 @@ import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 import { useTeamMembers } from "hooks/analysis/useTeamMembers";
+import { useTeams } from "hooks/analysis/useTeams";
+import { ITeam } from "types/analysis/Team.d";
+import { IEmployee } from "types/analysis/Employee.d";
 
 function DataAnalyticsWindow() {
   const [teamUserState, setTeamUserState] = useState(-1);
@@ -49,14 +52,21 @@ function DataAnalyticsWindow() {
     determineGraphState();
   });
 
-  let members = useTeamMembers("Olivia");
+  let teams = useTeams("1").teams;
+  console.log(teams);
+
+  let members = useTeamMembers("Olivia").members;
   console.log(members);
 
   return (
     <div className="tlm container text-center">
       <div className="row">
         <div className="col">
-          <TeamUserList onSelectTeamUser={handleTeamUser} />
+          <TeamUserList
+            teams={teams ? teams : []}
+            users={members ? members : []}
+            onSelectTeamUser={handleTeamUser}
+          />
         </div>
         <div className="col">
           <GraphContainer graphState={graphState} />

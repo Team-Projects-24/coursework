@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   try {
     //const { teamID } = req.body;
-    let teamID = [1,2];
+    let teamID = [1,2,3,4,5];
 
 
     if (!teamID) {
@@ -28,20 +28,40 @@ export default async function handler(
     })
 
     if (members) {
-
+      /*
       let employees: IEmployee[] = [];
 
       members.forEach(member => {
         (member.teams).forEach(team => {
-          teamID.forEach(id => {
-            if (id === team.teamId){
+          for (let i = 0; i < teamID.length; i++){
+            if (teamID[i] === team.teamId){
               // Put into Employee datatype so its easy to use client-side
-              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:id}
+              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:teamID[i]}
               employees.push(employee);
+            }
+          }
+        })
+      })
+      */
+      
+      let employees : IEmployee[][] = [];
+
+      for (let i = 0; i < teamID.length; i++){
+        // Create a sub-array for each team ID supplied
+        let teamMembers: IEmployee[] = [];
+        members.forEach(member => {
+          member.teams.forEach(team => {
+            if (teamID[i] === team.teamId){
+              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:teamID[i]}
+              teamMembers.push(employee);
             }
           })
         })
-      })
+        employees.push(teamMembers);
+      }
+
+      console.log(employees);
+      
 
       res.status(200).json(employees);
     } else {

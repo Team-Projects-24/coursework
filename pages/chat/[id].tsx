@@ -17,7 +17,7 @@ export default function ChatPage() {
   const { id } = router.query;
   const [url, setUrl] = useState<string>("");
   const chatroomId = parseInt(id as string);
-  // const user = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
   // const user = localStorage.getItem("username");
 
   const { loading, messages, members, sendMessage } = useChatroom(chatroomId);
@@ -46,7 +46,7 @@ export default function ChatPage() {
         chatImage={""}
         description={"This is a description"}
       />
-      <InputBar chatId={chatroomId} userId={"test"} />
+      <InputBar chatId={chatroomId} userId={user?.userId as string} />
     </>
   );
 }

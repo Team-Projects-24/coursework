@@ -20,6 +20,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   };
   async function onSendMessage() {
     //api call in here to send message
+    if (message === "") return;
     console.log(chatId, message, userId);
     await axios.post("/api/chat/sendMessage", {
       id: chatId,

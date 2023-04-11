@@ -1,22 +1,29 @@
-import { Avatar, Button, Grid, Typography } from "@mui/material";
+import { Avatar, Button, Grid, Link, Typography } from "@mui/material";
 import axios from "axios";
+import { resolveHref } from "next/dist/shared/lib/router/router";
+import { useRouter } from "next/router";
 
 interface ChatHeaderProps {
   chatImage: string;
   chatName: string;
   description: string;
+  chatId: number;
 }
 
 export default function ChatHeader(props: ChatHeaderProps) {
+  const router = useRouter();
+
+  const handleClick = async () => {
+    router.push(`/chat/${props.chatId}/info`);
+  };
+
   return (
     <>
       <Grid
         container
-        spacing={1}
         height={"7.5%"}
         flexDirection={"row"}
         alignItems={"center"}
-        padding={2}
         borderBottom={2}
         position={"fixed"}
       >
@@ -30,7 +37,13 @@ export default function ChatHeader(props: ChatHeaderProps) {
           alignItems={"center"}
           padding={1}
         >
-          <Avatar src={props.chatImage} alt={props.chatName} />
+          <Link href="#" onClick={handleClick}>
+            <Avatar
+              src={props.chatImage}
+              alt={props.chatName}
+              className={"avatar"}
+            />
+          </Link>
         </Grid>
         <Grid
           item
@@ -53,6 +66,13 @@ export default function ChatHeader(props: ChatHeaderProps) {
           <Typography>{props.description}</Typography>
         </Grid>
       </Grid>
+
+      <style>
+        {`
+        .avatar:hover {
+          transform: scale(1.2);
+        }`}
+      </style>
     </>
   );
 }

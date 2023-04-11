@@ -43,12 +43,12 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         bottom={0}
         height={"7.5%"}
         padding={1}
-        width={"90%"}
+        width={"92%"}
         border-top={1}
         flexDirection={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
-        border={1}
+        border={0}
       >
         <Grid width="5%" alignContent="center">
           <Button fullWidth>

@@ -22,11 +22,16 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
     //api call in here to send message
     if (message === "") return;
     console.log(chatId, message, userId);
-    await axios.post("/api/chat/sendMessage", {
-      id: chatId,
-      content: message,
-      userId: userId,
-    });
+    try {
+      await axios.post("/api/chat/sendMessage", {
+        id: chatId,
+        content: message,
+        userId: userId,
+      });
+      setMessage("");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -55,6 +60,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
             id="message"
             onChange={updateMessage}
             variant="outlined"
+            value={message}
             fullWidth
             size="small"
           />

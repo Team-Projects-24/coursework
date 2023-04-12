@@ -17,19 +17,20 @@ datasource db {
 }
 
 model User {
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  userId         String       @id @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  userId         String           @id @unique
   name           String
   password       String
-  role           Role         @default(EMPLOYEE)
+  role           Role             @default(EMPLOYEE)
   receivedInvite ChatInvite[]
   sentMessages   Message[]
   chatrooms      Chatroom[]
-  profileImage   String?      @db.VarChar(500)
+  profileImage   String?          @db.VarChar(500)
   teams          UserOnTeam[]
   seenMessages   SeenBy[]
   leaderOf       Team[]
+  PerformanceLog PerformanceLog[]
 }
 
 enum Role {
@@ -105,6 +106,7 @@ model Team {
 }
 
 model PerformanceLog {
+  user              User     @relation(fields: [userId], references: [userId])
   userId            String
   date              DateTime @default(now())
   manHoursSet       Float

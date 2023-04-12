@@ -1,17 +1,8 @@
-nav {
-    padding-block: 8px;
-}
-
-nav .icon-container {
-    padding: 7px;
-}
-
 .main-colour {
     background-color: #202c33;
 }
 
-.second-colour,
-.dropdown-content > li:hover {
+.second-colour {
     background-color: #111b21;
 }
 
@@ -44,7 +35,7 @@ nav .icon-container {
 
 .menu-card-right {
     border-style: solid;
-    border-bottom-width: 1.2px;
+    border-top-width: 1.4px;
     border-color: #222d34;
     display: flex;
     align-items: center;
@@ -87,8 +78,7 @@ nav .icon-container {
     display: block;
 }
 
-#chat-search {
-    width: 100%;
+.search {
     color: #ffffff;
     outline: none;
 }

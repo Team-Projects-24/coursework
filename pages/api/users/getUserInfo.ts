@@ -29,7 +29,7 @@ export default async function handler(
       //no user with given email found on database
       sendErrorResponse(res, { message: "User not found" });
     } else {
-      sendSuccessResponse(res, { user });
+      sendSuccessResponse(res, user);
     }
   } catch (e) {
     //problem with connecting to db

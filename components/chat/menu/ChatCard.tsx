@@ -18,7 +18,6 @@ import { Message } from "@prisma/client";
 import { difference } from "lodash";
 import { IChatMenu } from "types/ChatMenu.d";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 /**
  * @author Ade Osindero
@@ -112,7 +111,7 @@ function getImage(isPrivate: boolean, image: string | null) {
  * @param userId - The id of the current user.
  * @returns A react component (the card) detailing information of the chat.
  */
-export default function MenuCard({
+export default function ChatCard({
   chatId,
   userId,
 }: {

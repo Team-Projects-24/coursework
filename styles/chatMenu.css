@@ -1,0 +1,109 @@
+nav {
+    padding-block: 8px;
+}
+
+nav .icon-container {
+    padding: 7px;
+}
+
+.main-colour {
+    background-color: #202c33;
+}
+
+.second-colour,
+.dropdown-content > li:hover {
+    background-color: #111b21;
+}
+
+.icon-container {
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.icon-container:active {
+    background-color: #374248;
+}
+
+.icon {
+    color: #aebac1;
+}
+
+.menu-card {
+    color: #8696a0;
+    cursor: pointer;
+}
+
+.menu-card:hover,
+.menu-card:active {
+    background-color: #2a3942;
+}
+
+.menu-card:active {
+    color: #e9edef;
+}
+
+.menu-card-right {
+    border-style: solid;
+    border-bottom-width: 1.2px;
+    border-color: #222d34;
+    display: flex;
+    align-items: center;
+}
+
+.menu-card .icon-container {
+    background-color: #00a884;
+}
+
+.menu-card .tick {
+    color: #8696a0;
+}
+
+.menu-card .tick.active {
+    color: #53bdeb;
+}
+
+.menu-card .down-arrow {
+    display: none;
+    color: #8696a0;
+    animation-name: menu-card-dropdown;
+    animation-duration: .1s;
+}
+
+.menu-card:hover .down-arrow {
+    display: block;
+}
+
+.dropdown-content {
+    display: none;
+    border-radius: 3px;
+    padding-block: 5px;
+}
+
+.dropdown-content > li {
+    text-align: center;
+}
+
+.dropdown-content.active {
+    display: block;
+}
+
+#chat-search {
+    width: 100%;
+    color: #ffffff;
+    outline: none;
+}
+
+#top-bar .icon-container:active {
+    background-color: #00a884;
+}
+
+@keyframes menu-card-dropdown {
+    from {
+        margin-right: -12px;
+        color: transparent;
+    }
+    to {
+        margin-right: 0px;
+        color: auto;
+    }
+}

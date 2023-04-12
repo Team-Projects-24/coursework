@@ -1,20 +1,22 @@
 import { IUser } from "types/User.d";
 import { create } from "zustand";
-
-/**
- * @author Ben Pritchard
- *
- * @description A store for managing the current user logged in throughout the application.
- */
+import { devtools, persist } from "zustand/middleware";
 
 interface IUserStore {
   user: IUser | null;
   setUser: (user: IUser | null) => void;
 }
 
-const useUserStore = create<IUserStore>((set) => ({
-  user: null,
-  setUser: (user: IUser | null) => set((state: IUserStore) => ({ user: user })),
-}));
+const useUserStore = create(
+  persist(
+    devtools<IUserStore>((set) => ({
+      user: null,
+      setUser: (user: IUser | null) => set({ user }),
+    })),
+    {
+      name: "user-storage",
+    }
+  )
+);
 
 export default useUserStore;

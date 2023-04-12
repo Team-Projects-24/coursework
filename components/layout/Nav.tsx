@@ -42,7 +42,7 @@ export default function Nav() {
   return (
     <>
       {/* desktop nav */}
-      <div className="mobile-only:hidden z-[100] relative h-full bg-dark-light text-white flex flex-col w-44 p-2">
+      <div className="mobile-only:hidden z-[100] relative h-full bg-dark-light text-white flex flex-col w-40 p-2">
         {NavButtons()}
       </div>
       {/* mobile nav */}

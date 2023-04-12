@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { IChatMessage } from "types/ChatMessage.d";
 
-export function useChatrooms(id?: number) {
+export function useChatroom(id?: number) {
   const [messages, setMessages] = useState();
   const [members, setMembers] = useState();
   const [loading, setLoading] = useState(true);
@@ -30,25 +30,25 @@ export function useChatrooms(id?: number) {
     fetchData();
   }, []);
 
-  useEffect(
-    () => {
-      async function fetchData() {
-        setLoading(true);
-        try {
-          const response = await axios.get("/api/chat/getChatMessages");
-          const { data } = response;
-          setMessages(data);
-        } catch (error) {
-          console.error(error);
-        }
-        setLoading(false);
-      }
-      fetchData();
-    },
-    [
-      /*reload*/
-    ]
-  );
+  // useEffect(
+  //   () => {
+  //     async function fetchData() {
+  //       setLoading(true);
+  //       try {
+  //         const response = await axios.get("/api/chat/getChatMessages");
+  //         const { data } = response;
+  //         setMessages(data);
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //       setLoading(false);
+  //     }
+  //     fetchData();
+  //   },
+  //   [
+  //     /*reload*/
+  //   ]
+  // );
 
   useEffect(
     () => {

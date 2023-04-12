@@ -3,7 +3,7 @@ import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
 
 /**
- * @author Tom Whitticase
+ * @author Ben Pritchard
  *
  * @description User will be redirected to another page if on this page. Displays a loading animation
  *

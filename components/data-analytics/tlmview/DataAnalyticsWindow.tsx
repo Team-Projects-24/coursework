@@ -20,6 +20,17 @@ function DataAnalyticsWindow() {
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
 
+  // Get the currently logged in user
+  // useTeamLeaders();
+  // The API should only return teams and team members that this user manages
+
+  let teams = useTeams([1, 2, 3]).teams;
+  //console.log(teams);
+
+  let members = useTeamMembers([1, 2, 3]).members;
+  //console.log(members);
+
+  // handler events
   const handleTeamUser = (newState: number) => {
     setTeamUserState(newState);
   };
@@ -28,6 +39,7 @@ function DataAnalyticsWindow() {
     setTimeFrameState(newState);
   };
 
+  // Figure out what kind of graph should be displayed
   const determineGraphState = () => {
     if (teamUserState === 0 && timeFrameState === true) {
       // Display single line graph (2)
@@ -52,15 +64,6 @@ function DataAnalyticsWindow() {
     determineGraphState();
   });
 
-  // Get the currently logged in user
-
-  // The API should only return teams and team members that this user manages
-
-  let teams = useTeams([1, 2, 3]).teams;
-  //console.log(teams);
-
-  let members = useTeamMembers([1, 2, 3]).members;
-  //console.log(members);
 
   return (
     <div className="tlm container text-center">

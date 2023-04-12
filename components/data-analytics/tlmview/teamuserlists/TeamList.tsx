@@ -1,19 +1,20 @@
 /**
- * 
- * @author Olivia Gray 
- * 
+ *
+ * @author Olivia Gray
+ *
  * @description creates and displays a list of all teams (manager) or teams that the team leader manages (team leader)
- * 
+ *
  */
 
 import { useState } from "react";
 import React, { Fragment } from "react";
 import UserList from "./UserList";
-
+import { ITeam } from "types/analysis/Team.d";
+import { IEmployee } from "types/analysis/Employee.d";
 
 interface Props {
-  teams: string[];
-  users: string[][];
+  teams: ITeam[];
+  users: IEmployee[][];
   sendTeamsUsers: (
     selectedTeams: boolean[],
     selectedUsers: boolean[][]
@@ -50,14 +51,14 @@ function TeamList({ teams, users, sendTeamsUsers }: Props) {
   return (
     <ul className="list-group">
       {teams.map((team, index) => (
-        <React.Fragment key={team}>
+        <React.Fragment key={team.name}>
           <li
             className={
               selectedTeams[index] === true
                 ? "list-group-item active"
                 : "list-group-item"
             }
-            key={team}
+            key={team.name}
             onClick={() => {
               // (un/)highlight selected team
               let newTeamState = [...selectedTeams];
@@ -81,7 +82,7 @@ function TeamList({ teams, users, sendTeamsUsers }: Props) {
               textAlign: "left",
             }}
           >
-            {team}
+            {team.name}
           </li>
           <UserList
             key={userListInstance}

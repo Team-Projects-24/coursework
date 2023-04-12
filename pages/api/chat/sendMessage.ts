@@ -16,6 +16,7 @@ export default async function handler(
       console.log(id, content, userId);
     }
     if (errors.length > 0) {
+      console.log(errors);
       return res.status(400).json({
         message: "Invalid request error",
         errors: errors,

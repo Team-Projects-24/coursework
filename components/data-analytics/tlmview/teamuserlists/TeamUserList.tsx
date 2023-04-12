@@ -1,18 +1,22 @@
 /**
- * 
- * @author Olivia Gray 
- * 
+ *
+ * @author Olivia Gray
+ *
  * @description combines TeamList and UserList so that employees within a team are displayed under their team list item
- * 
+ *
  */
 
 import TeamList from "./TeamList";
+import { ITeam } from "types/analysis/Team.d";
+import { IEmployee } from "types/analysis/Employee.d";
 
 interface Props {
+  teams: ITeam[];
+  users: IEmployee[][];
   onSelectTeamUser: (teamUserState: number) => void;
 }
 
-function TeamUserList({ onSelectTeamUser }: Props) {
+function TeamUserList({ onSelectTeamUser, teams, users }: Props) {
   const handleTeamsUsers = (
     selectedTeams: boolean[],
     selectedUsers: boolean[][]
@@ -57,15 +61,15 @@ function TeamUserList({ onSelectTeamUser }: Props) {
     }
   };
 
+  //console.log(teams);
+  //console.log(users);
+
   return (
     <>
       <div className="containerComp">
         <TeamList
-          teams={["Team 1", "Team 2"]}
-          users={[
-            ["Bob", "Anna", "Steve"],
-            ["Mark", "Maria", "Tracy"],
-          ]}
+          teams={teams ? teams : []}
+          users={users ? users : []}
           sendTeamsUsers={handleTeamsUsers}
         />
       </div>

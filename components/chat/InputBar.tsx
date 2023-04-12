@@ -20,12 +20,18 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   };
   async function onSendMessage() {
     //api call in here to send message
+    if (message === "") return;
     console.log(chatId, message, userId);
-    await axios.post("/api/chat/sendMessage", {
-      id: chatId,
-      content: message,
-      userId: userId,
-    });
+    try {
+      await axios.post("/api/chat/sendMessage", {
+        id: chatId,
+        content: message,
+        userId: userId,
+      });
+      setMessage("");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -37,12 +43,12 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         bottom={0}
         height={"7.5%"}
         padding={1}
-        width={"90%"}
+        width={"92%"}
         border-top={1}
         flexDirection={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
-        border={1}
+        border={0}
       >
         <Grid width="5%" alignContent="center">
           <Button fullWidth>
@@ -54,12 +60,17 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
             id="message"
             onChange={updateMessage}
             variant="outlined"
+            value={message}
             fullWidth
             size="small"
           />
         </Grid>
         <Grid width="5%" alignContent="center">
-          <Button fullWidth onClick={onSendMessage}>
+          <Button
+            fullWidth
+            onClick={onSendMessage}
+            disabled={message ? false : true}
+          >
             <AiOutlineSend size={30} />
           </Button>
         </Grid>

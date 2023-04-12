@@ -11,12 +11,26 @@ import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 import { useTeamMembers } from "hooks/analysis/useTeamMembers";
+import { useTeams } from "hooks/analysis/useTeams";
+import { ITeam } from "types/analysis/Team.d";
+import { IEmployee } from "types/analysis/Employee.d";
 
 function DataAnalyticsWindow() {
   const [teamUserState, setTeamUserState] = useState(-1);
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
 
+  // Get the currently logged in user
+  // useTeamLeaders();
+  // The API should only return teams and team members that this user manages
+
+  let teams = useTeams([1, 2, 3]).teams;
+  //console.log(teams);
+
+  let members = useTeamMembers([1, 2, 3]).members;
+  //console.log(members);
+
+  // handler events
   const handleTeamUser = (newState: number) => {
     setTeamUserState(newState);
   };
@@ -25,6 +39,7 @@ function DataAnalyticsWindow() {
     setTimeFrameState(newState);
   };
 
+  // Figure out what kind of graph should be displayed
   const determineGraphState = () => {
     if (teamUserState === 0 && timeFrameState === true) {
       // Display single line graph (2)
@@ -49,14 +64,16 @@ function DataAnalyticsWindow() {
     determineGraphState();
   });
 
-  let members = useTeamMembers("Olivia");
-  console.log(members);
 
   return (
     <div className="tlm container text-center">
       <div className="row">
         <div className="col">
-          <TeamUserList onSelectTeamUser={handleTeamUser} />
+          <TeamUserList
+            teams={teams ? teams : []}
+            users={members ? members : []}
+            onSelectTeamUser={handleTeamUser}
+          />
         </div>
         <div className="col">
           <GraphContainer graphState={graphState} />

@@ -7,6 +7,8 @@ import { Box, Grid, Typography } from "@mui/material";
 import MenuCard from "components/chat/MenuCard";
 import useUserStore from "stores/userStore";
 import { Chatroom } from "@prisma/client";
+import MessageContainer from "components/chat/MessageContainer";
+import MessageBubble from "components/chat/MessageBubble";
 
 function BottomMenu() {
   const user = useUserStore((state) => state.user);
@@ -56,6 +58,11 @@ function BottomMenu() {
         {user?.chatrooms.map((chat: Chatroom) => (
           <MenuCard key={count++} chatId={chat.id} userId={user.userId} />
         ))}
+        <div>
+              <MessageBubble text="Hey there dude!dudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedude" person="Tim" recOrSen ={true}></MessageBubble>
+              <MessageBubble text="Hey there dude!" person="Tim" recOrSen = {false}  ></MessageBubble>
+            </div>
+            
       </Grid>
     </>
   );
@@ -86,7 +93,9 @@ export default function Chat() {
           </Grid>
         </Grid>
       </nav>
-      <BottomMenu />
+
+      <BottomMenu></BottomMenu>
     </>
+    
   );
 }

@@ -1,142 +1,9 @@
 
-// the following may have some use in the future when making it work with the backend 
-// import React, { useState, useEffect } from 'react';
-
-// function TaskForm() {
-//   const [tasks, setTasks] = useState([]);
-//   const [selectedTaskId, setSelectedTaskId] = useState(null);
-//   const [selectedTask, setSelectedTask] = useState(null);
-
-//   // Fetch tasks from backend when component mounts
-//   useEffect(() => {
-//     fetch('/tasks')
-//       .then((res) => res.json())
-//       .then((data) => {
-//         setTasks(data);
-//       });
-//   }, []);
-
-//   // Update selected task when dropdown selection changes
-//   const handleTaskSelection = (event) => {
-//     const taskId = event.target.value;
-//     setSelectedTaskId(taskId);
-//     const task = tasks.find((t) => t.task_id === parseInt(taskId));
-//     setSelectedTask(task);
-//   };
-
-//   // Update task attribute when input field changes
-//   const handleInputChange = (event) => {
-//     const { name, value } = event.target;
-//     setSelectedTask((prevState) => ({
-//       ...prevState,
-//       [name]: value,
-//     }));
-//   };
-
-//   // Update task in database when form is submitted
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     fetch(`/tasks/${selectedTask.task_id}`, {
-//       method: 'PUT',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(selectedTask),
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         console.log('Task updated:', data);
-//       });
-//   };
-//   return (
-//     <div>
-//       <h1>Task Form</h1>
-//       <label>
-//         Select a task:
-//         <select value={selectedTaskId} onChange={handleTaskSelection}>
-//           <option value="">Select a task</option>
-//           {tasks.map((task) => (
-//             <option key={task.task_id} value={task.task_id}>
-//               {task.name}
-//             </option>
-//           ))}
-//         </select>
-//       </label>
-//       {selectedTask && (
-//         <form onSubmit={handleSubmit}>
-//           <label>
-//             Name:
-//             <input
-//               type="text"
-//               name="name"
-//               value={selectedTask.name}
-//               onChange={handleInputChange}
-//             />
-//           </label>
-//           <br />
-//           <label>
-//             Description:
-//             <input
-//               type="text"
-//               name="description"
-//               value={selectedTask.description}
-//               onChange={handleInputChange}
-//             />
-//           </label>
-//           <br />
-//           <label>
-//             Start date:
-//             <input
-//               type="date"
-//               name="start_date"
-//               value={selectedTask.start_date}
-//               onChange={handleInputChange}
-//             />
-//           </label>
-//           <br />
-//           <label>
-//             Due date:
-//             <input
-//               type="date"
-//               name="due_date"
-//               value={selectedTask.due_date}
-//               onChange={handleInputChange}
-//             />
-//           </label>
-//           <br />
-//           <label>
-//             Man hours:
-//             <input
-//               type="number"
-//               name="man_hours"
-//               value={selectedTask.man_hours}
-//               onChange={handleInputChange}
-//             />
-//           </label>
-//           <br />
-//           <label>
-//             Completed man hours:
-//             <input
-//               type="number"
-//               name="completed_man_hours"
-//               value={selectedTask.completed_man_hours}
-//               onChange={handleInputChange}
-//             />
-//           </label>
-//           <br />
-//           <button type="submit">Update database</button>
-//         </form>
-//       )}
-//     </div>
-//   );
-// }
 
 
-
-
-import { useState } from 'react';
-
-
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 interface Task {
     task_id: number;
@@ -181,15 +48,19 @@ const hardcodedTasks: Task[] = [
 export function TaskForm() {
     const [selectedTaskId, setSelectedTaskId] = useState('');
     const [selectedTask, setSelectedTask] = useState<Task | undefined>();
+    const [selectedTaskHTML, setSelectedTaskHTML] = useState<HTMLSelectElement>();
+    function handleTaskSelection(event: SelectChangeEvent<HTMLSelectElement>) {
+        const taskIds = event.target.value as string;
+        const taskId = event.target.value as HTMLSelectElement;
 
-    function handleTaskSelection(event: React.ChangeEvent<HTMLSelectElement>) {
-        const taskId = event.target.value;
-        const task = hardcodedTasks.find((t) => t.task_id.toString() === taskId);
-        setSelectedTaskId(taskId);
+        const task = hardcodedTasks.find((t) => t.task_id.toString() === taskIds);
+        
+        setSelectedTaskId(taskIds);
         setSelectedTask(task);
+        setSelectedTaskHTML(taskId);
     }
 
-    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         if (!selectedTask) {
             return;
         }
@@ -201,7 +72,7 @@ export function TaskForm() {
         }) as Task);
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (!selectedTask) {
@@ -217,98 +88,105 @@ export function TaskForm() {
     // };
 
     return (
-        <div className="task-form-container">
-          <h1 className="task-form-header">Task Form</h1>
-          <label>
-            Select a task:
-            <select value={selectedTaskId} onChange={handleTaskSelection}>
-              <option value="">Select a task</option>
-              {hardcodedTasks.map((task) => (
-                <option key={task.task_id} value={task.task_id.toString()}>
-                  {task.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          {selectedTask && (
-            <form onSubmit={handleSubmit}>
-              <div className="task-form-row">
-                <label>
-                  Name:
-                  <input
-                    type="text"
-                    name="name"
-                    value={selectedTask.name}
-                    onChange={handleInputChange}
-                  />
-                </label>
-              </div>
-              <div className="task-form-row task-form-row-alt">
-                <label>
-                  Description:
-                  <input
-                    type="text"
-                    name="description"
-                    value={selectedTask.description}
-                    onChange={handleInputChange}
-                  />
-                </label>
-              </div>
-              <div className="task-form-row">
-                <label>
-                  Start date:
-                  <input
-                    type="date"
-                    name="start_date"
-                    value={selectedTask.start_date}
-                    onChange={handleInputChange}
-                  />
-                </label>
-              </div>
-              <div className="task-form-row task-form-row-alt">
-                <label>
-                  Due date:
-                  <input
-                    type="date"
-                    name="due_date"
-                    value={selectedTask.due_date}
-                    onChange={handleInputChange}
-                  />
-                </label>
-              </div>
-              <div className="task-form-row">
-                <label>
-                  Man hours:
-                  <input
-                    type="number"
-                    name="man_hours"
-                    value={selectedTask.man_hours}
-                    onChange={handleInputChange}
-                  />
-                </label>
-              </div>
-              <div className="task-form-row task-form-row-alt">
-                <label>
-                  Completed man hours:
-                  <input
-                    type="number"
-                    name="completed_man_hours"
-                    value={selectedTask.completed_man_hours}
-                    onChange={handleInputChange}
-                  />
-                </label>
-              </div>
-              <div className="task-form-row task-form-row-last">
-                <button type="submit" className="task-form-completion-btn">
+      <Box sx={{ margin: 'auto', maxWidth: 600 }}>
+        <Typography variant="h4" sx={{ textAlign: 'center', bgcolor: '#ffbf00', color: 'white', p: 2, borderRadius: 5 }}>
+          Task Form
+        </Typography>
+        <FormControl sx={{ my: 2 }}>
+          <InputLabel id="task-select-label">Select a task</InputLabel>
+          <Select
+            labelId="task-select-label"
+            id="task-select"
+            value={selectedTaskHTML}
+            label="Select a task"
+            onChange={handleTaskSelection}
+          >
+            <MenuItem value="Select a Task">
+              <em>Select a task</em>
+            </MenuItem>
+            {hardcodedTasks.map((task) => (
+              <MenuItem key={task.task_id} value={task.task_id.toString()}>
+                {task.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {selectedTask && (
+          <Box component="form" onSubmit={handleSubmit}>
+            <Grid container spacing={2} sx={{ my: 2 }}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  name="name"
+                  label="Name"
+                  value={selectedTask.name}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  name="description"
+                  label="Description"
+                  value={selectedTask.description}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  name="start_date"
+                  label="Start date"
+                  type="date"
+                  value={selectedTask.start_date}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  name="due_date"
+                  label="Due date"
+                  type="date"
+                  value={selectedTask.due_date}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  name="man_hours"
+                  label="Man hours"
+                  type="number"
+                  value={selectedTask.man_hours}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  name="completed_man_hours"
+                  label="Completed man hours"
+                  type="number"
+                  value={selectedTask.completed_man_hours}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary">
                   Update task
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      );
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+      </Box>
+    );
+    
 
 }
+
+
 
 
 
@@ -372,7 +250,7 @@ export function EmployeeForm() {
         }
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (selectedEmployee) {

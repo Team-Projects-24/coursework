@@ -1,8 +1,8 @@
 /**
  * @author Olivia Gray
- * 
+ *
  * @description provides template for bar chart (for comparing individuals' and teams' performance)
- * 
+ *
  */
 
 import {
@@ -15,6 +15,10 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+
+interface Props {
+  data: any;
+}
 
 ChartJS.register(
   CategoryScale,

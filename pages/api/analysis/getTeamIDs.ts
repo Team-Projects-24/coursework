@@ -1,11 +1,3 @@
-/**
- * 
- * @asuthor Olivia Gray
- * 
- * @description Pull all the team IDs of the team the currently logged in user manages
- * 
- */
-
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Team, User } from "@prisma/client";
@@ -18,9 +10,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { teamID } = req.body;
+    const { leaderID } = req.body;
 
-    if (!teamID) {
+    if (!leaderID) {
       res
         .status(400)
         .json({ message: "Required fields are missing in the request." });
@@ -29,20 +21,19 @@ export default async function handler(
 
     const results = await prisma.team.findMany({
       where: {
-        id: {in: teamID}
+        leaderId: leaderID
       }
     })
 
     if (results) {
 
-      let teams: ITeam[] = [];
+      let teamIDs: number[] = [];
 
       results.forEach(result => {
-        let team: ITeam = {teamID: result.id, name: result.name};
-        teams.push(team);
+        teamIDs.push(result.id);
       })      
 
-      res.status(200).json(teams);
+      res.status(200).json(teamIDs);
     } else {
       res.status(404).json({ message: "Teams not found" });
     }

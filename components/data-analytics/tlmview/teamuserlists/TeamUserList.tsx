@@ -9,20 +9,31 @@
 import TeamList from "./TeamList";
 import { ITeam } from "types/analysis/Team.d";
 import { IEmployee } from "types/analysis/Employee.d";
+import { useEffect } from "react";
 
 interface Props {
   teams: ITeam[];
   users: IEmployee[][];
   onSelectTeamUser: (teamUserState: number) => void;
+  onSendTeamUser: (
+    selectedTeams: boolean[],
+    selectedUsers: boolean[][]
+  ) => void;
 }
 
-function TeamUserList({ onSelectTeamUser, teams, users }: Props) {
+function TeamUserList({
+  onSelectTeamUser,
+  onSendTeamUser,
+  teams,
+  users,
+}: Props) {
   const handleTeamsUsers = (
     selectedTeams: boolean[],
     selectedUsers: boolean[][]
   ) => {
     // Handle logic of whether employees or teams are selected
-
+    //console.log(selectedUsers);
+    //console.log(selectedTeams);
     // Count how many teams have been selected
     let teamCount = 0;
     for (let i in selectedTeams) {
@@ -33,10 +44,12 @@ function TeamUserList({ onSelectTeamUser, teams, users }: Props) {
       // Single team selected
       //console.log("Single team");
       onSelectTeamUser(0);
+      //onSendTeamUser(selectedTeams, selectedUsers);
     } else if (teamCount > 1) {
       // Multiple teams selected
       //console.log("Multiple teams");
       onSelectTeamUser(1);
+      //onSendTeamUser(selectedTeams, selectedUsers);
     } else {
       // Count how many users have been selected
       let userCount = 0;
@@ -59,6 +72,7 @@ function TeamUserList({ onSelectTeamUser, teams, users }: Props) {
         onSelectTeamUser(-1);
       }
     }
+    onSendTeamUser(selectedTeams, selectedUsers);
   };
 
   //console.log(teams);

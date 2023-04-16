@@ -22,22 +22,49 @@ interface Props {
 }
 
 function TeamList({ teams, users, sendTeamsUsers }: Props) {
-  const [selectedTeams, setSelectedTeams] = useState([false, false]);
-  const [selectedUsers, setSelectedUsers] = useState([
-    [false, false, false],
-    [false, false, false],
-  ]);
+  //console.log(users);
+  //console.log(users.length);
+  // function for initialising false 2D array for users
+  const initialiseUsers = () => {
+    //console.log("initialising user list");
+    //console.log(users);
+    let usersArr = [];
+    for (let i = 0; i < users.length; i++) {
+      //console.log("USERS");
+      usersArr.push(new Array(users[i].length).fill(false));
+    }
+    //console.log(usersArr);
+    return usersArr;
+  };
+
+  const [selectedTeams, setSelectedTeams] = useState(
+    new Array(teams.length).fill(false)
+  );
+  const [selectedUsers, setSelectedUsers] = useState(initialiseUsers());
   const [userListInstance, setUserListInstance] = useState(0);
 
   const handleSelectUser = (index: number, selectedSubUsers: boolean[]) => {
     // Deselect all teams
-    setSelectedTeams([false, false]);
-
+    setSelectedTeams(new Array(teams.length).fill(false));
+    //console.log("handling user");
+    //console.log(selectedSubUsers);
     // Update selectedUsers
-    let newState = selectedUsers;
-    newState[index] = selectedSubUsers;
-    setSelectedUsers(newState);
+    //let newState = selectedUsers;
+    //newState[index] = selectedSubUsers;
+    //newState.splice(index, 1, selectedSubUsers);
 
+    // Build new state
+    let newState = [];
+    for (let i = 0; i < selectedUsers.length; i++) {
+      if (i === index) {
+        newState.push([...selectedSubUsers]);
+      } else {
+        newState.push(selectedUsers[i]);
+      }
+    }
+
+    console.log(newState);
+    setSelectedUsers(newState);
     // Send selected users to TeamUserList component
     sendTeamsUsers(new Array(teams.length).fill(false), newState);
   };
@@ -47,6 +74,9 @@ function TeamList({ teams, users, sendTeamsUsers }: Props) {
     setUserListInstance(userListInstance + 1);
     // Post selectedTeams to TeamUserList component
   };
+
+  //console.log(teams);
+  //console.log(users);
 
   return (
     <ul className="list-group">
@@ -69,10 +99,8 @@ function TeamList({ teams, users, sendTeamsUsers }: Props) {
               onSelectTeam();
 
               // Send selected teams, no users selected
-              let newUserState = [
-                [false, false, false],
-                [false, false, false],
-              ];
+              let newUserState = initialiseUsers();
+              //console.log(newUserState);
               setSelectedUsers(newUserState);
               sendTeamsUsers(newTeamState, newUserState);
             }}

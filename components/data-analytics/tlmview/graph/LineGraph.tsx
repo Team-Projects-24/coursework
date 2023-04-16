@@ -1,9 +1,9 @@
 /**
- * 
+ *
  * @author Olivia Gray
- * 
+ *
  * @description provides template for line graph for analysing performance over a given time frame
- * 
+ *
  */
 
 import {
@@ -17,6 +17,10 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+
+interface Props {
+  data: any;
+}
 
 ChartJS.register(
   CategoryScale,

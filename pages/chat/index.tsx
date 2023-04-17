@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 function BottomMenu() {
   const user = useUserStore((state) => state.user);
   var count = 0;
+
   return (
     <Grid
       container
@@ -33,14 +34,15 @@ function BottomMenu() {
         paddingY={1}
         justifyContent="center"
         id="top-bar"
+        paddingX={2}
       >
         <Grid
           container
           item
           paddingY={1}
-          borderRadius={3}
+          borderRadius={2}
           className="main-colour"
-          xs={11}
+          xs
         >
           <Grid item paddingLeft={2} xs="auto">
             <SearchIcon className="icon" />
@@ -53,15 +55,15 @@ function BottomMenu() {
             />
           </Grid>
         </Grid>
-        <Grid item paddingLeft={2} paddingTop={0.8}>
+        <Grid item paddingLeft={2} paddingTop={0.8} xs="auto">
           <Box padding={0.3} className="icon-container">
             <FilterListIcon className="icon" />
           </Box>
         </Grid>
       </Grid>
-      {user?.chatrooms.map((chat: Chatroom) => (
+      {user?.chatrooms.map((chat) => 
         <ChatCard key={count++} chatId={chat.id} userId={user.userId} />
-      ))}
+      )}
     </Grid>
   );
 }
@@ -86,9 +88,7 @@ export default function Chat() {
         <Grid item>
           <Box
             className="icon-container"
-            onClick={() => {
-                router.push({ pathname: `/chat/createChat` });
-              }
+            onClick={() => {router.push("/chat/create-chat")}
             }
             padding={1.1}
           >

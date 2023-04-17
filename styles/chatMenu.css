@@ -83,6 +83,10 @@
     outline: none;
 }
 
+.arrowBack {
+    cursor: pointer;
+}
+
 #top-bar .icon-container:active {
     background-color: #00a884;
 }

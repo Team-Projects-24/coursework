@@ -14,8 +14,6 @@ import { IChatMessage } from "types/ChatMessage.d";
 import DoneIcon from "@mui/icons-material/Done";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import GroupIcon from "@mui/icons-material/Group";
-import { Message } from "@prisma/client";
-import { difference } from "lodash";
 import { IChatMenu } from "types/ChatMenu.d";
 import { useRouter } from "next/router";
 
@@ -26,7 +24,8 @@ import { useRouter } from "next/router";
  * @returns A formatted string depiction of the last time the chat was updated.
  */
 function getChatDate(updatedAt: Date) {
-  const dateDifference = new Date().getDay() - updatedAt.getDay();
+  const dateDifference =
+    Math.floor(((new Date()).getTime() - updatedAt.getTime())/86400000);
 
   if (dateDifference === 0) {
     return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
@@ -94,7 +93,7 @@ function getImage(isPrivate: boolean, image: string | null) {
   }
 
   return (
-    <Grid item padding={1} className="icon-container">
+    <Grid item padding={1.2} className="icon-container">
       {isPrivate ? (
         <PersonIcon className="icon" />
       ) : (
@@ -129,26 +128,33 @@ export default function ChatCard({
       });
       setChat(chat as IChatMenu);
 
-      const { data: lastMessage } = await axios.post(
-        "/api/chat/getChatMessage",
-        { id: chat.messages.at(-1)!.id }
-      );
-      setLastMessage(lastMessage as IChatMessage);
+      if (chat.messages.length) {
+        const { data: lastMessage } = await axios.post(
+          "/api/chat/getChatMessage",
+          { id: chat.messages.at(-1)!.id }
+        );
+        setLastMessage(lastMessage as IChatMessage);
+      }
     }
     getData();
   }, []);
 
-  if (!chat || (chat.private && !chat.messages.length)) {
+  if (!chat || chat.private && !chat.messages.length) {
     return <></>;
   }
 
+  const chatTitle = chat.private ?
+    chat.members.filter((member) => member.userId !== userId).pop()?.name ??
+    `${chat.members.at(0)?.name} (You)` :
+    chat.name;
+
   const enterChat = () => {
-    router.push({ pathname: `/chat/[id]`, query: { id: chat.id } });
+    router.push(`/chat/${chat.id}`);
   }
 
   return (
     <>
-      <Grid container className="menu-card" paddingX={2}>
+      <Grid container className="menu-card">
         <Grid item container xs="auto" padding={2} onClick={enterChat}>
           {getImage(chat.private, chat.chatImage)}
         </Grid>
@@ -157,14 +163,13 @@ export default function ChatCard({
             <Grid
               item
               container
-              xs={12}
               justifyContent="space-between"
               alignItems="center"
               onClick={enterChat}
             >
               <Grid item xs="auto">
                 <Typography color="#e9edef" fontSize={18}>
-                  {chat.name}
+                  {chatTitle}
                 </Typography>
               </Grid>
               <Grid item xs="auto">

@@ -7,6 +7,7 @@
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
+import { orderBy } from "lodash";
 
 const prisma = new PrismaClient();
 
@@ -21,7 +22,12 @@ export default async function handler(
         userId: username,
       },
       include: {
-        chatrooms: true,
+        chatrooms: {
+          include: {
+            members: true,
+          },
+          orderBy: { updatedAt: "desc" },
+        },
       }
     });
 

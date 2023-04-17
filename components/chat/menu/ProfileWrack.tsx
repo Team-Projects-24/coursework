@@ -4,9 +4,14 @@ import { useState, useEffect } from "react";
 import { IUser } from "types/User.d";
 import UserCard from "./UserCard";
 
-export default function ProfileWrack({ partialId }: { partialId: string }) {
+export default function ProfileWrack(
+    { partialId, response }: {
+        partialId: string, response: ((arg0: IUser) => void)
+    }
+) {
     const [users, setUsers] = useState<IUser[]>();
     var currentLetter = "";
+    var i = 0;
 
     useEffect(() => {
         setUsers(undefined);
@@ -22,18 +27,23 @@ export default function ProfileWrack({ partialId }: { partialId: string }) {
     return !users? <></> : (
         <Box>
             {users.map((user) => {
-                if (!currentLetter || !user.name.toUpperCase().startsWith(currentLetter)) {
+                if (
+                    !currentLetter ||
+                    !user.name.toUpperCase().startsWith(currentLetter)
+                ) {
                     currentLetter = user.name.charAt(0).toUpperCase();
                     return (
                         <Box>
-                            <Box color="#00a884" paddingY={2} paddingX={5.8}>
-                                <Typography>{user.name.charAt(0).toUpperCase()}</Typography>
+                            <Box color="#00a884" paddingY={2} paddingX={4}>
+                                <Typography>{currentLetter}</Typography>
                             </Box>
-                            <UserCard userId={user.userId} />
+                            <UserCard
+                                key={i++} user={user} response={response}
+                            />
                         </Box>
                     );
                 }
-                return <UserCard userId={user.userId} />;
+                return <UserCard key={i++} user={user} response={response} />;
             })}
         </Box>
     );

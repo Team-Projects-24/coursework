@@ -18,11 +18,15 @@ export default async function handler(
   try {
     const users = await prisma.user.findMany({
       include: {
-        chatrooms: true,
+        chatrooms: {
+          include: {
+            members: true,
+          }
+        },
       }
     });
     if (users) {
-      sendSuccessResponse(res, users as IUser[]);
+      sendSuccessResponse(res, users);
     }
   } catch (e) {
     sendErrorResponse(res, e);

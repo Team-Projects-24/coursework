@@ -43,7 +43,7 @@ function UserList({ users, teamIndex, onSelectUser }: Props) {
               //console.log(newState);
               newState[index] = !newState[index];
               setSelectedUsers(newState);
-              //console.log(newState);
+              console.log(newState);
               // Deselect any selected teams and send selectedUsers to team component
               onSelectUser(teamIndex, newState);
             }}

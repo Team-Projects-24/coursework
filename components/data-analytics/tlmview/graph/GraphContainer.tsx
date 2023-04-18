@@ -29,7 +29,7 @@ function GraphContainer({ graphState, data }: Props) {
     graphState === 0 ? (
       <ProgressBar data={data} />
     ) : graphState === 1 ? (
-      <BarGraph />
+      <BarGraph data={data} />
     ) : graphState === 2 ? (
       <LineGraph />
     ) : (

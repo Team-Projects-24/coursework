@@ -37,7 +37,7 @@ function DataAnalyticsWindow() {
 
   useEffect(() => {
     // Change graph state when selectedUsers or selectedTeams or timeFrameToggle changes
-    determineGraphState();
+    //determineGraphState();
   });
 
   async function loadData() {
@@ -77,6 +77,7 @@ function DataAnalyticsWindow() {
     if (teamInputs.length === 1 && !timeFrame) {
       // Get a single team's performance
       console.log("single team");
+      setGraphState(0);
       axios
         .post("api/analysis/getTeamPerformanceMetrics", {
           teamIDs: teamInputs,
@@ -87,6 +88,7 @@ function DataAnalyticsWindow() {
         });
     } else if (userInputs.length === 1 && !timeFrame) {
       console.log("single user");
+      setGraphState(0);
       // Get a single employee's performance
       //let requestedUsers = getSelectedUserIDs();
       //console.log(requestedUsers);
@@ -100,6 +102,7 @@ function DataAnalyticsWindow() {
         });
     } else if (teamInputs.length > 0 && !timeFrame) {
       console.log("multiple teams");
+      setGraphState(1);
       // Compare teams in a bar chart
       axios
         .post("api/analysis/getTeamPerformanceMetrics", {
@@ -111,6 +114,7 @@ function DataAnalyticsWindow() {
         });
     } else if (userInputs.length > 0 && !timeFrame) {
       console.log("multiple users");
+      setGraphState(1);
       // Compare users in a bar chart
       axios
         .post("api/analysis/getUserPerformanceMetrics", {
@@ -122,8 +126,32 @@ function DataAnalyticsWindow() {
         });
     } else if (teamInputs.length > 0 && timeFrame) {
       console.log("line graph for teams");
+      setGraphState(2);
+      // View / display performance over a time period for teams
+      axios
+        .post("api/analysis/getTeamTimePerformanceMetrics", {
+          teamIDs: teamInputs,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setPerformanceData(response.data);
+        });
     } else if (userInputs.length > 0 && timeFrame) {
       console.log("line graph for users");
+      setGraphState(2);
+      // View / display performance over a time period for users
+      axios
+        .post("api/analysis/getUserTimePerformanceMetrics", {
+          userIDs: userInputs,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else {
+      // Nothing selected
+      console.log("nothing selected");
+      setGraphState(-1);
     }
   }
 

@@ -53,8 +53,8 @@ function getRandomRGB() {
 const labels = ["Man Hours Set", "Man Hours Completed"];
 
 function BarGraph({ data }: Props) {
-  const buildDataset = (data: any) => {
-    //console.log(data);
+  const buildDataset = () => {
+    console.log(data);
     let groups = [];
     for (let i = 0; i < data?.length; i++) {
       let group = {
@@ -76,7 +76,7 @@ function BarGraph({ data }: Props) {
     return dataset;
   };
 
-  return <Bar options={options} data={buildDataset(data)} />;
+  return <Bar options={options} data={buildDataset()} />;
 }
 
 export default BarGraph;

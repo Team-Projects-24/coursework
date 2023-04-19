@@ -18,16 +18,16 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { teamIDs } = req.body;
+    const { userIDs } = req.body;
 
-    if (!teamIDs) {
+    if (!userIDs) {
       res
         .status(400)
         .json({ message: "Required fields are missing in the request." });
       return;
     }
 
-    const results = await prisma.$queryRaw<ITimeFramePerformance[]>`select userId as "id", date, sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from PerformanceLog group by id, date having id in ("Anna","Lynn");`;
+    const results = await prisma.$queryRaw<ITimeFramePerformance[]>`select userId as "id", date, sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from PerformanceLog group by id, date having id in (${Prisma.join(userIDs)});`;
 
     //console.log(results);
     if (results) {    

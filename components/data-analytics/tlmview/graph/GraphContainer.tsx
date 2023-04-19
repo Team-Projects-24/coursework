@@ -31,7 +31,7 @@ function GraphContainer({ graphState, data }: Props) {
     ) : graphState === 1 ? (
       <BarGraph data={data} />
     ) : graphState === 2 ? (
-      <LineGraph />
+      <LineGraph data={data} />
     ) : (
       <EmptyGraph />
     );

@@ -12,6 +12,9 @@ import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 import axios from "axios";
 import { getLinearProgressUtilityClass } from "@mui/material";
+import { ITeam } from "types/analysis/Team.d";
+import { IEmployee } from "types/analysis/Employee.d";
+import { time } from "console";
 
 function DataAnalyticsWindow() {
   const [teams, setTeams] = useState();
@@ -19,6 +22,8 @@ function DataAnalyticsWindow() {
   const [teamUserState, setTeamUserState] = useState(-1);
   const [selectedTeams, setSelectedTeams] = useState<boolean[] | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<boolean[][] | null>(null);
+  const [selectedTeamIDs, setSelectedTeamIDs] = useState<number[]>([]);
+  const [selectedUserIDs, setSelectedUserIDs] = useState<String[]>([]);
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
@@ -60,71 +65,65 @@ function DataAnalyticsWindow() {
       });
   }
 
-  async function loadPerformanceData() {
-    /*
-    const getSelectedUserIDs = () => {
-      // Compare selectedUsers to users
-      console.log(selectedUsers);
-      console.log(members);
-      if (selectedUsers && members) {
-        let selectedUserInfo: any = [];
-        for (let i = 0; i < selectedUsers?.length; i++) {
-          for (let j = 0; j < selectedUsers?.[i]?.length; i++) {
-            console.log(selectedUsers[i][j]);
-            if (selectedUsers[i][j]) {
-              console.log("found match");
-              selectedUserInfo.push(members[i][j].userID);
-            }
-          }
-        }
-        return selectedUserInfo;
-      }
-    };
-    */
-
-    //console.log("Performancing");
-    if (graphState === 0 && selectedTeams?.includes(true)) {
+  async function loadPerformanceData(
+    teamInputs: number[],
+    userInputs: String[],
+    timeFrame: boolean
+  ) {
+    console.log("getting performance data");
+    console.log(teamInputs);
+    console.log(userInputs);
+    console.log(timeFrameState);
+    if (teamInputs.length === 1 && !timeFrame) {
       // Get a single team's performance
+      console.log("single team");
       axios
         .post("api/analysis/getTeamPerformanceMetrics", {
-          teamIDs: [1],
+          teamIDs: teamInputs,
         })
         .then((response) => {
           console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (graphState === 0) {
+    } else if (userInputs.length === 1 && !timeFrame) {
+      console.log("single user");
       // Get a single employee's performance
       //let requestedUsers = getSelectedUserIDs();
       //console.log(requestedUsers);
       axios
         .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: ["Anna"],
+          userIDs: userInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (graphState === 1 && selectedTeams?.includes(true)) {
+    } else if (teamInputs.length > 0 && !timeFrame) {
+      console.log("multiple teams");
       // Compare teams in a bar chart
       axios
         .post("api/analysis/getTeamPerformanceMetrics", {
-          teamIDs: [1, 3],
+          teamIDs: teamInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (graphState === 1) {
+    } else if (userInputs.length > 0 && !timeFrame) {
+      console.log("multiple users");
       // Compare users in a bar chart
       axios
         .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: ["Anna", "Jonathan"],
+          userIDs: userInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
+    } else if (teamInputs.length > 0 && timeFrame) {
+      console.log("line graph for teams");
+    } else if (userInputs.length > 0 && timeFrame) {
+      console.log("line graph for users");
     }
   }
 
@@ -140,11 +139,45 @@ function DataAnalyticsWindow() {
     setSelectedUsers(selectedUsers);
     setSelectedTeams(selectedTeams);
 
-    console.log(selectedUsers);
+    //console.log(selectedUsers);
+
+    if (selectedTeams.includes(true)) {
+      let teamsInput: any[] = [];
+      // Determine the corresponding teams from selectedTeams
+      console.log(selectedTeams);
+      for (let i = 0; i < selectedTeams.length; i++) {
+        // If selectedTeams[i] is true then we want to get the performance data of this team
+        if (selectedTeams[i]) {
+          //console.log(teams?.[i]);
+          teamsInput.push(teams?.[i]["teamID"]);
+        }
+      }
+      console.log(teamsInput);
+      setSelectedTeamIDs(teamsInput);
+      setSelectedUserIDs([]);
+      loadPerformanceData(teamsInput, [], timeFrameState);
+    } else {
+      let usersInput: any[] = [];
+      // Determine the corresponding users from selectedUsers
+      for (let i = 0; i < selectedUsers.length; i++) {
+        for (let j = 0; j < selectedUsers[i].length; j++) {
+          if (selectedUsers[i][j]) {
+            usersInput.push(members?.[i]?.[j]["userID"]);
+          }
+        }
+      }
+      if (usersInput.length > 0) {
+        console.log(usersInput);
+        setSelectedTeamIDs([]);
+        setSelectedUserIDs(usersInput);
+        loadPerformanceData([], usersInput, timeFrameState);
+      }
+    }
   };
 
   const handleTimeFrameToggle = (newState: boolean) => {
     setTimeFrameState(newState);
+    loadPerformanceData(selectedTeamIDs, selectedUserIDs, newState);
   };
 
   // Figure out what kind of graph should be displayed
@@ -166,9 +199,6 @@ function DataAnalyticsWindow() {
       // Display no graph (-1)
       setGraphState(-1);
     }
-
-    // If graph state has changed, then load performance data
-    loadPerformanceData();
   };
 
   return (

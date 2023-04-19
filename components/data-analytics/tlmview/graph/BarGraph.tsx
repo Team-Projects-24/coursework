@@ -54,19 +54,19 @@ const labels = ["Man Hours Set", "Man Hours Completed"];
 
 function BarGraph({ data }: Props) {
   const buildDataset = (data: any) => {
-    console.log(data);
+    //console.log(data);
     let groups = [];
     for (let i = 0; i < data?.length; i++) {
       let group = {
         label: data?.[i]?.id,
         data: [data?.[i]?.manHoursSet, data?.[i]?.manHoursCompleted],
-        backgroundColor: "rgba(150,30,100,0.5)",
+        backgroundColor: getRandomRGB(),
       };
-      console.log(group);
+      //console.log(group);
       groups.push(group);
     }
 
-    console.log(groups);
+    //console.log(groups);
 
     let dataset = {
       labels,

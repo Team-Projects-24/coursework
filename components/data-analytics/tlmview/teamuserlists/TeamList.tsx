@@ -63,7 +63,7 @@ function TeamList({ teams, users, sendTeamsUsers }: Props) {
       }
     }
 
-    console.log(newState);
+    //console.log(newState);
     setSelectedUsers(newState);
     // Send selected users to TeamUserList component
     sendTeamsUsers(new Array(teams.length).fill(false), newState);

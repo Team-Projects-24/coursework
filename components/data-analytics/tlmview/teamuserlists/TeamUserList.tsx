@@ -31,6 +31,7 @@ function TeamUserList({
     selectedTeams: boolean[],
     selectedUsers: boolean[][]
   ) => {
+    console.log("team user list");
     // Handle logic of whether employees or teams are selected
     //console.log(selectedUsers);
     //console.log(selectedTeams);

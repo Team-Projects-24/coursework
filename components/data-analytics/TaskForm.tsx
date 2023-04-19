@@ -48,6 +48,7 @@ export function TaskForm() {
     const [selectedTaskId, setSelectedTaskId] = useState('');
     const [selectedTask, setSelectedTask] = useState<Task | undefined>();
     const [selectedTaskHTML, setSelectedTaskHTML] = useState<HTMLSelectElement>();
+    
     function handleTaskSelection(event: SelectChangeEvent<HTMLSelectElement>) {
         const taskIds = event.target.value as string;
         const taskId = event.target.value as HTMLSelectElement;

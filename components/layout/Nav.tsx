@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaChartBar } from "react-icons/fa";
+import { FaChartBar, FaChessKing } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FaFileAlt, FaProjectDiagram, FaUsers } from "react-icons/fa";
 import useUserStore from "stores/userStore";
@@ -32,6 +32,8 @@ export default function Nav() {
         <NavButton href="/projects" text="Projects" icon={FaProjectDiagram} /> */}
         <NavButton href="/chat" text="Chat" icon={FaFileAlt} />
         <NavButton href="/analytics" text="Analytics" icon={FaChartBar} />
+        <NavButton href="/admin" text="Admin" icon={FaChessKing} />
+
         {/* <NavButton href="/tasks" text="Tasks" icon={FaTasks} />
         <NavButton href="/documents" text="Documents" icon={FaFileAlt} /> */}
         {isAdmin && <NavButton href="/users" text="Users" icon={FaUsers} />}

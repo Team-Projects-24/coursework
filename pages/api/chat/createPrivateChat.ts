@@ -1,29 +1,25 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
   try {
     const { creatorId, participantId } = req.body;
 
     const chat = await prisma.chatroom.create({
-        data: {
-            private: true,
-            members: {
-                connect: [
-                    { userId: creatorId },
-                    { userId: participantId }
-                ]
-            },
-            creatorId: creatorId,
-            description: "A chat between users.",
-            name: `${creatorId}-${participantId}`,
-        }
-    })
+      data: {
+        private: true,
+        members: {
+          connect: [{ userId: creatorId }, { userId: participantId }],
+        },
+        creatorId: creatorId,
+        description: "A chat between users.",
+        name: `${creatorId}-${participantId}`,
+      },
+    });
 
     if (chat) {
       res.status(200).json(chat);

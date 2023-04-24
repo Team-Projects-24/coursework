@@ -1,4 +1,5 @@
 import { User, Chatroom } from "@prisma/client";
+import { IChatroomInfo } from "./Chatroom.d";
 
 /**
  * @author Ben Pritchard
@@ -11,5 +12,5 @@ export interface IUser {
   name: string;
   profileImage: string;
   role: "EMPLOYEE" | "MANAGER" | "TEAMLEADER";
-  chatrooms: Chatroom[];
+  chatrooms: IChatroomInfo[];
 }

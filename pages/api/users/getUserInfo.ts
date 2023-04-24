@@ -7,6 +7,7 @@
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
+import { orderBy } from "lodash";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,15 +21,20 @@ export default async function handler(
         userId: username,
       },
       include: {
-        chatrooms: true,
-      },
+        chatrooms: {
+          include: {
+            members: true,
+          },
+          orderBy: { updatedAt: "desc" },
+        },
+      }
     });
 
     if (!user) {
       //no user with given email found on database
       sendErrorResponse(res, { message: "User not found" });
     } else {
-      sendSuccessResponse(res, { user });
+      sendSuccessResponse(res, user);
     }
   } catch (e) {
     //problem with connecting to db

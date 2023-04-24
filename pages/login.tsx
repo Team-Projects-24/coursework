@@ -69,12 +69,11 @@ export default function Login() {
   // If authentication is successful then save user information and redirect to dashboard
   const handleLoginSuccess = async (username: string, password: string) => {
     try {
-      const res = await axios.post("/api/users/getUserInfo", {
+      const { data, status } = await axios.post("/api/users/getUserInfo", {
         username,
       });
-      if (res.status === 200) {
-        const { user } = res.data;
-        setUser(user as IUser);
+      if (status === 200) {
+        setUser(data as IUser);
         // sessionStorage.setItem("username", username);
         // sessionStorage.setItem("password", password);
 

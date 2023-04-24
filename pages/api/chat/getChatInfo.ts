@@ -24,11 +24,6 @@ export default async function handler(
       },
       include: {
         members: true,
-        sentInvite: {
-          include: {
-            user: { select: { userId: true, name: true, profileImage: true } },
-          },
-        },
       },
     });
 

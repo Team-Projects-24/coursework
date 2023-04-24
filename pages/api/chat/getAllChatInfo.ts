@@ -22,7 +22,6 @@ export default async function handler(
       },
       include: {
         members: true,
-        sentInvite: true,
         messages: true,
       },
     });

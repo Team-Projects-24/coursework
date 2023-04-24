@@ -3,6 +3,9 @@
 import { PrismaClient, User } from "@prisma/client";
 import Heading from "./Heading"
 
+//24/4/23
+//the users isnt working yet for the info page, plus zero styling
+
 const prisma = new PrismaClient();
 
 interface allChatInfo{

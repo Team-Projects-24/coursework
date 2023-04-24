@@ -57,12 +57,7 @@ function BottomMenu() {
         </Grid>
         {user?.chatrooms.map((chat: Chatroom) => (
           <MenuCard key={count++} chatId={chat.id} userId={user.userId} />
-        ))}
-        <div>
-              <MessageBubble text="Hey there dude!dudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedudedude" person="Tim" recOrSen ={true}></MessageBubble>
-              <MessageBubble text="Hey there dude!" person="Tim" recOrSen = {false}  ></MessageBubble>
-            </div>
-            
+        ))}            
       </Grid>
     </>
   );
@@ -94,7 +89,7 @@ export default function Chat() {
         </Grid>
       </nav>
 
-      <BottomMenu></BottomMenu>
+      <BottomMenu/>
     </>
     
   );

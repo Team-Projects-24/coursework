@@ -3,12 +3,11 @@ import { PrismaClient, User } from "@prisma/client";
 import { IUser } from "types/User.d";
 import { IChatroomInfo } from "types/Chatroom.d";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
   try {
     const { id } = req.body;
 

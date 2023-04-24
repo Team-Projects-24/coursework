@@ -50,7 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
     if (user && router.pathname === "/") {
       router.push("/dashboard");
     }
-  })
+  });
 
   //when alerts change, loop through them and display and remove them
   useEffect(() => {

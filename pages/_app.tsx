@@ -1,3 +1,6 @@
+
+import "../styles/RESET.css";
+
 import type { AppProps } from "next/app";
 import Layout from "../components/layout/Layout";
 import "../styles/globals.css";
@@ -20,6 +23,7 @@ import axios from "axios";
 import "styles/bubblestyle.css";
 
 import "../styles/tlmstyles.css";
+import "../styles/TaskForm.css";
 
 //page loading bar
 Router.events.on("routeChangeStart", nProgress.start);

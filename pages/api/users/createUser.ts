@@ -2,12 +2,13 @@ import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
 //recieves a new user and adds to db
-const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   console.log("start of create user");
   const { newUser, referral } = req.body;
   if (!newUser || !referral) {

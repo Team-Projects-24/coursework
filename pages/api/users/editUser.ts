@@ -17,12 +17,12 @@ import { IUser } from "types/User.d";
  *
  */
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   //get user and password(optional) from request
   const user: IUser = req.body.user;
   const password: string = req.body.password;
@@ -51,7 +51,7 @@ export default async function handler(
         data: {
           name: user.name,
           profileImage: user.profileImage,
-          role: mapRole[user.role] as "EMPLOYEE" | "ADMIN" | "MANAGER",
+          role: mapRole[user.role] as "EMPLOYEE" | "TEAMLEADER" | "MANAGER",
         },
       });
     } else {
@@ -64,7 +64,7 @@ export default async function handler(
           name: user.name,
           password: hashedPassword,
           profileImage: user.profileImage,
-          role: mapRole[user.role] as "EMPLOYEE" | "ADMIN" | "MANAGER",
+          role: mapRole[user.role] as "EMPLOYEE" | "TEAMLEADER" | "MANAGER",
         },
       });
     }

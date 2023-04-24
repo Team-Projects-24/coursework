@@ -21,13 +21,13 @@ export default function UserCard(
     { user, response }: { user: IUser, response: (arg0: IUser) => void }
 ) {
     return (
-        <Grid container className="menu-card" onClick={() => response(user)}>
+        <Grid container className="info-card" onClick={() => response(user)}>
             <Grid item container xs="auto" padding={2}>
                 <Grid item padding={1.2} className="icon-container">
                     <PersonIcon className="icon" />
                 </Grid>
             </Grid>
-            <Grid item container className="menu-card-right" xs={11}>
+            <Grid item container className="info-card-right" xs={11}>
                 <Grid container direction="column">
                     <Grid item xs="auto">
                         <Typography color="#e9edef" fontSize={18}>

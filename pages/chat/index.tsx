@@ -3,10 +3,9 @@ import ChatIcon from "@mui/icons-material/Chat";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import ChatCard from "components/chat/menu/ChatCard";
 import useUserStore from "stores/userStore";
-import { Chatroom } from "@prisma/client";
 import { useRouter } from "next/router";
 
 /**
@@ -41,7 +40,7 @@ function BottomMenu() {
           item
           paddingY={1}
           borderRadius={2}
-          className="main-colour"
+          className="primary-colour"
           xs
         >
           <Grid item paddingLeft={2} xs="auto">
@@ -51,7 +50,7 @@ function BottomMenu() {
             <input
               type="text"
               placeholder="Search or start new chat"
-              className="main-colour search"
+              className="primary-colour search"
             />
           </Grid>
         </Grid>
@@ -82,7 +81,7 @@ export default function Chat() {
     <Box className="second-color" height="100%">
       <Grid
         container justifyContent="center" paddingY={1.2}
-        className="main-colour" columnSpacing={2} margin={0}
+        className="primary-colour" columnSpacing={2} margin={0}
         width="100%"
       >
         <Grid item>

@@ -54,7 +54,7 @@ function getChatLastMessage(
   if (!lastMessage) {
     return (
       <Box>
-        <Typography className="menu-card-text">Start a conversation</Typography>
+        <Typography className="info-card-text">Start a conversation</Typography>
       </Box>
     );
   }
@@ -69,7 +69,7 @@ function getChatLastMessage(
           />
         </Grid>
         <Grid item xs zeroMinWidth>
-          <Typography className="menu-card-text" noWrap>
+          <Typography className="info-card-text" noWrap>
             {lastMessage.content}
           </Typography>
         </Grid>
@@ -78,7 +78,7 @@ function getChatLastMessage(
   }
   return (
     <Box>
-      <Typography className="menu-card-text">
+      <Typography className="info-card-text">
         {`${!isPrivate ? `${lastMessage.senderId}: ` : ""}${
           lastMessage.content
         }`}
@@ -154,11 +154,11 @@ export default function ChatCard({
 
   return (
     <>
-      <Grid container className="menu-card">
+      <Grid container className="info-card">
         <Grid item container xs="auto" padding={2} onClick={enterChat}>
           {getImage(chat.private, chat.chatImage)}
         </Grid>
-        <Grid item container className="menu-card-right" xs={11}>
+        <Grid item container className="info-card-right" xs={11}>
           <Grid container direction="column">
             <Grid
               item

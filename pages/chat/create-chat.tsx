@@ -19,14 +19,15 @@ export default function createChat() {
         <Box minHeight="100%" className="second-colour">
             <Grid
                 container paddingY={2} columnSpacing={3}
-                className="main-colour" margin={0} width="100%"
+                className="primary-colour" margin={0} width="100%"
             >
                 <Grid 
                     item color="#d9dee0" display="flex" alignItems="center"
                     xs="auto" padding={0}
                 >
                     <ArrowBackIcon
-                        className="arrowBack" onClick={() => router.back()}/>
+                        className="arrowBack" onClick={() => router.back()}
+                    />
                 </Grid>
                 <Grid item xs="auto">
                     <Typography
@@ -41,7 +42,7 @@ export default function createChat() {
                         container
                         paddingY={1}
                         borderRadius={2}
-                        className="main-colour"
+                        className="primary-colour"
                     >
                         <Grid item paddingLeft={2} xs="auto">
                             <SearchIcon className="icon" />
@@ -50,7 +51,7 @@ export default function createChat() {
                             <input
                                 type="text"
                                 placeholder="Search user by id"
-                                className="main-colour search"
+                                className="primary-colour search"
                                 onChange={(e) => setPartialId(
                                     e.currentTarget.value
                                 )}

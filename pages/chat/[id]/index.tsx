@@ -6,9 +6,11 @@ import { useChatroom } from "hooks/useChatroom";
 import { IChatMessage } from "types/ChatMessage.d";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
+import { IChatroomInfo } from "types/Chatroom.d";
+import axios from "axios";
 
 // const message = "Hello World! page";
 
@@ -18,6 +20,7 @@ export default function ChatPage() {
   const [url, setUrl] = useState<string>("");
   const chatroomId = parseInt(id as string);
   const user = useUserStore((state) => state.user);
+  const [chatInfo, setChatInfo] = useState<IChatroomInfo>();
   // const user = localStorage.getItem("username");
 
   const { loading, messages, members, sendMessage } = useChatroom(chatroomId);
@@ -27,6 +30,23 @@ export default function ChatPage() {
       setUrl(window.location.href);
     }
   }, []);
+
+  useEffect(() => {
+    async function getChat() {
+      const { data } =
+        await axios.post("/api/chat/getChatInfo", { id: chatroomId });
+      setChatInfo(data as IChatroomInfo)
+    }
+    getChat();
+  }, [id]);
+
+  console.log(chatInfo);
+
+  const chatName = chatInfo?.private ?
+    chatInfo.members.filter(
+      (member) => member.userId !== user?.userId
+    ).at(0)?.name ?? user?.name :
+    chatInfo?.name;
 
   const loadingMessage = "loading...";
 
@@ -40,15 +60,14 @@ export default function ChatPage() {
     //       ))
 
     // }
-    <>
+    <Box className="secondary-colour" height="100%">
       <ChatHeader
-        chatName={"Name"}
-        chatImage={""}
-        description={"This is a description"}
+        chatName={chatName!}
+        chatImage=""
         chatId={chatroomId}
       />
-      <InputBar chatId={chatroomId} userId={user?.userId as string} />
-    </>
+      {/* <InputBar chatId={chatroomId} userId={user?.userId as string} /> */}
+    </Box>
   );
 }
 

@@ -47,7 +47,7 @@ export default async function handler(
         description: chat.description,
         private: chat.private,
         creatorId: chat.creatorId,
-        chatUsers: users,
+        members: users,
         chatImage: chat.chatImage as string,
       };
 

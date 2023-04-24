@@ -1,13 +1,21 @@
-import { ReactElement, useEffect, useState } from "react"
-import { NextApiRequest, NextApiResponse } from "next";
+//import { ReactElement, useEffect, useState } from "react"
+//import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
 import Heading from "./Heading"
 
 const prisma = new PrismaClient();
 
 interface allChatInfo{
-    name : String,
+    name : String
     desc : String
+    creator : String
+    users : String
+}
+
+interface user{
+    name : String
+    role : String
+    
 }
 
 /*
@@ -36,21 +44,28 @@ async function getInfo(
      }
 }
 */
+
 async function getChatInfo(
-    id : number
+    idr : number
 ){
     try{
+
         const chat = await prisma.chatroom.findFirst({
-            where: { id: id }, })
+            where: { id: idr }, })
+
             var chatInfo: allChatInfo = {
                 name : chat!.name,
-                desc : chat!.description
+                desc : chat!.description,
+                creator : chat!.creatorId,
+                users : "chat!."
             }
             return chatInfo
     } catch{
         var chatInfo: allChatInfo = {
             name : "",
-            desc : ""
+            desc : "",
+            creator : "",
+            users : "",
         }
         return chatInfo
     }
@@ -64,4 +79,7 @@ async function App(id : number){
     <Heading title={(await chatInfo).desc}/>
     </>
 }
-export default App()
+
+//idk
+const id = 1
+export default App(id)

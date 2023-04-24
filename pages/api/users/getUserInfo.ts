@@ -8,12 +8,11 @@ import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
   try {
     const { username } = req.body;
     const user = await prisma.user.findFirst({
@@ -22,7 +21,7 @@ export default async function handler(
       },
       include: {
         chatrooms: true,
-      }
+      },
     });
 
     if (!user) {

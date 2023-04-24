@@ -1,19 +1,17 @@
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Team, User } from "@prisma/client";
 import { ITeam } from "types/analysis/Team.d";
-
-const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   try {
     const { teamID } = req.body;
     console.log(teamID);
     //let teamID = [1,2];
-
 
     if (!teamID) {
       res
@@ -24,18 +22,17 @@ export default async function handler(
 
     const results = await prisma.team.findMany({
       where: {
-        id: {in: teamID}
-      }
-    })
+        id: { in: teamID },
+      },
+    });
 
     if (results) {
-
       let teams: ITeam[] = [];
 
-      results.forEach(result => {
-        let team: ITeam = {teamID: result.id, name: result.name};
+      results.forEach((result) => {
+        let team: ITeam = { teamID: result.id, name: result.name };
         teams.push(team);
-      })      
+      });
 
       res.status(200).json(teams);
     } else {

@@ -1,16 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
   try {
     const { id } = req.body;
     if (!id) {
-      res.status(400).json({ message: "Required fields are missing in the request." });
+      res
+        .status(400)
+        .json({ message: "Required fields are missing in the request." });
     }
     const message = await prisma.message.findFirst({
       where: {

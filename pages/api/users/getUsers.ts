@@ -10,17 +10,17 @@ import { PrismaClient } from "@prisma/client";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
 import Users from "pages/users";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   try {
     const users = await prisma.user.findMany({
       include: {
         chatrooms: true,
-      }
+      },
     });
     if (users) {
       sendSuccessResponse(res, users);

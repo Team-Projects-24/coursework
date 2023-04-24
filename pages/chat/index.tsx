@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
  * @returns A component containinng the contents of the bottom portiion of the page.
  */
 
+
 function BottomMenu() {
   const user = useUserStore((state) => state.user);
   var count = 0;
@@ -102,5 +103,6 @@ export default function Chat() {
       </Grid>
       <BottomMenu />
     </Box>
+
   );
 }

@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   try {
     const errors: string[] = [];
     const { id, content, userId } = req.body;

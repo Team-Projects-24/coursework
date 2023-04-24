@@ -1,3 +1,6 @@
+
+import "../styles/RESET.css";
+
 import type { AppProps } from "next/app";
 import Layout from "../components/layout/Layout";
 import "../styles/globals.css";
@@ -17,8 +20,10 @@ import useUserStore from "../stores/userStore";
 import UserAvatar from "components/user/UserAvatar";
 import "styles/ChatMenu.css";
 import axios from "axios";
+import "styles/bubblestyle.css";
 
 import "../styles/tlmstyles.css";
+import "../styles/TaskForm.css";
 
 //page loading bar
 Router.events.on("routeChangeStart", nProgress.start);
@@ -49,7 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
     if (user && router.pathname === "/") {
       router.push("/dashboard");
     }
-  })
+  });
 
   //when alerts change, loop through them and display and remove them
   useEffect(() => {

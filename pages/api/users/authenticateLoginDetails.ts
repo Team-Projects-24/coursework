@@ -18,12 +18,12 @@ import bcrypt from "bcrypt";
  *
  */
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   const { username, password } = req.body;
 
   if (!username || !password) {

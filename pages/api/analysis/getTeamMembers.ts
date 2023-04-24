@@ -1,18 +1,15 @@
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Team, User } from "@prisma/client";
 import { IEmployee } from "types/analysis/Employee.d";
-
-const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
   try {
     const { teamID } = req.body;
     //let teamID = [1,2,3,4,5];
-
 
     if (!teamID) {
       res
@@ -23,32 +20,35 @@ export default async function handler(
 
     const members = await prisma.user.findMany({
       include: {
-        teams: true
-      }
-    })
+        teams: true,
+      },
+    });
 
     if (members) {
+      // Pre-process data so each member is placed in a sub-array for their team
+      let employees: IEmployee[][] = [];
 
-      // Pre-process data so each member is placed in a sub-array for their team      
-      let employees : IEmployee[][] = [];
-
-      for (let i = 0; i < teamID.length; i++){
+      for (let i = 0; i < teamID.length; i++) {
         // Create a sub-array for each team ID supplied
         let teamMembers: IEmployee[] = [];
-        members.forEach(member => {
-          member.teams.forEach(team => {
+        members.forEach((member) => {
+          member.teams.forEach((team) => {
             // Only return employees that belong to queried teams
-            if (teamID[i] === team.teamId){
-              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:teamID[i]}
+            if (teamID[i] === team.teamId) {
+              let employee: IEmployee = {
+                userID: member.userId,
+                name: member.name,
+                role: member.role,
+                teamID: teamID[i],
+              };
               teamMembers.push(employee);
             }
-          })
-        })
+          });
+        });
         employees.push(teamMembers);
       }
 
       console.log(employees);
-      
 
       res.status(200).json(employees);
     } else {

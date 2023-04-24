@@ -1,7 +1,17 @@
+
 import DataAnalyticsWindow from "components/data-analytics/tlmview/DataAnalyticsWindow";
 
-function Analytics () {
-    return (<DataAnalyticsWindow></DataAnalyticsWindow>);
+
+
+function Admin() {
+    return (
+        <div>
+
+            <DataAnalyticsWindow />
+        </div>
+
+
+    );
 }
 
-export default Analytics;
+export default Admin;

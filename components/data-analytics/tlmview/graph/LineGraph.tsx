@@ -84,7 +84,7 @@ export function LineGraph({ data }: Props) {
     for (let i = 0; i < data.length; i++) {
       // date from db comes in datetime format - I only want date
       let date = data?.[i]?.date;
-      if (!labels.includes(date.slice(0, 10))) {
+      if (!labels.includes(date?.slice(0, 10))) {
         labels.push(date?.slice(0, 10));
       }
       let name = data?.[i]?.id;

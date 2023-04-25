@@ -27,7 +27,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     async function getMessages() {
-      const { data } = await axios.post("/api/chat/getMessages", {
+      const { data } = await axios.post("/api/chat/getChatMessages", {
         id: chatroomId,
       });
       setMessages(data as IChatMessage[]);
@@ -35,10 +35,6 @@ export default function ChatPage() {
     }
     getMessages();
   }, [id]);
-
-  // const user = localStorage.getItem("username");
-
-  // const { loading, members, sendMessage } = useChatroom(chatroomId);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -66,23 +62,10 @@ export default function ChatPage() {
   const loadingMessage = "loading...";
 
   return (
-    //       {loading ? <Typography>loadingMessage</Typography> : <div></div>}
-    //       {
-    //         <p> No messages in this chat</p>
-    // }
-    //       { messages.map((message: IChatMessage) => (
-    //         <MessageContainer {message} />
-    //       ))
-
-    // }
-    <Box className="secondary-colour" height="100%">
+    <div>
       <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
-      <ChatContainer messages={messages} />
+      <ChatContainer messages={messages} userId={user?.userId as string} />
       <InputBar chatId={chatroomId} userId={user?.userId as string} />
-    </Box>
+    </div>
   );
-}
-
-function onSendMessage(message: string) {
-  //api call in here to send message
 }

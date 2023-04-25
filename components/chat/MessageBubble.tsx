@@ -1,21 +1,23 @@
+import { IChatMessage } from "types/ChatMessage.d";
+
 interface MessageBubbleProps {
-  content: string;
-  userId: string;
+  message: IChatMessage;
   sent: boolean;
 }
-const MessageBubble: React.FC<MessageBubbleProps> = ({
-  content,
-  userId,
-  sent,
-}) => {
-  const currentTime = new Date().toLocaleTimeString();
+
+function getChatDate(updatedAt: Date) {
+  return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
+}
+
+export default function MessageBubble({ message, sent }: MessageBubbleProps) {
+  //   const stringSentAt = message.sentAt.toLocaleTimeString();
+  console.log(message.sentAt);
   return (
     <div>
       <div className={`speech-bubble ${sent ? "sent" : "received"}`}>
-        <p>{content}</p>
-        <span className="time">{currentTime}</span>
+        <p>{message.content}</p>
+        <span className="time">{getChatDate(new Date(message.sentAt))}</span>
       </div>
     </div>
   );
-};
-export default MessageBubble;
+}

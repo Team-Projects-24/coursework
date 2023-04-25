@@ -51,10 +51,7 @@ export default function ChatHeader(props: ChatHeaderProps) {
           justifyContent="center"
           alignContent="center"
         >
-          <Typography
-            fontWeight="bold" fontSize={18}
-            color="#e9edef"
-          >
+          <Typography fontWeight="bold" fontSize={18} color="#e9edef">
             {props.chatName}
           </Typography>
         </Grid>

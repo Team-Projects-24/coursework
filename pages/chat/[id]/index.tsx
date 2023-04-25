@@ -6,7 +6,7 @@ import { useChatroom } from "hooks/useChatroom";
 import { IChatMessage } from "types/ChatMessage.d";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
 import { IChatroomInfo } from "types/Chatroom.d";
@@ -62,10 +62,16 @@ export default function ChatPage() {
   const loadingMessage = "loading...";
 
   return (
-    <div>
-      <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
-      <ChatContainer messages={messages} userId={user?.userId as string} />
-      <InputBar chatId={chatroomId} userId={user?.userId as string} />
-    </div>
+    <Grid container direction="column" height="100%" width="100%">
+      <Grid item>
+        <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
+      </Grid>
+      <Grid item>
+        <InputBar chatId={chatroomId} userId={user?.userId as string} />
+      </Grid>
+      <Grid item style={{ flexGrow: 1 }}>
+        <ChatContainer messages={messages} userId={user?.userId as string} />
+      </Grid>
+    </Grid>
   );
 }

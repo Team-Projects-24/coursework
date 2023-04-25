@@ -1,8 +1,8 @@
 /**
  * @author Olivia Gray
- * 
+ *
  * @description provides template for bar chart (for comparing individuals' and teams' performance)
- * 
+ *
  */
 
 import {
@@ -15,6 +15,10 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+
+interface Props {
+  data: any;
+}
 
 ChartJS.register(
   CategoryScale,
@@ -38,26 +42,41 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+function getRandomRGB() {
+  var num = Math.round(0xffffff * Math.random());
+  var r = num >> 16;
+  var g = (num >> 8) & 255;
+  var b = num & 255;
+  return "rgba(" + r + ", " + g + ", " + b + ", 0.5)";
+}
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => Math.random() * 1001),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: labels.map(() => Math.random() * 1001),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+const labels = ["Man Hours Set", "Man Hours Completed"];
 
-function BarGraph() {
-  return <Bar options={options} data={data} />;
+function BarGraph({ data }: Props) {
+  const buildDataset = () => {
+    console.log(data);
+    let groups = [];
+    for (let i = 0; i < data?.length; i++) {
+      let group = {
+        label: data?.[i]?.id,
+        data: [data?.[i]?.manHoursSet, data?.[i]?.manHoursCompleted],
+        backgroundColor: getRandomRGB(),
+      };
+      //console.log(group);
+      groups.push(group);
+    }
+
+    //console.log(groups);
+
+    let dataset = {
+      labels,
+      datasets: groups,
+    };
+
+    return dataset;
+  };
+
+  return <Bar options={options} data={buildDataset()} />;
 }
 
 export default BarGraph;

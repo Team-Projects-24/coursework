@@ -1,9 +1,9 @@
 /**
- * 
+ *
  * @author Olivia Gray
- * 
+ *
  * @description provides container for graphs and contains logic for selecting graph type
- * 
+ *
  */
 
 import BarGraph from "./BarGraph";
@@ -20,24 +20,25 @@ import styles from "styles/analytics.module.css";
 
 interface Props {
   graphState: number;
+  data: any;
 }
 
-function GraphContainer({ graphState }: Props) {
+function GraphContainer({ graphState, data }: Props) {
   // Decide what graph to display
   const graph =
     graphState === 0 ? (
-      <ProgressBar />
+      <ProgressBar data={data} />
     ) : graphState === 1 ? (
-      <BarGraph />
+      <BarGraph data={data} />
     ) : graphState === 2 ? (
-      <LineGraph />
+      <LineGraph data={data} />
     ) : (
       <EmptyGraph />
     );
 
   return (
     <div className="containerComp" style={{ height: "100%" }}>
-      <div className="graphContainer" >{graph}</div>
+      <div className="graphContainer">{graph}</div>
     </div>
   );
 }

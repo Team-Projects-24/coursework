@@ -30,6 +30,7 @@ model User {
   seenMessages   SeenBy[]
   leaderOf       Team[]
   PerformanceLog PerformanceLog[]
+  Task           Task[]
 }
 
 enum Role {
@@ -39,13 +40,13 @@ enum Role {
 }
 
 model Chatroom {
-  id          Int          @id @default(autoincrement())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   name        String
-  chatImage   String?      @db.VarChar(500)
+  chatImage   String?   @db.VarChar(500)
   description String
-  private     Boolean      @default(true)
+  private     Boolean   @default(true)
   creatorId   String
   members     User[]
   messages    Message[]
@@ -74,18 +75,17 @@ model SeenBy {
   @@id([messageId, userId])
 }
 
-
 model UserOnTeam {
   userId String
   user   User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  teamId Int
+  teamId String
   team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@id([userId, teamId])
 }
 
 model Team {
-  id        Int          @id @default(autoincrement())
+  id        String       @id @unique
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   name      String
@@ -93,16 +93,32 @@ model Team {
   members   UserOnTeam[]
   leader    User         @relation(fields: [leaderId], references: [userId])
   leaderId  String
+  Task      Task[]
 }
 
 model PerformanceLog {
   user              User     @relation(fields: [userId], references: [userId])
   userId            String
+  task              Task     @relation(fields: [taskId], references: [taskId])
+  taskId            Int
   date              DateTime @default(now())
   manHoursSet       Float
   manHoursCompleted Float
 
-  @@id([userId, date])
+  @@id([userId, taskId, date])
+}
+
+model Task {
+  taskId            Int              @id @default(autoincrement())
+  team              Team             @relation(fields: [teamId], references: [id])
+  teamId            String
+  user              User             @relation(fields: [userId], references: [userId])
+  userId            String
+  deadline          DateTime
+  name              String
+  manHoursCompleted Float
+  manHoursSet       Float
+  PerformanceLog    PerformanceLog[]
 }
 
 // for handling images, place image tag containing url within the body of the message, backend fetches image and displays within the message

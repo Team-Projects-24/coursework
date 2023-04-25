@@ -6,7 +6,7 @@
  *
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IEmployee } from "types/analysis/Employee.d";
 
 interface Props {
@@ -16,14 +16,14 @@ interface Props {
 }
 
 function UserList({ users, teamIndex, onSelectUser }: Props) {
-  const [selectedUsers, setSelectedUsers] = useState([false, false, false]);
+  //console.log(users.length);
+  //console.log(users?.length);
 
-  const onSelectTeam = () => {
-    // Deselect all users
-    setSelectedUsers([false, false, false]);
-  };
+  const [selectedUsers, setSelectedUsers] = useState(
+    new Array(users?.length).fill(false)
+  );
 
-  //console.log(users);
+  //console.log(selectedUsers);
 
   if (users) {
     return (
@@ -39,9 +39,11 @@ function UserList({ users, teamIndex, onSelectUser }: Props) {
             onClick={() => {
               // (un/)Highlight selected users
               let newState = [...selectedUsers];
+              //console.log(selectedUsers);
+              //console.log(newState);
               newState[index] = !newState[index];
               setSelectedUsers(newState);
-
+              //console.log(newState);
               // Deselect any selected teams and send selectedUsers to team component
               onSelectUser(teamIndex, newState);
             }}

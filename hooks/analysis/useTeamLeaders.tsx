@@ -2,16 +2,15 @@
  *
  * @author Olivia Gray
  *
- * @description Hook to initiate RESTful API request to get members of teams that a team leader manages
+ * @description Hook to initiate RESTful API request to get team IDs that a user manages
  *
  */
-
 
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export function useTeamMembers(id: number[]) {
-  const [members, setMembers] = useState();
+export function useTeamLeaders(id: String) {
+  const [teamIDs, setTeamIDs] = useState();
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
 
@@ -19,9 +18,11 @@ export function useTeamMembers(id: number[]) {
     async function fetchData() {
       setLoading(true);
       try {
-        const response = await axios.post("/api/analysis/getTeamMembers", { teamID: id });
+        const response = await axios.post("/api/analysis/getTeamIDs", {
+          leaderID: id,
+        });
         const { data } = response;
-        setMembers(data);
+        setTeamIDs(data);
       } catch (error) {
         console.error(error);
       }
@@ -32,5 +33,5 @@ export function useTeamMembers(id: number[]) {
 
   const reloadChat = () => setReload(reload + 1);
 
-  return { members, loading, reloadChat };
+  return { teamIDs, loading, reloadChat };
 }

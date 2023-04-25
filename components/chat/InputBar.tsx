@@ -35,44 +35,46 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   }
 
   return (
-    <FormControl>
-      <Grid
-        container
-        className="input-bar primary-colour"
-        height={"7.5%"}
-        padding={1}
-        width={"92%"}
-        border-top={1}
-        flexDirection={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        border={0}
-      >
-        <Grid width="5%" alignContent="center">
-          <Button fullWidth>
-            <AiOutlinePaperClip size={30} />
-          </Button>
+    <div>
+      <FormControl>
+        <Grid
+          container
+          className="input-bar primary-colour"
+          height={"7.5%"}
+          padding={1}
+          width={"92%"}
+          border-top={1}
+          flexDirection={"row"}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          border={0}
+        >
+          <Grid width="5%" alignContent="center">
+            <Button fullWidth>
+              <AiOutlinePaperClip size={30} />
+            </Button>
+          </Grid>
+          <Grid width="90%" alignContent={"center"}>
+            <TextField
+              id="message"
+              onChange={updateMessage}
+              variant="outlined"
+              value={message}
+              fullWidth
+              size="small"
+            />
+          </Grid>
+          <Grid width="5%" alignContent="center">
+            <Button
+              fullWidth
+              onClick={onSendMessage}
+              disabled={message ? false : true}
+            >
+              <AiOutlineSend size={30} />
+            </Button>
+          </Grid>
         </Grid>
-        <Grid width="90%" alignContent={"center"}>
-          <TextField
-            id="message"
-            onChange={updateMessage}
-            variant="outlined"
-            value={message}
-            fullWidth
-            size="small"
-          />
-        </Grid>
-        <Grid width="5%" alignContent="center">
-          <Button
-            fullWidth
-            onClick={onSendMessage}
-            disabled={message ? false : true}
-          >
-            <AiOutlineSend size={30} />
-          </Button>
-        </Grid>
-      </Grid>
-    </FormControl>
+      </FormControl>
+    </div>
   );
 }

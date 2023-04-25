@@ -12,7 +12,7 @@ export default function ChatContainer({
   userId,
 }: ChatContainerProps) {
   return (
-    <div className="chat-container">
+    <div className="chat-container flex: 1 margin:20px">
       <div className="messages">
         {messages.map(
           (message) =>

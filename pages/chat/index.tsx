@@ -3,66 +3,74 @@ import ChatIcon from "@mui/icons-material/Chat";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { Box, Grid, Typography } from "@mui/material";
-import MenuCard from "components/chat/MenuCard";
+import { Box, Grid } from "@mui/material";
+import ChatCard from "components/chat/menu/ChatCard";
 import useUserStore from "stores/userStore";
-import { Chatroom } from "@prisma/client";
+import { useRouter } from "next/router";
+
+/**
+ * @author Ade Osindero
+ * 
+ * @returns A component containinng the contents of the bottom portiion of the page.
+ */
+
 
 function BottomMenu() {
   const user = useUserStore((state) => state.user);
   var count = 0;
+
   return (
-    <>
+    <Grid
+      container
+      height="100%"
+      direction="column"
+      width="100%"
+      className="second-colour"
+    >
       <Grid
+        item
         container
-        height={"100%"}
-        className="second-colour"
-        direction={"column"}
+        margin={0}
+        paddingY={1}
+        justifyContent="center"
+        id="top-bar"
+        paddingX={2}
       >
         <Grid
-          item
           container
-          margin={0}
+          item
           paddingY={1}
-          justifyContent={"center"}
-          id="top-bar"
+          borderRadius={2}
+          className="primary-colour"
+          xs
         >
-          <Grid
-            container
-            item
-            paddingY={1}
-            borderRadius={3}
-            className="main-colour"
-            xs={11}
-          >
-            <Grid item paddingLeft={2} xs="auto">
-              <SearchIcon className="icon" />
-            </Grid>
-            <Grid item paddingLeft={4} xs={11}>
-              <input
-                type="search"
-                id="chat-search"
-                placeholder="Search or start new chat"
-                className="main-colour"
-              />
-            </Grid>
+          <Grid item paddingLeft={2} xs="auto">
+            <SearchIcon className="icon" />
           </Grid>
-          <Grid item paddingLeft={2} paddingTop={0.8}>
-            <Box padding={0.3} className="icon-container">
-              <FilterListIcon className="icon" />
-            </Box>
+          <Grid item paddingLeft={4} xs={11}>
+            <input
+              type="text"
+              placeholder="Search or start new chat"
+              className="primary-colour search"
+            />
           </Grid>
         </Grid>
-        {user?.chatrooms.map((chat: Chatroom) => (
-          <MenuCard key={count++} chatId={chat.id} userId={user.userId} />
-        ))}
+        <Grid item paddingLeft={2} paddingTop={0.8} xs="auto">
+          <Box padding={0.3} className="icon-container">
+            <FilterListIcon className="icon" />
+          </Box>
+        </Grid>
       </Grid>
-    </>
+      {user?.chatrooms.map((chat) => 
+        <ChatCard key={count++} chatId={chat.id} userId={user.userId} />
+      )}
+    </Grid>
   );
 }
 
 export default function Chat() {
   const [url, setUrl] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -71,22 +79,30 @@ export default function Chat() {
   }, []);
 
   return (
-    <>
-      <nav className="main-colour">
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item>
-            <div className="icon-container">
-              <ChatIcon className="icon" />
-            </div>
-          </Grid>
-          <Grid item>
-            <div className="icon-container">
-              <GroupsIcon className="icon" />
-            </div>
-          </Grid>
+    <Box className="second-color" height="100%">
+      <Grid
+        container justifyContent="center" paddingY={1.2}
+        className="primary-colour" columnSpacing={2} margin={0}
+        width="100%"
+      >
+        <Grid item>
+          <Box
+            className="icon-container"
+            onClick={() => {router.push("/chat/create-chat")}
+            }
+            padding={1.1}
+          >
+            <ChatIcon className="icon" />
+          </Box>
         </Grid>
-      </nav>
+        <Grid item>
+          <Box className="icon-container" padding={1.1}>
+            <GroupsIcon className="icon" />
+          </Box>
+        </Grid>
+      </Grid>
       <BottomMenu />
-    </>
+    </Box>
+
   );
 }

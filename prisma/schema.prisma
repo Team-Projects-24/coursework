@@ -23,7 +23,6 @@ model User {
   name           String
   password       String
   role           Role             @default(EMPLOYEE)
-  receivedInvite ChatInvite[]
   sentMessages   Message[]
   chatrooms      Chatroom[]
   profileImage   String?          @db.VarChar(500)
@@ -47,7 +46,6 @@ model Chatroom {
   chatImage   String?      @db.VarChar(500)
   description String
   private     Boolean      @default(true)
-  sentInvite  ChatInvite[]
   creatorId   String
   members     User[]
   messages    Message[]
@@ -76,14 +74,6 @@ model SeenBy {
   @@id([messageId, userId])
 }
 
-model ChatInvite {
-  chatId Int
-  chat   Chatroom @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  userId String
-  user   User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
-
-  @@id([chatId, userId])
-}
 
 model UserOnTeam {
   userId String

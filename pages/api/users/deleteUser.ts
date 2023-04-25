@@ -12,12 +12,12 @@ import { PrismaClient } from "@prisma/client";
 import Tasks from "pages/tasks";
 import Task from "components/tasks/Task";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
-  req: NextApiRequest, 
+  req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   const { username } = req.body; //task
   if (!username) sendBadRequestResponse(res, "No user provided");
 
@@ -27,7 +27,7 @@ export default async function handler(
       const user = await prisma.user.delete({
         where: {
           userId: username,
-          },
+        },
       });
 
       sendSuccessResponse(res, { deleted: true });

@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 interface ChatHeaderProps {
   chatImage: string;
   chatName: string;
-  description: string;
   chatId: number;
 }
 
@@ -21,27 +20,27 @@ export default function ChatHeader(props: ChatHeaderProps) {
     <>
       <Grid
         container
-        height={"7.5%"}
-        flexDirection={"row"}
-        alignItems={"center"}
-        borderBottom={2}
-        position={"fixed"}
+        alignItems="center"
+        position="fixed"
+        paddingY={1.2}
+        margin={0}
+        className="primary-colour"
       >
         <Grid
           item
           xs={0.5}
-          justifyContent={"center"}
-          display={"flex"}
-          justifyItems={"center"}
-          alignContent={"center"}
-          alignItems={"center"}
-          padding={1}
+          justifyContent="center"
+          display="flex"
+          justifyItems="center"
+          alignContent="center"
+          alignItems="center"
+          paddingX={5}
         >
           <Link href="#" onClick={handleClick}>
             <Avatar
               src={props.chatImage}
               alt={props.chatName}
-              className={"avatar"}
+              className="avatar"
             />
           </Link>
         </Grid>
@@ -49,21 +48,15 @@ export default function ChatHeader(props: ChatHeaderProps) {
           item
           flex={4}
           xs={5.25}
-          justifyContent={"center"}
-          alignContent={"center"}
-          padding={1}
+          justifyContent="center"
+          alignContent="center"
         >
-          <Typography>{props.chatName}</Typography>
-        </Grid>
-        <Grid
-          item
-          flex={4}
-          xs={5.25}
-          justifyContent={"center"}
-          alignContent={"center"}
-          padding={1}
-        >
-          <Typography>{props.description}</Typography>
+          <Typography
+            fontWeight="bold" fontSize={18}
+            color="#e9edef"
+          >
+            {props.chatName}
+          </Typography>
         </Grid>
       </Grid>
 

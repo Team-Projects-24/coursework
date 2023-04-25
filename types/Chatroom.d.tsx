@@ -11,7 +11,7 @@ export interface IChatroom {
   creatorId: string;
   sentInvites: IChatInvite[];
   chatMessages: IChatMessage[];
-  chatUsers: IUser[];
+  members: IUser[];
 }
 
 export interface IChatroomInfo {
@@ -21,5 +21,5 @@ export interface IChatroomInfo {
   private: boolean;
   creatorId: string;
   chatImage: string;
-  chatUsers: IUser[];
+  members: IUser[];
 }

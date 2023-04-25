@@ -38,9 +38,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
     <FormControl>
       <Grid
         container
-        className="input-bar"
-        position="fixed"
-        bottom={0}
+        className="input-bar primary-colour"
         height={"7.5%"}
         padding={1}
         width={"92%"}

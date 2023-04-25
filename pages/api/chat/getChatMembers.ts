@@ -5,12 +5,11 @@ import { IUser } from "types/User.d";
 import { IChatroom, IChatroomInfo } from "types/Chatroom.d";
 import { includes } from "lodash";
 
-const prisma = new PrismaClient();
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
   try {
     const { id } = req.body;
 

@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { IUser } from "types/User.d";
 import { IError } from "types/Error.d";
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
   try {
     const errors: string[] = [];
     const { id } = req.body;

@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 // import { IChat } from "types/Chat.d";
 import { IUser } from "types/User.d";
 import { IChatroom, IChatroomInfo } from "types/Chatroom.d";
 import { includes } from "lodash";
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
   try {
     const { id } = req.body;
 

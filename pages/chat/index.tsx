@@ -10,10 +10,9 @@ import { useRouter } from "next/router";
 
 /**
  * @author Ade Osindero
- * 
+ *
  * @returns A component containinng the contents of the bottom portiion of the page.
  */
-
 
 function BottomMenu() {
   const user = useUserStore((state) => state.user);
@@ -61,9 +60,9 @@ function BottomMenu() {
           </Box>
         </Grid>
       </Grid>
-      {user?.chatrooms.map((chat) => 
+      {user?.chatrooms.map((chat) => (
         <ChatCard key={count++} chatId={chat.id} userId={user.userId} />
-      )}
+      ))}
     </Grid>
   );
 }
@@ -81,15 +80,20 @@ export default function Chat() {
   return (
     <Box className="second-color" height="100%">
       <Grid
-        container justifyContent="center" paddingY={1.2}
-        className="primary-colour" columnSpacing={2} margin={0}
+        container
+        justifyContent="center"
+        paddingY={1.2}
+        className="primary-colour"
+        columnSpacing={2}
+        margin={0}
         width="100%"
       >
         <Grid item>
           <Box
             className="icon-container"
-            onClick={() => {router.push("/chat/create-chat")}
-            }
+            onClick={() => {
+              router.push("/chat/create-chat");
+            }}
             padding={1.1}
           >
             <ChatIcon className="icon" />
@@ -103,6 +107,5 @@ export default function Chat() {
       </Grid>
       <BottomMenu />
     </Box>
-
   );
 }

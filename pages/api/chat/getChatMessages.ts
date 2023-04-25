@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { User } from "@prisma/client";
 import { IUser } from "types/User.d";
 import { IError } from "types/Error.d";
+import { IChatMessage } from "types/ChatMessage.d";
 import prisma from "lib/prisma";
 
 export default async function handler(
@@ -35,16 +36,16 @@ export default async function handler(
       },
     });
     if (messages) {
-      const chatMessages = messages.map((message) => ({
-        id: message.id,
-        senderId: message.senderId,
-        sender: message.sender,
-        chatroomId: message.chatroomId,
-        content: message.content,
-        createdAt: message.sentAt,
-        updatedAt: message.updatedAt,
-      }));
-      res.status(200).json(chatMessages);
+      // const chatMessages: IChatMessage = messages.map((message) => ({
+      //   id: message.id,
+      //   senderId: message.senderId,
+      //   sender: message.sender,
+      //   chatroomId: message.chatroomId,
+      //   content: message.content,
+      //   createdAt: message.sentAt,
+      //   updatedAt: message.updatedAt,
+      // }));
+      res.status(200).json(messages);
     }
   } catch (error) {
     res.status(500).json({ message: "Server Error" });

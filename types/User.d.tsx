@@ -14,3 +14,10 @@ export interface IUser {
   role: "EMPLOYEE" | "MANAGER" | "TEAMLEADER";
   chatrooms: IChatroomInfo[];
 }
+
+export interface IUserInfo {
+  userId: string;
+  name: string;
+  profileImage: string;
+  role: "EMPLOYEE" | "MANAGER" | "TEAMLEADER";
+}

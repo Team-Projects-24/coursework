@@ -1,24 +1,23 @@
 //import { ReactElement, useEffect, useState } from "react"
 //import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
-import Heading from "./Heading"
+import Heading from "./Heading";
 
 //24/4/23
 //the users isnt working yet for the info page, plus zero styling
 
 const prisma = new PrismaClient();
 
-interface allChatInfo{
-    name : String
-    desc : String
-    creator : String
-    users : String
+interface allChatInfo {
+  name: String;
+  desc: String;
+  creator: String;
+  users: String;
 }
 
-interface user{
-    name : String
-    role : String
-    
+interface user {
+  name: String;
+  role: String;
 }
 
 /*
@@ -48,41 +47,43 @@ async function getInfo(
 }
 */
 
-async function getChatInfo(
-    idr : number
-){
-    try{
+async function getChatInfo(idr: number) {
+  try {
+    const chat = await prisma.chatroom.findFirst({
+      where: { id: idr },
+    });
 
-        const chat = await prisma.chatroom.findFirst({
-            where: { id: idr }, })
-
-            var chatInfo: allChatInfo = {
-                name : chat!.name,
-                desc : chat!.description,
-                creator : chat!.creatorId,
-                users : "chat!."
-            }
-            return chatInfo
-    } catch{
-        var chatInfo: allChatInfo = {
-            name : "",
-            desc : "",
-            creator : "",
-            users : "",
-        }
-        return chatInfo
-    }
+    var chatInfo: allChatInfo = {
+      name: chat!.name,
+      desc: chat!.description,
+      creator: chat!.creatorId,
+      users: "chat!.",
+    };
+    return chatInfo;
+  } catch {
+    var chatInfo: allChatInfo = {
+      name: "",
+      desc: "",
+      creator: "",
+      users: "",
+    };
+    return chatInfo;
+  }
 }
 
-async function App(id : number){
-    //NEED DYNAMIC ID VALUE
-    const chatInfo = getChatInfo(id)
-    return<>
-    <Heading title={(await chatInfo).name}/>
-    <Heading title={(await chatInfo).desc}/>
+async function App(id: number) {
+  //NEED DYNAMIC ID VALUE
+  const chatInfo = getChatInfo(id);
+  return (
+    <>
+      <div>
+        <Heading title={(await chatInfo).name} />
+        <Heading title={(await chatInfo).desc} />
+      </div>
     </>
+  );
 }
 
 //idk
-const id = 1
-export default App(id)
+const id = 1;
+export default App(id);

@@ -11,6 +11,7 @@ import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
 import { IChatroomInfo } from "types/Chatroom.d";
 import axios from "axios";
+import ChatContainer from "components/chat/ChatContainer";
 
 // const message = "Hello World! page";
 
@@ -21,9 +22,19 @@ export default function ChatPage() {
   const chatroomId = parseInt(id as string);
   const user = useUserStore((state) => state.user);
   const [chatInfo, setChatInfo] = useState<IChatroomInfo>();
-  // const user = localStorage.getItem("username");
+  const [messages, setMessages] = useState<IChatMessage[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const { loading, messages, members, sendMessage } = useChatroom(chatroomId);
+  useEffect(() => {
+    async function getMessages() {
+      const { data } = await axios.post("/api/chat/getChatMessages", {
+        id: chatroomId,
+      });
+      setMessages(data as IChatMessage[]);
+      setLoading(false);
+    }
+    getMessages();
+  }, [id]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -33,44 +44,28 @@ export default function ChatPage() {
 
   useEffect(() => {
     async function getChat() {
-      const { data } =
-        await axios.post("/api/chat/getChatInfo", { id: chatroomId });
-      setChatInfo(data as IChatroomInfo)
+      const { data } = await axios.post("/api/chat/getChatInfo", {
+        id: chatroomId,
+      });
+      setChatInfo(data as IChatroomInfo);
     }
     getChat();
   }, [id]);
 
   console.log(chatInfo);
 
-  const chatName = chatInfo?.private ?
-    chatInfo.members.filter(
-      (member) => member.userId !== user?.userId
-    ).at(0)?.name ?? user?.name :
-    chatInfo?.name;
+  const chatName = chatInfo?.private
+    ? chatInfo.members.filter((member) => member.userId !== user?.userId).at(0)
+        ?.name ?? user?.name
+    : chatInfo?.name;
 
   const loadingMessage = "loading...";
 
   return (
-    //       {loading ? <Typography>loadingMessage</Typography> : <div></div>}
-    //       {
-    //         <p> No messages in this chat</p>
-    // }
-    //       { messages.map((message: IChatMessage) => (
-    //         <MessageContainer {message} />
-    //       ))
-
-    // }
-    <Box className="secondary-colour" height="100%">
-      <ChatHeader
-        chatName={chatName!}
-        chatImage=""
-        chatId={chatroomId}
-      />
-      {/* <InputBar chatId={chatroomId} userId={user?.userId as string} /> */}
-    </Box>
+    <div>
+      <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
+      <ChatContainer messages={messages} userId={user?.userId as string} />
+      <InputBar chatId={chatroomId} userId={user?.userId as string} />
+    </div>
   );
-}
-
-function onSendMessage(message: string) {
-  //api call in here to send message
 }

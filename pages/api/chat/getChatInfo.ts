@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
-import { IUser } from "types/User.d";
+import { IUser, IUserInfo } from "types/User.d";
 import { IChatroomInfo } from "types/Chatroom.d";
 
 export default async function handler(
@@ -28,7 +28,7 @@ export default async function handler(
     });
 
     if (chat) {
-      const users: IUser[] = chat.members.map((user: User) => ({
+      const users: IUserInfo[] = chat.members.map((user: User) => ({
         userId: user.userId,
         name: user.name,
         profileImage: user.profileImage as string,

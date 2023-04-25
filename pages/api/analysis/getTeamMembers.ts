@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Team, User } from "@prisma/client";
+import { PrismaClient} from "@prisma/client";
 import { IEmployee } from "types/analysis/Employee.d";
 
 export default async function handler(
@@ -9,7 +9,6 @@ export default async function handler(
   const prisma = new PrismaClient();
   try {
     const { teamID } = req.body;
-    //let teamID = [1,2,3,4,5];
 
     if (!teamID) {
       res
@@ -46,9 +45,8 @@ export default async function handler(
           });
         });
         employees.push(teamMembers);
-      }
+      }      
 
-      console.log(employees);
 
       res.status(200).json(employees);
     } else {

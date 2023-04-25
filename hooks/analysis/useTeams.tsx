@@ -1,3 +1,11 @@
+/**
+ *
+ * @author Olivia Gray
+ *
+ * @description Hook to initiate RESTful API request to get teams that a user manages
+ *
+ */
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -23,7 +31,7 @@ export function useTeams(id: number[]) {
       setLoading(false);
     }
     fetchData();
-  }, [reload]);
+  }, []);
 
   const reloadChat = () => setReload(reload + 1);
 

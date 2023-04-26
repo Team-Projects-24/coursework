@@ -49,16 +49,6 @@ export default function ChatPage() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   async function getChat() {
-  //     const { data } = await axios.post("/api/chat/getChatInfo", {
-  //       id: chatroomId,
-  //     });
-  //     setChatInfo(data as IChatroomInfo);
-  //   }
-  //   getChat();
-  // }, [id]);
-
   console.log(chatData);
 
   const chatName = chatData?.private
@@ -70,18 +60,15 @@ export default function ChatPage() {
 
   return (
     <Grid container direction="column" height="100%" width="100%">
-      <Grid item>
-        <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
-      </Grid>
-      <Grid item>
-        <InputBar chatId={chatroomId} userId={user?.userId as string} />
-      </Grid>
+      <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
+
       <Grid item style={{ flexGrow: 1 }}>
         <ChatContainer
           messages={chatData?.messages as unknown as Message[]}
           userId={user?.userId as string}
         />
       </Grid>
+      <InputBar chatId={chatroomId} userId={user?.userId as string} />
     </Grid>
   );
 }

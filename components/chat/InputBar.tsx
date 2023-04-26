@@ -8,11 +8,21 @@ import useUserStore from "stores/userStore";
 import router, { Router } from "next/router";
 import { ICreateChatMessage } from "types/ChatMessage.d";
 
+/**
+ * @author Ben Pritchard
+ *
+ * @description Implements a react component which serves as the input bar for the chatroom.
+ * @param chatId - The id of the current chatroom.
+ * @param userId - The id of the current user.
+ * @returns A react component (the input bar) which allows the user to send messages.
+ * @todo Implement the ability to send images and files.
+ *
+ */
+
 interface IInputBarProps {
   userId: string;
   chatId: number;
 }
-
 export default function InputBar({ chatId, userId }: IInputBarProps) {
   const [message, setMessage] = useState<string>("");
 
@@ -39,38 +49,45 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   }
 
   return (
-    <FormControl>
+    <Grid
+      item
+      container
+      margin={0}
+      paddingY={1}
+      justifyContent={"center"}
+      alignContent={"center"}
+      paddingX={2}
+      id="input-bar"
+    >
       <Grid
         container
-        className="input-bar"
-        position="fixed"
-        bottom={0}
-        height={"7.5%"}
-        padding={1}
-        width={"92%"}
-        border-top={1}
-        flexDirection={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        border={0}
+        item
+        alignContent={"center"}
+        paddingY={1}
+        borderRadius={2}
+        xs
+        justifyContent={"center"}
       >
-        <Grid width="5%" alignContent="center">
+        <Grid item xs="auto">
           <Button fullWidth>
             <AiOutlinePaperClip size={30} />
           </Button>
         </Grid>
-        <Grid width="90%" alignContent={"center"}>
+        <Grid item xs={9}>
           <TextField
             id="message"
             onChange={updateMessage}
-            onKeyPress={(e) => {if (e.key === "Enter") onSendMessage()}}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") onSendMessage();
+            }}
             variant="outlined"
             value={message}
             fullWidth
             size="small"
           />
         </Grid>
-        <Grid width="5%" alignContent="center">
+
+        <Grid xs="auto" alignContent="center">
           <Button
             fullWidth
             onClick={onSendMessage}
@@ -80,6 +97,6 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
           </Button>
         </Grid>
       </Grid>
-    </FormControl>
+    </Grid>
   );
 }

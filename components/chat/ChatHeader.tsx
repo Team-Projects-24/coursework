@@ -3,6 +3,16 @@ import axios from "axios";
 import { resolveHref } from "next/dist/shared/lib/router/router";
 import { useRouter } from "next/router";
 
+/**
+ * @author Ben Pritchard
+ *
+ * @description Implements react component which serves to display the header of the chat.
+ * @param chatImage - The image of the chat.
+ * @param chatName - The name of the chat.
+ * @param chatId - The id of the chat.
+ * @returns A react component (the header) which displays the name and image of the chat.
+ */
+
 interface ChatHeaderProps {
   chatImage: string;
   chatName: string;

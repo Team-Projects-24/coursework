@@ -9,11 +9,7 @@
   - Added the required column `taskId` to the `PerformanceLog` table without a default value. This is not possible if the table is not empty.
 
 */
--- DropForeignKey
-ALTER TABLE `ChatInvite` DROP FOREIGN KEY `ChatInvite_chatId_fkey`;
 
--- DropForeignKey
-ALTER TABLE `ChatInvite` DROP FOREIGN KEY `ChatInvite_userId_fkey`;
 
 -- DropForeignKey
 ALTER TABLE `UserOnTeam` DROP FOREIGN KEY `UserOnTeam_teamId_fkey`;
@@ -32,9 +28,6 @@ ALTER TABLE `Team` DROP PRIMARY KEY,
 ALTER TABLE `UserOnTeam` DROP PRIMARY KEY,
     MODIFY `teamId` VARCHAR(191) NOT NULL,
     ADD PRIMARY KEY (`userId`, `teamId`);
-
--- DropTable
-DROP TABLE `ChatInvite`;
 
 -- CreateTable
 CREATE TABLE `Task` (

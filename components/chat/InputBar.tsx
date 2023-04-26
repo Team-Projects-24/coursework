@@ -6,10 +6,11 @@ import axios from "axios";
 import { IUser } from "types/User.d";
 import useUserStore from "stores/userStore";
 import router, { Router } from "next/router";
+import { ICreateChatMessage } from "types/ChatMessage.d";
 
 interface IInputBarProps {
   userId: string;
-  chatId: Number;
+  chatId: number;
 }
 
 export default function InputBar({ chatId, userId }: IInputBarProps) {
@@ -23,11 +24,14 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
     if (message === "") return;
     console.log(chatId, message, userId);
     try {
-      await axios.post("/api/chat/sendMessage", {
-        id: chatId,
+      const newMessage: ICreateChatMessage = {
         content: message,
-        userId: userId,
-      });
+        senderId: userId,
+        chatroomId: chatId,
+      };
+      console.log(newMessage);
+
+      await axios.post("/api/chat/message/", newMessage);
       setMessage("");
     } catch (err) {
       console.log(err);

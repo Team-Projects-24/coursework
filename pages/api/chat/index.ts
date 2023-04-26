@@ -1,26 +1,28 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { User } from "@prisma/client";
+import { Chatroom, User } from "@prisma/client";
+import { ICreateChatroom } from "types/Chatroom.d";
 import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { room } = req.body;
+  switch (req.method) {
+    case "POST":
+      return handlePost(room, res);
+    default:
+      res.setHeader("Allow", ["POST"]);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
+
+// POST /api/chat
+async function handlePost(room: ICreateChatroom, res: NextApiResponse) {
   try {
-    const { creatorId, participantId } = req.body;
-
     const chat = await prisma.chatroom.create({
-      data: {
-        private: true,
-        members: {
-          connect: [{ userId: creatorId }, { userId: participantId }],
-        },
-        creatorId: creatorId,
-        description: "A chat between users.",
-        name: `${creatorId}-${participantId}`,
-      },
+      data: room,
     });
-
     if (chat) {
       res.status(200).json(chat);
     } else {

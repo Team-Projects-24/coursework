@@ -1,7 +1,8 @@
+import { Message } from "@prisma/client";
 import { IChatMessage } from "types/ChatMessage.d";
 
 interface MessageBubbleProps {
-  message: IChatMessage;
+  message: Message;
   sent: boolean;
 }
 

@@ -15,6 +15,7 @@ export default async function handle(
   }
 }
 
+// GET /api/chat/:id
 async function handleGet(id: number, res: NextApiResponse) {
   try {
     if (!id) {

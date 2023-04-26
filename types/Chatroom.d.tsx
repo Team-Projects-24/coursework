@@ -24,8 +24,8 @@ export interface IChatroomInfo {
 
 export interface ICreateChatroom {
   name: string;
-  description: string;
   private: boolean;
   creatorId: string;
   chatImage: string;
+  members: string[];
 }

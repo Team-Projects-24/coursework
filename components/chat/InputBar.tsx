@@ -21,7 +21,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   async function onSendMessage() {
     //api call in here to send message
     if (message === "") return;
-    // console.log(chatId, message, userId);
+    console.log(chatId, message, userId);
     try {
       await axios.post("/api/chat/sendMessage", {
         id: chatId,
@@ -59,7 +59,6 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
           <TextField
             id="message"
             onChange={updateMessage}
-            onKeyPress={(e) => {if (e.key === "Enter") onSendMessage()}}
             variant="outlined"
             value={message}
             fullWidth

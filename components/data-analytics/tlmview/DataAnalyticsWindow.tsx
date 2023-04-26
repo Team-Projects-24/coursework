@@ -1,6 +1,6 @@
 /**
  *
- * @author Olivia Gray
+ * @author Olivia Gray, Euan Hall (Individual view)
  *
  * @description puts all tlm components together to create the view for team leaders and managers
  *
@@ -10,6 +10,10 @@ import { use, useEffect, useState } from "react";
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
+import useUserStore from "stores/userStore";
+import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
+import { BarCard } from "components/dashboard/BarCard";
+import { ResponsivePie } from "@nivo/pie";
 import axios from "axios";
 import { getLinearProgressUtilityClass } from "@mui/material";
 import { ITeam } from "types/analysis/Team.d";
@@ -27,9 +31,9 @@ function DataAnalyticsWindow() {
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
+  
 
   // Get the currently logged in user
-
   // DYNAMICALLY LOADING THE PAGE
   useEffect(() => {
     loadData();
@@ -229,26 +233,182 @@ function DataAnalyticsWindow() {
     }
   };
 
-  return (
-    <div className="tlm container text-center">
-      <div className="row">
-        <div className="col">
-          <TeamUserList
-            teams={teams ? teams : []}
-            users={members ? members : []}
-            onSelectTeamUser={handleTeamUser}
-            onSendTeamUser={handleRecievedTeamUser}
-          />
-        </div>
-        <div className="col">
-          <GraphContainer graphState={graphState} data={performanceData} />
-          <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
-        </div>
-      </div>
-      {/* <button onClick={}> Go to Admin Page </button> */}
-    </div>
-
+  return (<div className="tlm container text-center">
+		      <div className="row">
+			<div className="col">
+			  <TeamUserList
+			    teams={teams ? teams : []}
+			    users={members ? members : []}
+			    onSelectTeamUser={handleTeamUser}
+			    onSendTeamUser={handleRecievedTeamUser}
+			  />
+			</div>
+			<div className="col">
+			  <GraphContainer graphState={graphState} data={performanceData} />
+			  <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
+			</div>
+		      </div>
+		</div>
   );
 }
 
-export default DataAnalyticsWindow;
+function IndividualUserView() {
+   const { user } = useUserStore();
+   const [performanceData, setPerformanceData] = useState<any | null>(null);
+   const pieChartData = [
+     {
+       id: "To-do",
+       label: "To-do",
+       value: 20,
+       color: "hsl(339, 70%, 50%)",
+     },
+     {
+       id: "in-Progress",
+       label: "in-Progress",
+       value: 10,
+       color: "hsl(330, 70%, 50%)",
+     },
+     {
+       id: "Completed",
+       label: "Completed",
+       value: 4,
+       color: "hsl(299, 70%, 50%)",
+     },
+   ];
+   
+   useEffect(() => {
+    loadIndividualProgress();
+  }, []);
+  
+   async function loadIndividualProgress() {
+      axios
+        .post("api/analysis/getUserPerformanceMetrics", {
+          userIDs: user.userId,
+        })
+        .then((response) => {
+        	console.log(response.data);
+          setPerformanceData(response.data);
+        }); 
+   }
+   
+   function updatePieChart() {}
+   function updateTaskList() {}
+   
+   function checkScreenSize(): boolean {
+     let isScreenLarge = true; // Assume screen is large by default
+     console.log("HERE");
+     const updateScreenSize = () => {
+       const screenWidth = window.innerWidth;
+       if (screenWidth < 620) {
+         isScreenLarge = false;
+       } else {
+         isScreenLarge = true;
+       }
+     };
+     updateScreenSize(); // Call initially to set the initial screen size
+     window.addEventListener("resize", updateScreenSize); // Listen for resize events and update the screen size
+     return isScreenLarge;
+   }
+   
+   return (
+   <div id="UserView" className="flex w-full">
+   	<div className="overflow-x-auto w-full mobile-only:pb-[4rem]"> 
+	  <div>
+	   <div className="md:flex flex-row py-4 shadow-lg justify-between">
+	     <h1 className="px-4 text-2xl ">{user?.name}'s Task list</h1>
+	   </div>
+	    	{performanceData?.map((data) => (
+	    		<Box className="flex desktop-only:flex-row py-2 px-4 w-full mobile-only:flex-col">
+        			<BarCard title={"Task"} total={data.manHoursSet} completed={data.manHoursCompleted} totalLabel={"Total"} isHours={true} />
+        		</Box>
+      	    	))}
+	  </div> 
+        </div>
+        <Card elevation={2} className=" p-2 w-1/2 h-1/2 text-center mobile-only:w-[100%]" sx={{ m: 2, height: 300, overflow: "auto" }}>
+		<CardContent sx={{ height: 420, width: "100%", overflowX: "hidden", scrollBehavior: "auto",}}>
+			<Typography className="font-semibold text-left" sx={{ fontSize: 20 }}> Tasks Overview </Typography>
+			<Divider />
+			<ResponsivePie
+				  enableArcLinkLabels={true}
+				  data={pieChartData}
+				  margin={{ top: 20, right: 40, bottom: 100, left: 20 }}
+				  innerRadius={0.4}
+				  padAngle={0.7}
+				  cornerRadius={1}
+				  activeOuterRadiusOffset={1}
+				  colors={{ scheme: "nivo" }}
+				  borderWidth={0.5}
+				  borderColor={{
+				    from: "color",
+				    modifiers: [["darker", 0.2]],
+				  }}
+				  arcLinkLabelsSkipAngle={1}
+				  arcLinkLabelsTextColor="#333333"
+				  arcLinkLabelsThickness={2}
+				  arcLinkLabelsColor={{ from: "color" }}
+				  arcLabelsSkipAngle={10}
+				  arcLabelsTextColor={{
+				    from: "color",
+				    modifiers: [["darker", 2]],
+				  }}
+			/>
+	  </CardContent>
+     </Card>
+  </div>
+	);
+}
+
+export default function AnalyticPage() {
+   const { user } = useUserStore(); 
+   
+   
+   const userView = () => {
+   	let e = document.getElementById('UserView');
+   	e.style.display = 'flex';
+   	
+   	e = document.getElementById('TeamView');
+   	if(e != null) {e.style.display = 'none'; }
+   	
+   	e = document.getElementById('ManagerView');
+   	if(e != null) {e.style.display = 'none'; }
+   }
+   
+   const teamView = () => {
+	let e = document.getElementById('UserView');
+   	if(e != null) {e.style.display = 'none';}
+   	
+   	e = document.getElementById('TeamView');
+   	if(e != null) {e.style.display = 'flex w-full';}
+   	
+   	e = document.getElementById('ManagerView');
+   	if(e != null) {e.style.display = 'none';}
+   }
+   
+   const managerView = () => {
+	let e = document.getElementById('UserView');
+   	if(e != null) {e.style.display = 'none';}
+   	
+   	e = document.getElementById('TeamView');
+   	if(e != null) {e.style.display = 'none';}
+   	
+   	e = document.getElementById('ManagerView');
+   	if(e != null) {e.style.display = 'flex';}
+   }
+   
+  return (
+  	<div className="flex h-[calc(100vh-4rem)]">
+	  	<div className="mobile-only:absolute h-full">
+		  	<div id="data-left-nav" className="movbile-only:hidden relative h-full bg-dark-light text-white flex flex-col w.44 p-2">
+		  		<div className="mobile-only:hidden flex rounded-r-lg items-center false"><a className="px-4 py-2" href="#" onClick={userView}>{user?.name}'s Progress</a></div>
+		  		<div className="mobile-only:hidden flex rounded-r-lg items-center false"><a className="px-4 py-2" href="#" onClick={teamView}>Team</a></div>
+		  		<div className="mobile-only:hidden flex rounded-r-lg items-center false"><a className="px-4 py-2" href="#" onClick={managerView}>Manager</a></div>
+		  	</div>
+		</div>
+		
+		    <IndividualUserView />
+		    <div id="ManagerView" className="none">
+		    	<DataAnalyticsWindow />
+		    </div>
+	</div>
+  );
+}

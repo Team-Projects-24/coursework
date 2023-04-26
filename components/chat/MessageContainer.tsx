@@ -16,7 +16,6 @@ export default function MessageContainer(props: IChatMessage) {
       </Grid>
       <div>
         <DialogContent>{sentAt.toDateString()}</DialogContent>
-        
       </div>
     </>
   );

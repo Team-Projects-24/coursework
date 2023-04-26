@@ -34,13 +34,13 @@ export default function ChatPage() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    async function getMessages() {
+    async function getData() {
       console.log("/api/chat/" + chatroomId);
       const { data } = await axios.get("/api/chat/" + chatroomId);
       setChatData(data);
       setLoading(false);
     }
-    getMessages();
+    getData();
   }, [id]);
 
   useEffect(() => {

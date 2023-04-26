@@ -60,15 +60,18 @@ export default function ChatPage() {
 
   return (
     <Grid container direction="column" height="100%" width="100%">
-      <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
-
-      <Grid item style={{ flexGrow: 1 }}>
+      <Grid item container>
+        <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
+      </Grid>
+      <Grid item style={{ flexGrow: 12 }}>
         <ChatContainer
           messages={chatData?.messages as unknown as Message[]}
           userId={user?.userId as string}
         />
       </Grid>
-      <InputBar chatId={chatroomId} userId={user?.userId as string} />
+      <Grid item container style={{ flexGrow: 0.5 }}>
+        <InputBar chatId={chatroomId} userId={user?.userId as string} />
+      </Grid>
     </Grid>
   );
 }

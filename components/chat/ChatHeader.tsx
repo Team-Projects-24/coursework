@@ -31,7 +31,6 @@ export default function ChatHeader(props: ChatHeaderProps) {
       <Grid
         container
         alignItems="center"
-        position="fixed"
         paddingY={1.2}
         margin={0}
         className="primary-colour"

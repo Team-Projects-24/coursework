@@ -8,6 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { room } = req.body;
+
   switch (req.method) {
     case "POST":
       return handlePost(room, res);
@@ -21,7 +22,19 @@ export default async function handler(
 async function handlePost(room: ICreateChatroom, res: NextApiResponse) {
   try {
     const chat = await prisma.chatroom.create({
-      data: room,
+      data: {
+        name: room.name,
+        creatorId: room.creatorId,
+        description: "",
+        private: room.private,
+        chatImage: room.chatImage,
+        members: {
+          connect: [
+            { userId: room.creatorId },
+            ...room.members.map((memberId) => ({ userId: memberId })),
+          ],
+        },
+      },
     });
     if (chat) {
       res.status(200).json(chat);

@@ -43,7 +43,7 @@ function DataAnalyticsWindow() {
   async function loadData() {
     axios
       .post("api/analysis/getTeamIDs", {
-        leaderID: "Olivia",
+        leaderID: "Liv",
       })
       .then((responseIDs) => {
         axios
@@ -247,7 +247,6 @@ function DataAnalyticsWindow() {
       </div>
       {/* <button onClick={}> Go to Admin Page </button> */}
     </div>
-
   );
 }
 

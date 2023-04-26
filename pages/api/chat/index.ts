@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Chatroom, User } from "@prisma/client";
+import { ICreateChatroom } from "types/Chatroom.d";
 import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const room = req.body;
+  const { room } = req.body;
   switch (req.method) {
     case "POST":
       return handlePost(room, res);
@@ -16,7 +17,8 @@ export default async function handler(
   }
 }
 
-async function handlePost(room: Chatroom, res: NextApiResponse) {
+// POST /api/chat
+async function handlePost(room: ICreateChatroom, res: NextApiResponse) {
   try {
     const chat = await prisma.chatroom.create({
       data: room,

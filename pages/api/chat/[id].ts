@@ -5,7 +5,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id } = req.body;
+  const id = parseInt(req.query.id as string);
   switch (req.method) {
     case "GET":
       return handleGet(id, res);
@@ -15,6 +15,7 @@ export default async function handle(
   }
 }
 
+// GET /api/chat/:id
 async function handleGet(id: number, res: NextApiResponse) {
   try {
     if (!id) {

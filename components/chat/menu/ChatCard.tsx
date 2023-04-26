@@ -16,6 +16,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import GroupIcon from "@mui/icons-material/Group";
 import { IChatMenu } from "types/ChatMenu.d";
 import { useRouter } from "next/router";
+import { Chatroom, SeenBy, User } from "@prisma/client";
+import { Message } from "@prisma/client";
 
 /**
  * @author Ade Osindero
@@ -24,8 +26,9 @@ import { useRouter } from "next/router";
  * @returns A formatted string depiction of the last time the chat was updated.
  */
 function getChatDate(updatedAt: Date) {
-  const dateDifference =
-    Math.floor(((new Date()).getTime() - updatedAt.getTime())/86400000);
+  const dateDifference = Math.floor(
+    (new Date().getTime() - updatedAt.getTime()) / 86400000
+  );
 
   if (dateDifference === 0) {
     return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
@@ -47,7 +50,11 @@ function getChatDate(updatedAt: Date) {
  * @returns A react component which formats the display of the last message sent in the chat.
  */
 function getChatLastMessage(
-  lastMessage: IChatMessage | undefined,
+  lastMessage:
+    | (Message & {
+        seenBy: SeenBy[];
+      })
+    | null,
   isPrivate: boolean,
   id: string
 ) {
@@ -117,40 +124,50 @@ export default function ChatCard({
   chatId: number;
   userId: string;
 }) {
-  const [lastMessage, setLastMessage] = useState<IChatMessage>();
-  const [chat, setChat] = useState<IChatMenu>();
+  const [lastMessage, setLastMessage] = useState<
+    (Message & { seenBy: SeenBy[] }) | null
+  >(null);
+  const [chat, setChat] = useState<
+    | (Chatroom & {
+        members: User[];
+        messages: Message[];
+      })
+    | null
+  >();
   const router = useRouter();
 
   useEffect(() => {
     async function getData() {
-      const { data: chat } = await axios.post("/api/chat/getAllChatInfo", {
-        id: chatId,
-      });
-      setChat(chat as IChatMenu);
+      try {
+        const chatResponse = await axios.get("/api/chat/" + chatId);
+        setChat(chatResponse.data);
 
-      if (chat.messages.length) {
-        const { data: lastMessage } = await axios.post(
-          "/api/chat/getChatMessage",
-          { id: chat.messages.at(-1)!.id }
-        );
-        setLastMessage(lastMessage as IChatMessage);
+        if (chatResponse.data.messages.length) {
+          const lastId = chatResponse.data.messages.at(-1)!.id;
+          const messageResponse = await axios.get(
+            "/api/chat/message/" + lastId
+          );
+          setLastMessage(messageResponse.data);
+        }
+      } catch (error) {
+        console.error("Error fetching chat data:", error);
       }
     }
     getData();
-  }, []);
+  }, [chatId]);
 
-  if (!chat || chat.private && !chat.messages.length) {
+  if (!chat || (chat.private && !chat.messages.length)) {
     return <></>;
   }
 
-  const chatTitle = chat.private ?
-    chat.members.filter((member) => member.userId !== userId).pop()?.name ??
-    `${chat.members.at(0)?.name} (You)` :
-    chat.name;
+  const chatTitle = chat.private
+    ? chat.members.filter((member) => member.userId !== userId).pop()?.name ??
+      `${chat.members.at(0)?.name} (You)`
+    : chat.name;
 
   const enterChat = () => {
     router.push(`/chat/${chat.id}`);
-  }
+  };
 
   return (
     <>

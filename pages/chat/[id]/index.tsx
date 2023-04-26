@@ -12,6 +12,7 @@ import ChatHeader from "components/chat/ChatHeader";
 import { IChatroomInfo } from "types/Chatroom.d";
 import axios from "axios";
 import ChatContainer from "components/chat/ChatContainer";
+import { Chatroom, Message, User } from "@prisma/client";
 
 // const message = "Hello World! page";
 
@@ -21,16 +22,22 @@ export default function ChatPage() {
   const [url, setUrl] = useState<string>("");
   const chatroomId = parseInt(id as string);
   const user = useUserStore((state) => state.user);
-  const [chatInfo, setChatInfo] = useState<IChatroomInfo>();
-  const [messages, setMessages] = useState<IChatMessage[]>([]);
+  // const [chatInfo, setChatInfo] = useState<IChatroomInfo>();
+  // const [messages, setMessages] = useState<IChatMessage[]>([]);
+  const [chatData, setChatData] = useState<
+    | (Chatroom & {
+        members: User[];
+        messages: Message[];
+      })
+    | null
+  >();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function getMessages() {
-      const { data } = await axios.post("/api/chat/getChatMessages", {
-        id: chatroomId,
-      });
-      setMessages(data as IChatMessage[]);
+      console.log("/api/chat/" + chatroomId);
+      const { data } = await axios.get("/api/chat/" + chatroomId);
+      setChatData(data);
       setLoading(false);
     }
     getMessages();
@@ -42,22 +49,22 @@ export default function ChatPage() {
     }
   }, []);
 
-  useEffect(() => {
-    async function getChat() {
-      const { data } = await axios.post("/api/chat/getChatInfo", {
-        id: chatroomId,
-      });
-      setChatInfo(data as IChatroomInfo);
-    }
-    getChat();
-  }, [id]);
+  // useEffect(() => {
+  //   async function getChat() {
+  //     const { data } = await axios.post("/api/chat/getChatInfo", {
+  //       id: chatroomId,
+  //     });
+  //     setChatInfo(data as IChatroomInfo);
+  //   }
+  //   getChat();
+  // }, [id]);
 
-  console.log(chatInfo);
+  console.log(chatData);
 
-  const chatName = chatInfo?.private
-    ? chatInfo.members.filter((member) => member.userId !== user?.userId).at(0)
+  const chatName = chatData?.private
+    ? chatData.members.filter((member) => member.userId !== user?.userId).at(0)
         ?.name ?? user?.name
-    : chatInfo?.name;
+    : chatData?.name;
 
   const loadingMessage = "loading...";
 
@@ -70,7 +77,10 @@ export default function ChatPage() {
         <InputBar chatId={chatroomId} userId={user?.userId as string} />
       </Grid>
       <Grid item style={{ flexGrow: 1 }}>
-        <ChatContainer messages={messages} userId={user?.userId as string} />
+        <ChatContainer
+          messages={chatData?.messages as unknown as Message[]}
+          userId={user?.userId as string}
+        />
       </Grid>
     </Grid>
   );

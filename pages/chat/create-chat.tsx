@@ -9,7 +9,7 @@ import ProfileWrack from "components/chat/menu/ProfileWrack";
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 import { ICreateChatroom } from "types/Chatroom.d";
-import Members from "components/chat-info/Members";
+import Members from "components/chat/info/Members";
 
 export default function createChat() {
   const [partialId, setPartialId] = useState<string>("");

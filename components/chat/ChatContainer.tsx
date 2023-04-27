@@ -22,7 +22,7 @@ export default function ChatContainer({
   messages,
   userId,
 }: ChatContainerProps) {
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -83,7 +83,7 @@ function DataAnalyticsWindow() {
           teamIDs: teamInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
     } else if (userInputs.length === 1 && !timeFrame) {
@@ -133,7 +133,7 @@ function DataAnalyticsWindow() {
           teamIDs: teamInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
     } else if (userInputs.length > 0 && timeFrame) {
@@ -145,7 +145,7 @@ function DataAnalyticsWindow() {
           userIDs: userInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
     } else {

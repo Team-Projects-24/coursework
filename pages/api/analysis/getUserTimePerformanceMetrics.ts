@@ -27,7 +27,7 @@ export default async function handler(
       return;
     }
 
-    const results = await prisma.$queryRaw<ITimeFramePerformance[]>`select userId as "id", date, sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from PerformanceLog group by id, date having id in (${Prisma.join(userIDs)});`;
+    const results = await prisma.$queryRaw<ITimeFramePerformance[]>`select userId as "id", date, sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by userId, date having id in (${Prisma.join(userIDs)}) order by date asc;`;
 
     //console.log(results);
     if (results) {    

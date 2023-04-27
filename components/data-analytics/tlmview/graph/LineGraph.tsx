@@ -45,26 +45,6 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const dataset = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => Math.random() * 1001),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: labels.map(() => Math.random() * 1001),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
-
 function getRandomRGB() {
   var num = Math.round(0xffffff * Math.random());
   var r = num >> 16;
@@ -101,10 +81,8 @@ export function LineGraph({ data }: Props) {
       let groupData = new Array(labels.length).fill(0);
       for (let j = 0; j < data.length; j++) {
         if (data?.[j]?.id === datasetNames[i]) {
-          // Insert the percentage of manhourscompleted to manhoursset
-          let index = labels.indexOf(data?.[j]?.date.slice(0, 10));
-          groupData[index] =
-            (data?.[j]?.manHoursCompleted / data?.[j]?.manHoursSet) * 100;
+          let index = labels.indexOf(data?.[j]?.date?.slice(0, 10));
+          groupData[index] = data?.[j]?.manHoursCompleted;
         }
       }
       let group = {
@@ -124,9 +102,6 @@ export function LineGraph({ data }: Props) {
 
     return dataset;
   };
-
-  buildDataset();
-  console.log(dataset);
 
   return <Line options={options} data={buildDataset()} />;
 }

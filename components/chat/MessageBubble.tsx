@@ -7,7 +7,10 @@ interface MessageBubbleProps {
 }
 
 function getChatDate(updatedAt: Date) {
-  return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
+  return updatedAt.toLocaleString("en-uk", {
+    timeStyle: "medium",
+    dateStyle: "short",
+  });
 }
 
 export default function MessageBubble({ message, sent }: MessageBubbleProps) {

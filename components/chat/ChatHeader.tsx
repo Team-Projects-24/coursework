@@ -34,6 +34,7 @@ export default function ChatHeader(props: ChatHeaderProps) {
         paddingY={1.2}
         margin={0}
         className="primary-colour"
+        position={"fixed"}
       >
         <Grid
           item

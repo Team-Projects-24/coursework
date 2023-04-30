@@ -118,6 +118,9 @@
 
 .tlm .graphContainer{
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .tlm .progress {
@@ -135,6 +138,7 @@
     font-size: var(--bs-progress-font-size);
     background-color: var(--bs-progress-bg);
     border-radius: var(--bs-progress-border-radius);
+    width: 100%;
 }
 
 .tlm .progress-bar {

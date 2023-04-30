@@ -15,6 +15,7 @@ import { getLinearProgressUtilityClass } from "@mui/material";
 import { ITeam } from "types/analysis/Team.d";
 import { IEmployee } from "types/analysis/Employee.d";
 import { time } from "console";
+import useUserStore from "stores/userStore";
 
 function DataAnalyticsWindow() {
   const [teams, setTeams] = useState();
@@ -27,6 +28,9 @@ function DataAnalyticsWindow() {
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
+
+  const { user, setUser } = useUserStore();
+  const loggedInUserID = user?.userId;
 
   // Get the currently logged in user
 
@@ -43,7 +47,7 @@ function DataAnalyticsWindow() {
   async function loadData() {
     axios
       .post("api/analysis/getTeamIDs", {
-        leaderID: "Liv",
+        leaderID: loggedInUserID,
       })
       .then((responseIDs) => {
         axios

@@ -171,7 +171,8 @@ function DataAnalyticsWindow() {
     setSelectedUsers(selectedUsers);
     setSelectedTeams(selectedTeams);
 
-    //console.log(selectedUsers);
+    console.log(selectedUsers);
+    console.log(selectedTeams);
 
     if (selectedTeams.includes(true)) {
       let teamsInput: any[] = [];
@@ -199,10 +200,16 @@ function DataAnalyticsWindow() {
         }
       }
       if (usersInput.length > 0) {
+        // If any users have been selected
         console.log(usersInput);
         setSelectedTeamIDs([]);
         setSelectedUserIDs(usersInput);
         loadPerformanceData([], usersInput, timeFrameState);
+      } else {
+        // If no one has been selected
+        setSelectedTeamIDs([]);
+        setSelectedUserIDs([]);
+        loadPerformanceData([], [], timeFrameState);
       }
     }
   };

@@ -15,6 +15,7 @@ import { getLinearProgressUtilityClass } from "@mui/material";
 import { ITeam } from "types/analysis/Team.d";
 import { IEmployee } from "types/analysis/Employee.d";
 import { time } from "console";
+import useUserStore from "stores/userStore";
 
 function DataAnalyticsWindow() {
   const [teams, setTeams] = useState();
@@ -27,6 +28,9 @@ function DataAnalyticsWindow() {
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
+
+  const { user, setUser } = useUserStore();
+  const loggedInUserID = user?.userId;
 
   // Get the currently logged in user
 
@@ -43,7 +47,7 @@ function DataAnalyticsWindow() {
   async function loadData() {
     axios
       .post("api/analysis/getTeamIDs", {
-        leaderID: "Olivia",
+        leaderID: loggedInUserID,
       })
       .then((responseIDs) => {
         axios
@@ -83,7 +87,7 @@ function DataAnalyticsWindow() {
           teamIDs: teamInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
     } else if (userInputs.length === 1 && !timeFrame) {
@@ -133,7 +137,7 @@ function DataAnalyticsWindow() {
           teamIDs: teamInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
     } else if (userInputs.length > 0 && timeFrame) {
@@ -145,7 +149,7 @@ function DataAnalyticsWindow() {
           userIDs: userInputs,
         })
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           setPerformanceData(response.data);
         });
     } else {
@@ -167,7 +171,8 @@ function DataAnalyticsWindow() {
     setSelectedUsers(selectedUsers);
     setSelectedTeams(selectedTeams);
 
-    //console.log(selectedUsers);
+    console.log(selectedUsers);
+    console.log(selectedTeams);
 
     if (selectedTeams.includes(true)) {
       let teamsInput: any[] = [];
@@ -195,10 +200,16 @@ function DataAnalyticsWindow() {
         }
       }
       if (usersInput.length > 0) {
+        // If any users have been selected
         console.log(usersInput);
         setSelectedTeamIDs([]);
         setSelectedUserIDs(usersInput);
         loadPerformanceData([], usersInput, timeFrameState);
+      } else {
+        // If no one has been selected
+        setSelectedTeamIDs([]);
+        setSelectedUserIDs([]);
+        loadPerformanceData([], [], timeFrameState);
       }
     }
   };
@@ -247,7 +258,6 @@ function DataAnalyticsWindow() {
       </div>
       {/* <button onClick={}> Go to Admin Page </button> */}
     </div>
-
   );
 }
 

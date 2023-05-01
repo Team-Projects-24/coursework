@@ -1,7 +1,6 @@
-import { ChatInvite, Chatroom, User } from "@prisma/client";
+import { Chatroom, User } from "@prisma/client";
 import { IChatMessage } from "./ChatMessage.d";
-import { IUser } from "./User.d";
-import { IChatInvite } from "./ChatInvite.d";
+import { IUser, IUserInfo } from "./User.d";
 
 export interface IChatroom {
   id: number;
@@ -9,7 +8,6 @@ export interface IChatroom {
   description: string;
   private: boolean;
   creatorId: string;
-  sentInvites: IChatInvite[];
   chatMessages: IChatMessage[];
   members: IUser[];
 }
@@ -21,5 +19,13 @@ export interface IChatroomInfo {
   private: boolean;
   creatorId: string;
   chatImage: string;
-  members: IUser[];
+  members: IUserInfo[];
+}
+
+export interface ICreateChatroom {
+  name: string;
+  private: boolean;
+  creatorId: string;
+  chatImage: string;
+  members: string[];
 }

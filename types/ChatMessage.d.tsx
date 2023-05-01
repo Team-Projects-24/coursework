@@ -18,3 +18,9 @@ export interface IChatMessage {
   chatroom: Chatroom;
   seenBy: SeenBy;
 }
+
+export interface ICreateChatMessage {
+  chatroomId: number;
+  senderId: string;
+  content: string;
+}

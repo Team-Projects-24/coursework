@@ -6,11 +6,13 @@ import { useChatroom } from "hooks/useChatroom";
 import { IChatMessage } from "types/ChatMessage.d";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
 import { IChatroomInfo } from "types/Chatroom.d";
 import axios from "axios";
+import ChatContainer from "components/chat/ChatContainer";
+import { Chatroom, Message, User } from "@prisma/client";
 
 // const message = "Hello World! page";
 
@@ -20,10 +22,26 @@ export default function ChatPage() {
   const [url, setUrl] = useState<string>("");
   const chatroomId = parseInt(id as string);
   const user = useUserStore((state) => state.user);
-  const [chatInfo, setChatInfo] = useState<IChatroomInfo>();
-  // const user = localStorage.getItem("username");
+  // const [chatInfo, setChatInfo] = useState<IChatroomInfo>();
+  // const [messages, setMessages] = useState<IChatMessage[]>([]);
+  const [chatData, setChatData] = useState<
+    | (Chatroom & {
+        members: User[];
+        messages: Message[];
+      })
+    | null
+  >();
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const { loading, messages, members, sendMessage } = useChatroom(chatroomId);
+  useEffect(() => {
+    async function getData() {
+      console.log("/api/chat/" + chatroomId);
+      const { data } = await axios.get("/api/chat/" + chatroomId);
+      setChatData(data);
+      setLoading(false);
+    }
+    getData();
+  }, [id]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -31,46 +49,29 @@ export default function ChatPage() {
     }
   }, []);
 
-  useEffect(() => {
-    async function getChat() {
-      const { data } =
-        await axios.post("/api/chat/getChatInfo", { id: chatroomId });
-      setChatInfo(data as IChatroomInfo)
-    }
-    getChat();
-  }, [id]);
+  console.log(chatData);
 
-  console.log(chatInfo);
-
-  const chatName = chatInfo?.private ?
-    chatInfo.members.filter(
-      (member) => member.userId !== user?.userId
-    ).at(0)?.name ?? user?.name :
-    chatInfo?.name;
+  const chatName = chatData?.private
+    ? chatData.members.filter((member) => member.userId !== user?.userId).at(0)
+        ?.name ?? user?.name
+    : chatData?.name;
 
   const loadingMessage = "loading...";
 
   return (
-    //       {loading ? <Typography>loadingMessage</Typography> : <div></div>}
-    //       {
-    //         <p> No messages in this chat</p>
-    // }
-    //       { messages.map((message: IChatMessage) => (
-    //         <MessageContainer {message} />
-    //       ))
-
-    // }
-    <Box className="secondary-colour" height="100%">
-      <ChatHeader
-        chatName={chatName!}
-        chatImage=""
-        chatId={chatroomId}
-      />
-      {/* <InputBar chatId={chatroomId} userId={user?.userId as string} /> */}
-    </Box>
+    <Grid container direction="column" height="100%" width="100%">
+      <Grid item container height="7.5%" zIndex={1}>
+        <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
+      </Grid>
+      <Grid item container height="85%" zIndex={0}>
+        <ChatContainer
+          messages={chatData?.messages as unknown as Message[]}
+          userId={user?.userId as string}
+        />
+      </Grid>
+      <Grid item container height="7.5%" zIndex={1}>
+        <InputBar chatId={chatroomId} userId={user?.userId as string} />
+      </Grid>
+    </Grid>
   );
-}
-
-function onSendMessage(message: string) {
-  //api call in here to send message
 }

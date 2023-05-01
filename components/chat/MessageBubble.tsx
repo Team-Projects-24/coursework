@@ -1,21 +1,27 @@
+import { Message } from "@prisma/client";
+import { IChatMessage } from "types/ChatMessage.d";
 
-interface MessageBubbleProps{
-    text:string;
-    person:string;
-    recOrSen:boolean;
+interface MessageBubbleProps {
+  message: Message;
+  sent: boolean;
 }
-const MessageBubble: React.FC<MessageBubbleProps> = ({text,person,recOrSen}) =>{
-    const currentTime = new Date().toLocaleTimeString();
-    return(
-        <div>
-         <div className={`speech-bubble ${recOrSen ? 'sent' : 'received'}`}>
-            <p>{text}</p>
-            <span className="time">{currentTime}</span>
-        </div>
-        </div>
 
-    )
-
-    
+function getChatDate(updatedAt: Date) {
+  return updatedAt.toLocaleString("en-uk", {
+    timeStyle: "medium",
+    dateStyle: "short",
+  });
 }
-export default MessageBubble;
+
+export default function MessageBubble({ message, sent }: MessageBubbleProps) {
+  //   const stringSentAt = message.sentAt.toLocaleTimeString();
+  console.log(message.sentAt);
+  return (
+    <div>
+      <div className={`speech-bubble ${sent ? "sent" : "received"}`}>
+        <p>{message.content}</p>
+        <span className="time">{getChatDate(new Date(message.sentAt))}</span>
+      </div>
+    </div>
+  );
+}

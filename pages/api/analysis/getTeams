@@ -10,8 +10,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //const { teamID } = req.body;
-    let teamID = [1,2];
+    const { teamID } = req.body;
+    //let teamID = [1,2];
 
 
     if (!teamID) {

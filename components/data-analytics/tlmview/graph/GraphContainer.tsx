@@ -25,6 +25,9 @@ interface Props {
 
 function GraphContainer({ graphState, data }: Props) {
   // Decide what graph to display
+
+  console.log("graph state:" + graphState);
+
   const graph =
     graphState === 0 ? (
       <ProgressBar data={data} />

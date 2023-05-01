@@ -3,6 +3,16 @@ import axios from "axios";
 import { resolveHref } from "next/dist/shared/lib/router/router";
 import { useRouter } from "next/router";
 
+/**
+ * @author Ben Pritchard
+ *
+ * @description Implements react component which serves to display the header of the chat.
+ * @param chatImage - The image of the chat.
+ * @param chatName - The name of the chat.
+ * @param chatId - The id of the chat.
+ * @returns A react component (the header) which displays the name and image of the chat.
+ */
+
 interface ChatHeaderProps {
   chatImage: string;
   chatName: string;
@@ -21,10 +31,10 @@ export default function ChatHeader(props: ChatHeaderProps) {
       <Grid
         container
         alignItems="center"
-        position="fixed"
         paddingY={1.2}
         margin={0}
         className="primary-colour"
+        position={"fixed"}
       >
         <Grid
           item
@@ -51,10 +61,7 @@ export default function ChatHeader(props: ChatHeaderProps) {
           justifyContent="center"
           alignContent="center"
         >
-          <Typography
-            fontWeight="bold" fontSize={18}
-            color="#e9edef"
-          >
+          <Typography fontWeight="bold" fontSize={18} color="#e9edef">
             {props.chatName}
           </Typography>
         </Grid>

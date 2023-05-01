@@ -5,6 +5,6 @@
  */
 
 export interface ITeam {
-  teamID: number;
+  teamID: String;
   name: string;
 }

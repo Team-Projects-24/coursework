@@ -21,3 +21,11 @@ export interface IChatroomInfo {
   chatImage: string;
   members: IUserInfo[];
 }
+
+export interface ICreateChatroom {
+  name: string;
+  private: boolean;
+  creatorId: string;
+  chatImage: string;
+  members: string[];
+}

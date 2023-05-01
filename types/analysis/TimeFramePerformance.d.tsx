@@ -7,6 +7,5 @@
 export interface ITimeFramePerformance {
   id: string;
   date: Date;
-  manHoursSet: Number;
   manHoursCompleted: Number;
 }

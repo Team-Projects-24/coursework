@@ -8,5 +8,5 @@ export interface IEmployee {
   userID: string;
   name: string;
   role: "EMPLOYEE" | "MANAGER" | "TEAMLEADER";
-  teamID: number;
+  teamID: String;
 }

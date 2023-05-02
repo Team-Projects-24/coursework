@@ -29,3 +29,10 @@ export interface ICreateChatroom {
   chatImage: string;
   members: string[];
 }
+
+export interface IEditChat {
+  name: string;
+  description: string;
+  members: string[];
+  chatImage:string;
+}

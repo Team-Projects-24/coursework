@@ -12,6 +12,8 @@ import { TextField } from "@mui/material";
 import {Select} from "@mui/material";
 import MembersList from "components/chat/info/Members";
 
+
+
 export default function InfoPage() {
   const router = useRouter();
   const { id } = router.query;
@@ -25,6 +27,10 @@ export default function InfoPage() {
     | null
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  
+
 
   useEffect(() => {
     async function getData() {
@@ -49,12 +55,67 @@ export default function InfoPage() {
     }
   }, []);
 
+  function CRname(){
+    
+    const handleUpdateE =  async() =>{
+      try{
+        const response = await axios.put("/api/chat/" + chatroomId,
+        {
+          name : name as String,
+          description : chatData?.description as String,
+          chatImage : chatData?.chatImage as String,
+          members : chatData?.members?.map((person)=>(person.userId) )
+        });
+        setName("");
+      }catch(error){
+        console.error(error)
+      }
+    }
+    
+    handleUpdateE();
+  };
+
+  function CRdesc(){
+
+    const handleUpdateD =  async() =>{
+      try{
+        const response = await axios.put("/api/chat/" + chatroomId,
+        {
+          name : chatData?.name as String,
+          description : description as String,
+          chatImage : chatData?.chatImage as String,
+          members : chatData?.members?.map((person)=>(person.userId) )
+        });
+        setDescription("");
+      }catch(error){
+        console.error(error)
+      }
+    }
+
+    handleUpdateD();
+    
+  };
+  
+function clearingField() {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleClearClick = () => {
+    setInputValue('');
+  };
+
+  return (
+    <div>
+      <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+      <button onClick={handleClearClick}>Clear</button>
+    </div>
+  );
+}
+
   return (
     <>
       <Grid container direction="column">
         <Grid item alignContent={"center"} alignSelf={"center"} xs={12} md={8}>
-          {/* <Info name={chatData?.name as string} description={chatData?.description as string} /> */}
-          <Info name={"chatname"} chatImage={""} description={"description for a chat"} />
+          {<Info name={chatData?.name as string} description={chatData?.description as string} chatImage={""} />}
         </Grid>
         <Grid container direction="column" alignContent ={"center"} alignSelf={"center"} paddingTop={5}>
         
@@ -82,14 +143,22 @@ export default function InfoPage() {
         
         </Grid>
       </Grid>
-      <Grid container direction="column" alignContent ={"center"} alignSelf={"center"}>
-        
+      
+
+      <Grid container direction="column" alignContent ={"center"} alignSelf={"center"}>  
         <Grid container direction ="row" justifyContent="center" >
-        <TextField label ="Enter chat description" variant="outlined" />
-        <Button variant="contained">Submit</Button>
+        <TextField id="proposedDesc" name="proposedDesc" label ="Enter chat description"  variant="outlined" type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
+        <Button type="submit" variant="contained" onClick={CRdesc}>Submit</Button>
         </Grid>
-        
+
+
+        <Grid container direction ="row" justifyContent="center" >
+        <TextField id="proposedName" name="proposedName" label ="Enter New Name"  variant="outlined" type="text" value={name} onChange={(e) => setName(e.target.value)}/>
+        <Button type="submit" variant="contained" onClick={CRname}>Submit</Button>
+        </Grid>
+    
       </Grid>
+
 
 
       

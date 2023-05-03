@@ -62,6 +62,8 @@ async function handlePut(
         .json({ message: "Required fields are missing in the request." });
       return;
     }
+    console.log("id:", id);
+    console.log("editedChat:", editedChat);
     const chat = await prisma.chatroom.update({
       where: {
         id: id,
@@ -79,6 +81,7 @@ async function handlePut(
         messages: true,
       },
     });
+    console.log("Updated chat:", chat);
     if (chat){
       res.status(200).json(chat);
     }else{

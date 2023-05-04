@@ -2,6 +2,7 @@ import { Box, DialogContent, DialogContentText } from "@mui/material";
 import { IChatMessage } from "types/ChatMessage.d";
 import MessageBubble from "./MessageBubble";
 import { Message } from "@prisma/client";
+import { useEffect, useRef } from "react";
 
 /**
  * @author Ben Pritchard
@@ -31,6 +32,17 @@ export default function ChatContainer({
   }, [messages]);
 
   return (
+    <>
+      <div className="messages justify-content:flex-end overflow-y:auto sc">
+        {messages?.map(
+          (message: Message) => (
+            <MessageBubble
+              key={message.id}
+              message={message}
+              sent={userId === message.senderId}
+            />
+          )
+
           // other people
         )}
         <div ref={messagesEndRef} />

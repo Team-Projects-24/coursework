@@ -1,6 +1,6 @@
 /**
  *
- * @author Olivia Gray
+ * @author Olivia Gray, Euan Hall (Individual view)
  *
  * @description puts all tlm components together to create the view for team leaders and managers
  *
@@ -10,6 +10,10 @@ import { use, useEffect, useState } from "react";
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
+import useUserStore from "stores/userStore";
+import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
+import { BarCard } from "components/dashboard/BarCard";
+import { ResponsivePie } from "@nivo/pie";
 import axios from "axios";
 import { getLinearProgressUtilityClass } from "@mui/material";
 import { ITeam } from "types/analysis/Team.d";
@@ -28,12 +32,12 @@ function DataAnalyticsWindow() {
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
+  
 
   const { user, setUser } = useUserStore();
   const loggedInUserID = user?.userId;
 
   // Get the currently logged in user
-
   // DYNAMICALLY LOADING THE PAGE
   useEffect(() => {
     loadData();
@@ -240,25 +244,96 @@ function DataAnalyticsWindow() {
     }
   };
 
-  return (
-    <div className="tlm container text-center">
-      <div className="row">
-        <div className="col">
-          <TeamUserList
-            teams={teams ? teams : []}
-            users={members ? members : []}
-            onSelectTeamUser={handleTeamUser}
-            onSendTeamUser={handleRecievedTeamUser}
-          />
-        </div>
-        <div className="col">
-          <GraphContainer graphState={graphState} data={performanceData} />
-          <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
-        </div>
-      </div>
-      {/* <button onClick={}> Go to Admin Page </button> */}
-    </div>
+  return (<div className="tlm container text-center">
+		      <div className="row">
+			<div className="col">
+			  <TeamUserList
+			    teams={teams ? teams : []}
+			    users={members ? members : []}
+			    onSelectTeamUser={handleTeamUser}
+			    onSendTeamUser={handleRecievedTeamUser}
+			  />
+			</div>
+			<div className="col">
+			  <GraphContainer graphState={graphState} data={performanceData} />
+			  <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
+			</div>
+		      </div>
+		</div>
   );
 }
 
-export default DataAnalyticsWindow;
+function IndividualUserView() {
+   const { user } = useUserStore();
+   const [performanceData, setPerformanceData] = useState<any | null>(null);
+   const pieChartData = [
+     {
+       id: "To-do",
+       label: "To-do",
+       value: 20,
+       color: "hsl(339, 70%, 50%)",
+     },
+     {
+       id: "in-Progress",
+       label: "in-Progress",
+       value: 10,
+       color: "hsl(330, 70%, 50%)",
+     },
+     {
+       id: "Completed",
+       label: "Completed",
+       value: 4,
+       color: "hsl(299, 70%, 50%)",
+     },
+   ];
+   
+   useEffect(() => {
+    loadIndividualProgress();
+  }, []);
+  
+   async function loadIndividualProgress() {
+      axios
+        .post("api/analysis/getUserPerformanceMetrics", {
+          userIDs: user.userId,
+        })
+        .then((response) => {
+        	console.log(response.data);
+          setPerformanceData(response.data);
+        }); 
+   }
+   
+   function updatePieChart() {}
+   function updateTaskList() {}
+   
+   function checkScreenSize(): boolean {
+     let isScreenLarge = true; // Assume screen is large by default
+     console.log("HERE");
+     const updateScreenSize = () => {
+       const screenWidth = window.innerWidth;
+       if (screenWidth < 620) {
+         isScreenLarge = false;
+       } else {
+         isScreenLarge = true;
+       }
+     };
+     updateScreenSize(); // Call initially to set the initial screen size
+     window.addEventListener("resize", updateScreenSize); // Listen for resize events and update the screen size
+     return isScreenLarge;
+   }
+   
+   return (
+   <div id="UserView" className="flex w-full">
+   	<div className="overflow-x-auto w-full mobile-only:pb-[4rem]"> 
+	  <div>
+	   <div className="md:flex flex-row py-4 shadow-lg justify-between">
+	     <h1 className="px-4 text-2xl ">{user?.name}'s Task list</h1>
+	   </div>
+	    	{performanceData?.map((data) => (
+	    		<Box className="flex desktop-only:flex-row py-2 px-4 w-full mobile-only:flex-col">
+        			<BarCard title={"Task"} total={data.manHoursSet} completed={data.manHoursCompleted} totalLabel={"Total"} isHours={true} />
+        		</Box>
+      	    	))}
+	  </div> 
+        </div>
+  );
+}

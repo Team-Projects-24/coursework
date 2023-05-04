@@ -19,9 +19,8 @@ import { getLinearProgressUtilityClass } from "@mui/material";
 import { ITeam } from "types/analysis/Team.d";
 import { IEmployee } from "types/analysis/Employee.d";
 import { time } from "console";
-import useUserStore from "stores/userStore";
 
-function DataAnalyticsWindow() {
+export default function DataAnalyticsWindow() {
   const [teams, setTeams] = useState();
   const [members, setMembers] = useState<any>();
   const [teamUserState, setTeamUserState] = useState(-1);
@@ -32,7 +31,6 @@ function DataAnalyticsWindow() {
   const [timeFrameState, setTimeFrameState] = useState(false);
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
-  
 
   const { user, setUser } = useUserStore();
   const loggedInUserID = user?.userId;
@@ -244,96 +242,22 @@ function DataAnalyticsWindow() {
     }
   };
 
-  return (<div className="tlm container text-center">
-		      <div className="row">
-			<div className="col">
-			  <TeamUserList
-			    teams={teams ? teams : []}
-			    users={members ? members : []}
-			    onSelectTeamUser={handleTeamUser}
-			    onSendTeamUser={handleRecievedTeamUser}
-			  />
-			</div>
-			<div className="col">
-			  <GraphContainer graphState={graphState} data={performanceData} />
-			  <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
-			</div>
-		      </div>
-		</div>
-  );
-}
-
-function IndividualUserView() {
-   const { user } = useUserStore();
-   const [performanceData, setPerformanceData] = useState<any | null>(null);
-   const pieChartData = [
-     {
-       id: "To-do",
-       label: "To-do",
-       value: 20,
-       color: "hsl(339, 70%, 50%)",
-     },
-     {
-       id: "in-Progress",
-       label: "in-Progress",
-       value: 10,
-       color: "hsl(330, 70%, 50%)",
-     },
-     {
-       id: "Completed",
-       label: "Completed",
-       value: 4,
-       color: "hsl(299, 70%, 50%)",
-     },
-   ];
-   
-   useEffect(() => {
-    loadIndividualProgress();
-  }, []);
-  
-   async function loadIndividualProgress() {
-      axios
-        .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: user.userId,
-        })
-        .then((response) => {
-        	console.log(response.data);
-          setPerformanceData(response.data);
-        }); 
-   }
-   
-   function updatePieChart() {}
-   function updateTaskList() {}
-   
-   function checkScreenSize(): boolean {
-     let isScreenLarge = true; // Assume screen is large by default
-     console.log("HERE");
-     const updateScreenSize = () => {
-       const screenWidth = window.innerWidth;
-       if (screenWidth < 620) {
-         isScreenLarge = false;
-       } else {
-         isScreenLarge = true;
-       }
-     };
-     updateScreenSize(); // Call initially to set the initial screen size
-     window.addEventListener("resize", updateScreenSize); // Listen for resize events and update the screen size
-     return isScreenLarge;
-   }
-   
-   return (
-   <div id="UserView" className="flex w-full">
-   	<div className="overflow-x-auto w-full mobile-only:pb-[4rem]"> 
-	  <div>
-	   <div className="md:flex flex-row py-4 shadow-lg justify-between">
-	     <h1 className="px-4 text-2xl ">{user?.name}'s Task list</h1>
-	   </div>
-	    	{performanceData?.map((data) => (
-	    		<Box className="flex desktop-only:flex-row py-2 px-4 w-full mobile-only:flex-col">
-        			<BarCard title={"Task"} total={data.manHoursSet} completed={data.manHoursCompleted} totalLabel={"Total"} isHours={true} />
-        		</Box>
-      	    	))}
-	  </div> 
+  return (
+    <div className="tlm container text-center">
+      <div className="row">
+        <div className="col">
+          <TeamUserList
+            teams={teams ? teams : []}
+            users={members ? members : []}
+            onSelectTeamUser={handleTeamUser}
+            onSendTeamUser={handleRecievedTeamUser}
+          />
         </div>
+        <div className="col">
+          <GraphContainer graphState={graphState} data={performanceData} />
+          <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
+        </div>
+      </div>
+    </div>
   );
 }

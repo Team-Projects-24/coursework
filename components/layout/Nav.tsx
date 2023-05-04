@@ -23,9 +23,9 @@ export default function Nav() {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
-        if (user.role === "manager"){
+        if (user.role === "manager") {
           setIsManager(true);
-        } else{
+        } else {
           setIsManager(false);
         }
       }
@@ -41,7 +41,6 @@ export default function Nav() {
         <NavButton href="/analytics" text="Progress" icon={FaChartBar} />
         <NavButton href="/manager" text="Manager" icon={FaMediumM} />
         <NavButton href="/admin" text="Admin" icon={FaChessKing} />
-
 
         {/* <NavButton href="/tasks" text="Tasks" icon={FaTasks} />
         <NavButton href="/documents" text="Documents" icon={FaFileAlt} /> */}

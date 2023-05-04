@@ -1,14 +1,11 @@
-
-import ManagerWindow from "components/data-analytics/tlmview/ManagerWindow";
-
-
+import DataAnalyticsWindow from "components/data-analytics/tlmview/DataAnalyticsWindow";
 
 function Manager() {
-    return (
-        <div>
-            <ManagerWindow />
-        </div>
-    );
+  return (
+    <div>
+      <DataAnalyticsWindow />
+    </div>
+  );
 }
 
 export default Manager;

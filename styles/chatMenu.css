@@ -53,29 +53,15 @@
     color: #53bdeb;
 }
 
-.info-card .down-arrow {
+.remove-icon-container {
     display: none;
     color: #8696a0;
-    animation-name: info-card-dropdown;
+    animation-name: slide-left;
     animation-duration: .1s;
 }
 
-.info-card:hover .down-arrow {
-    display: block;
-}
-
-.dropdown-content {
-    display: none;
-    border-radius: 3px;
-    padding-block: 5px;
-}
-
-.dropdown-content > li {
-    text-align: center;
-}
-
-.dropdown-content.active {
-    display: block;
+.info-card:hover .remove-icon-container {
+    display: flex;
 }
 
 .search {
@@ -91,13 +77,12 @@
     background-color: #00a884;
 }
 
-@keyframes info-card-dropdown {
+@keyframes slide-left {
     from {
         margin-right: -12px;
         color: transparent;
-    }
-    to {
-        margin-right: 0px;
+    } to {
+        margin-right: 0;
         color: auto;
     }
 }

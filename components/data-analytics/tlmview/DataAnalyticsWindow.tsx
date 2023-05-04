@@ -34,6 +34,7 @@ export default function DataAnalyticsWindow() {
 
   const { user, setUser } = useUserStore();
   const loggedInUserID = user?.userId;
+  const loggedInUserRole = user?.role;
 
   // Get the currently logged in user
   // DYNAMICALLY LOADING THE PAGE
@@ -50,6 +51,7 @@ export default function DataAnalyticsWindow() {
     axios
       .post("api/analysis/getTeamIDs", {
         leaderID: loggedInUserID,
+        role: loggedInUserRole,
       })
       .then((responseIDs) => {
         axios

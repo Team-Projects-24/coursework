@@ -10,7 +10,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { leaderID } = req.body;
+    const { leaderID, role } = req.body;
 
     if (!leaderID) {
       res
@@ -19,11 +19,16 @@ export default async function handler(
       return;
     }
 
-    const results = await prisma.team.findMany({
-      where: {
-        leaderId: leaderID
+    let results;
+    if (role === "TEAMLEADER"){
+      results = await prisma.team.findMany({
+        where: {
+          leaderId: leaderID
+        }
+      })
+    } else{
+        results = await prisma.team.findMany({})
       }
-    })
 
     if (results) {
 

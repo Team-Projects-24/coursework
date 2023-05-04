@@ -8,7 +8,7 @@
 import { Grid, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { IUser } from "types/User.d";
-
+import { User } from "@prisma/client";
 
 /**
  * @author Ade Osindero
@@ -17,28 +17,32 @@ import { IUser } from "types/User.d";
  * @param response - The behaviour of the card upon being selected.
  * @returns A react component (the card) detailing information of the user.
  */
-export default function UserCard(
-    { user, response }: { user: IUser, response: (arg0: IUser) => void }
-) {
-    return (
-        <Grid container className="info-card" onClick={() => response(user)}>
-            <Grid item container xs="auto" padding={2}>
-                <Grid item padding={1.2} className="icon-container">
-                    <PersonIcon className="icon" />
-                </Grid>
-            </Grid>
-            <Grid item container className="info-card-right" xs={11}>
-                <Grid container direction="column">
-                    <Grid item xs="auto">
-                        <Typography color="#e9edef" fontSize={18}>
-                            {user.name}
-                        </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography>ID: {user.userId}</Typography>
-                    </Grid>
-                </Grid>
-            </Grid>
+export default function UserCard({
+  user,
+  response,
+}: {
+  user: User;
+  response: (arg0: User) => void;
+}) {
+  return (
+    <Grid container className="info-card" onClick={() => response(user)}>
+      <Grid item container xs="auto" padding={2}>
+        <Grid item padding={1.2} className="icon-container">
+          <PersonIcon className="icon" />
         </Grid>
-    );
+      </Grid>
+      <Grid item container className="info-card-right" xs={11}>
+        <Grid container direction="column">
+          <Grid item xs="auto">
+            <Typography color="#e9edef" fontSize={18}>
+              {user.name}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography>ID: {user.userId}</Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
 }

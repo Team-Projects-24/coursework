@@ -27,7 +27,7 @@ export default async function handler(
 
     if (results) {
 
-      let teamIDs: number[] = [];
+      let teamIDs: String[] = [];
 
       results.forEach(result => {
         teamIDs.push(result.id);

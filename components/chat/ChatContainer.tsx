@@ -21,29 +21,28 @@ export default function ChatContainer({
   messages,
   userId,
 }: ChatContainerProps) {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div className="chat-container flex: 1 margin:10px height=90vh">
-      <div className="messages">
-        {messages?.map(
-          (message: Message) =>
-            userId == message.senderId ? (
-              <MessageBubble message={message} sent={true} />
-            ) : (
-              <MessageBubble message={message} sent={false} />
-            )
           // other people
         )}
+        <div ref={messagesEndRef} />
       </div>
-    </div>
+      <style jsx>{`
+        .messages {
+          justify-content: flex-end;
+          overflow-y: auto;
+          height: 100%;
+          width: 100%;
+        }
+      `}</style>
+    </>
   );
 }
-
-// <div key={message.id} className="message">
-//   <div className="sender-info">
-//     <strong>{message.sender.name}</strong>
-//     <span className="sent-at">
-//       {message.sentAt.toLocaleTimeString()}
-//     </span>
-//   </div>
-//   <div className="content">{message.content}</div>
-//   </div>

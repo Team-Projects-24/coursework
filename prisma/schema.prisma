@@ -17,20 +17,19 @@ datasource db {
 }
 
 model User {
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  userId         String           @id @unique
-  name           String
-  password       String
-  role           Role             @default(EMPLOYEE)
-  sentMessages   Message[]
-  chatrooms      Chatroom[]
-  profileImage   String?          @db.VarChar(500)
-  teams          UserOnTeam[]
-  seenMessages   SeenBy[]
-  leaderOf       Team[]
-  PerformanceLog PerformanceLog[]
-  Task           Task[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  userId       String       @id @unique
+  name         String
+  password     String
+  role         Role         @default(EMPLOYEE)
+  sentMessages Message[]
+  chatrooms    Chatroom[]
+  profileImage String?      @db.VarChar(500)
+  teams        UserOnTeam[]
+  seenMessages SeenBy[]
+  leaderOf     Team[]
+  Task         Task[]
 }
 
 enum Role {
@@ -97,15 +96,13 @@ model Team {
 }
 
 model PerformanceLog {
-  user              User     @relation(fields: [userId], references: [userId])
-  userId            String
   task              Task     @relation(fields: [taskId], references: [taskId])
   taskId            Int
   date              DateTime @default(now())
   manHoursSet       Float
   manHoursCompleted Float
 
-  @@id([userId, taskId, date])
+  @@id([taskId, date])
 }
 
 model Task {

@@ -57,6 +57,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
       justifyContent={"center"}
       alignContent={"center"}
       paddingX={2}
+
       id="input-bar"
     >
       <Grid
@@ -87,7 +88,6 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
           />
         </Grid>
 
-        <Grid xs="auto" alignContent="center">
           <Button
             fullWidth
             onClick={onSendMessage}

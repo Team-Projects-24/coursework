@@ -18,6 +18,7 @@ export default async function handler(
 ) {
   try {
     const { userID } = req.body;
+    console.log(userID, typeof userID);
 
     if (!userID) {
       res
@@ -26,7 +27,11 @@ export default async function handler(
       return;
     }
 
-    const tasks = await prisma.$queryRaw<ITask[]>`select deadline as "deadline", name as "taskName", manHoursCompleted as "completed", manHoursSet as "set" from Task where userId = 'Anna';`
+    
+    //console.log(query)
+    const tasks = await prisma.$queryRaw(
+      Prisma.sql`select deadline as "deadline", name as "taskName", manHoursCompleted as "completed", manHoursSet as "set" from Task where userId =${userID};`
+    );
     //const results = await prisma.$queryRaw<ITask[]>`select userId as "id", sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from Task group by id having id in (${Prisma.join(userID)});`
 
     /*const tasks = await prisma.tasks.findMany({

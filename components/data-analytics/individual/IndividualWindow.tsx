@@ -17,7 +17,7 @@ import { ITask } from "types/analysis/Task.d";
 
 function IndividualUserView() {
    const { user } = useUserStore();
-   const [taskData, setTaskData] = useState<ITask[] | null>(null);
+   const [taskData, setTaskData] = useState<any[] | null>(null);
    const pieChartData = [
      {
        id: "To-do",
@@ -85,7 +85,7 @@ function IndividualUserView() {
 	   <div className="md:flex flex-row py-4 shadow-lg justify-between">
 	     <h1 className="px-4 text-2xl ">{user?.name}'s Task list</h1>
 	   </div>
-	    	{performanceData?.map((data) => (
+	    	{taskData?.map((data) => (
 	    		<Box className="flex desktop-only:flex-row py-2 px-4 w-full mobile-only:flex-col">
         			<BarCard title={data.taskName} total={data.set} completed={data.completed} totalLabel={"Total"} isHours={true} />
         		</Box>

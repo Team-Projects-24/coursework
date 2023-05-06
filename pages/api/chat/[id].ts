@@ -81,7 +81,7 @@ async function handlePut(
         messages: true,
       },
     });
-    console.log("Updated chat:", chat);
+    //console.log("Updated chat:", chat);
     if (chat){
       res.status(200).json(chat);
     }else{

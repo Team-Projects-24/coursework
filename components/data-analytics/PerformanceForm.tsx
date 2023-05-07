@@ -44,8 +44,9 @@ export default function PerformanceForm() {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get("/api/tasks");
+            const response = await axios.get("/api/admin/getTaskIDs");
             setTasks(response.data);
+            console.log("Fetched tasks:", response.data);
         } catch (error) {
             console.error("Error fetching tasks:", error);
         }
@@ -60,6 +61,9 @@ export default function PerformanceForm() {
     return (
 
         <Box sx={{ margin: 'auto', maxWidth: 600 }}>
+
+
+
             <Typography variant="h4" sx={{ textAlign: 'center', bgcolor: '#ffbf00', color: 'white', p: 2, borderRadius: 5 }}>
                 Performance Log Form
             </Typography>

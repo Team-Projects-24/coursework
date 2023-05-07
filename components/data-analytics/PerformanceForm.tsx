@@ -10,8 +10,10 @@ export default function PerformanceForm() {
 
 
 
-    const [tasks, setTasks] = useState<Array<{ taskId: string, name: string }>>([]);
+    const [tasks, setTasks] = useState<Array<{ taskId: string, name: string }>>([]); // ADAPT TO ALSO HAVE MAN HOURS SET TO USE IN PF LOG ENTRY
 
+    const [manHoursCompleted, setManHoursCompleted] = useState<number | null>(null);
+    const HARDCODEDMANHOURSSET = 8000; // can remove this once the task has the number of set hours with it 
 
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,12 +33,30 @@ export default function PerformanceForm() {
         task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
     );
 
+    
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (true) {
+        if (selectedName && manHoursCompleted !== null) {
             console.log("use api to update performance log");
+
+            // task, task ID, date (but would be now by default), man hours set, man hours completed
+
+            const createPerformanceEntry = async (taskId: string, manHoursSet: number, manHoursCompleted: number) => {
+                try {
+                    const response = await axios.post('/api/admin/newPerformanceEntry', {
+                        taskId,
+                        manHoursSet,
+                        manHoursCompleted,
+                    })
+                    console.log('New performance entry created:', response.data)
+                } catch (error) {
+                    console.error('Error creating performance entry:', error.response?.data || error.message)
+                }
+            }
+
+            createPerformanceEntry(selectedName.taskId, HARDCODEDMANHOURSSET, manHoursCompleted)
         }
     }
 
@@ -91,12 +111,15 @@ export default function PerformanceForm() {
                         />
                     </Grid>
                     <Grid item xs={12}>
+                        
                         <TextField
                             fullWidth
                             name="Man-Hours"
                             label="Man-Hours Completed"
                             placeholder="man hours you've completed"
-                            type='number'
+                            type="number"
+                            value={manHoursCompleted || ""}
+                            onChange={(event) => setManHoursCompleted(Number(event.target.value))}
                         />
                     </Grid>
 

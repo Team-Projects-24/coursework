@@ -1,49 +1,39 @@
 // api for getting all the task IDs
 
-
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Team, User } from "@prisma/client";
-import { ITeam } from "types/analysis/Team.d";
-
-const prisma = new PrismaClient();
+import { PrismaClient, Task } from "@prisma/client";
+import { ITask } from "types/Task.d";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   try {
-    const { leaderID } = req.body;
-
-    if (!leaderID) {
-      res
-        .status(400)
-        .json({ message: "Required fields are missing in the request." });
-      return;
-    }
-
-    const results = await prisma.team.findMany({
-      where: {
-        leaderId: leaderID
-      }
-    })
+    const results = await prisma.task.findMany();
 
     if (results) {
+      let tasks: ITask[] = [];
 
-      let teamIDs: String[] = [];
+      results.forEach((result) => {
+        let task: ITask = {
+          taskId: result.taskId,
+          name: result.name
+        };
+        tasks.push(task);
+      });
 
-      results.forEach(result => {
-        teamIDs.push(result.id);
-      })      
-
-      res.status(200).json(teamIDs);
+      res.status(200).json(tasks);
     } else {
-      res.status(404).json({ message: "Teams not found" });
+      res.status(404).json({ message: "Tasks not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error getting teams" });
+    res.status(500).json({ message: "Error getting tasks" });
   } finally {
     await prisma.$disconnect();
   }
 }
+
 

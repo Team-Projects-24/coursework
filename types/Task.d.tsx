@@ -1,4 +1,4 @@
-import { IProject } from "./Project.d";
+// import { IProject } from "./Project.d";
 import { ISubTask } from "./SubTask.d";
 import { IUser } from "./User.d";
 
@@ -9,16 +9,16 @@ import { IUser } from "./User.d";
  */
 
 export interface ITask {
-  id: number;
+  taskId: number;
   name: string;
-  description: string;
-  projectName: string | null;
-  status: "to-do" | "in-progress" | "review" | "completed";
-  user: IUser;
-  deadline: Date;
-  archived: boolean;
-  manHours: number;
-  subTasks: ISubTask[];
+  // description: string;
+  // projectName: string | null;
+  // status: "to-do" | "in-progress" | "review" | "completed";
+  // user: IUser;
+  // deadline: Date;
+  // archived: boolean;
+  // manHours: number;
+  // subTasks: ISubTask[];
 }
 
 //interface that defines data required to make a new task

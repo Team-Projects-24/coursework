@@ -1,29 +1,38 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { TextField, Autocomplete, Box, Grid, Typography, FormControl, Button } from "@mui/material";
+import axios from "axios";
 
 const hardcodedTasks = ["task1", "task twoo", "tasks four", "3 - third", "9ine"];
 
 export default function PerformanceForm() {
-    const [selectedName, setSelectedName] = useState<string>("");
+    // const [selectedName, setSelectedName] = useState<string>("");
+    const [selectedName, setSelectedName] = useState<{ taskId: string; name: string } | null>(null);
+
+
+
+    const [tasks, setTasks] = useState<Array<{ taskId: string, name: string }>>([]);
+
+
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedName(event.target.value);
+        setSelectedName({ taskId: '', name: event.target.value });
     };
 
     const handleNameSelect = (
         event: React.ChangeEvent<{}>,
-        value: string | null | undefined
+        value: { taskId: string; name: string } | null
     ) => {
         if (value) {
             setSelectedName(value);
         }
     };
 
-    const filteredNames = hardcodedTasks.filter((name) =>
-        name.toLowerCase().includes(selectedName.toLowerCase())
+    const filteredNames = tasks.filter((task) =>
+        task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
     );
 
-    function handleSubmit(event: FormEvent<HTMLFormElement>) { 
+
+    function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (true) {
@@ -32,49 +41,23 @@ export default function PerformanceForm() {
     }
 
 
+
+    const fetchTasks = async () => {
+        try {
+            const response = await axios.get("/api/tasks");
+            setTasks(response.data);
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+
+
     return (
-        // <Box sx={{ margin: 'auto', maxWidth: 600 }}>
-
-
-        //     <Typography variant="h4" sx={{ textAlign: 'center', bgcolor: '#ffbf00', color: 'white', p: 2, borderRadius: 5 }}>
-        //         Enter Performance Data
-        //     </Typography>
-
-        //     <FormControl sx={{ my: 2 }}>
-        //         <Grid item xs={12} sm={6} spacing={2} margin={5}>
-
-        //             <Autocomplete
-        //                 id="name-select"
-        //                 options={filteredNames}
-        //                 value={selectedName}
-        //                 onChange={handleNameSelect}
-        //                 renderInput={(params) => (
-        //                     <TextField
-        //                         {...params}
-        //                         label="Search for a task or taskID"
-        //                         variant="outlined"
-        //                         onChange={handleNameChange}
-        //                     />
-        //                 )}
-        //             />
-        //         </Grid>
-        //         <Grid item xs={12} sm={6} spacing={2} margin={5}>
-        //             <TextField
-        //                 fullWidth
-        //                 name="man_hours"
-        //                 label="Man Hours"
-        //                 type="number"
-        //                 placeholder="Enter the number of man-hours you've completed"
-        //                 onSubmit={handleSubmit}
-        //             />
-        //         </Grid>
-
-        //         <Button type="submit" variant="contained" color="primary">
-        //             Submit
-        //         </Button>
-
-//     </FormControl>
-        // </Box>
 
         <Box sx={{ margin: 'auto', maxWidth: 600 }}>
             <Typography variant="h4" sx={{ textAlign: 'center', bgcolor: '#ffbf00', color: 'white', p: 2, borderRadius: 5 }}>
@@ -87,16 +70,18 @@ export default function PerformanceForm() {
                         <Autocomplete
                             value={selectedName}
                             onChange={handleNameSelect}
+                            inputValue={selectedName?.name || ""}
+                            onInputChange={(_, value) => handleNameChange({ target: { value } } as any)}
                             id="search-name"
                             options={filteredNames}
-                            getOptionLabel={(name) => name}
+                            getOptionLabel={(task) => task.name}
                             style={{ width: 300 }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="Search for a name"
                                     variant="outlined"
-                                    onChange={handleNameChange}
+                                // onChange={handleNameChange}
                                 />
                             )}
                         />
@@ -121,6 +106,6 @@ export default function PerformanceForm() {
         </Box>
 
 
-        
+
     );
 }

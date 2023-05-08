@@ -18,13 +18,13 @@ export default function PerformanceForm() {
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle name change called");
-        setSelectedName({ taskId: '', name: event.target.value}); // , manHoursSet: 8000
+        setSelectedName({ taskId: '', name: event.target.value}); 
     };
 
     const handleNameSelect = (
         
         event: React.ChangeEvent<{}>,
-        value: { taskId: string; name: string ; manHoursSet?: number} | null
+        value: { taskId: string; name: string ; manHoursSet?: number} | null  // remove question mark if setselectedtask isn't working properly
     ) => {
         if (value) {
             setSelectedName(value);
@@ -46,6 +46,35 @@ export default function PerformanceForm() {
     }, [selectedName, selectedTask]);
 
 
+    const updateTaskCompletedHours = async (taskId: string, additionalHours: number) => {
+        try {
+          const response = await axios.put(`/api/admin/updateCompletedHours?id=${taskId}`, {
+            additionalHours,
+          });
+          console.log("Updated task:", response.data);
+        } catch (error) {
+          console.error("Error updating task:", error.response?.data || error.message);
+        }
+      };
+      
+      
+      const createPerformanceEntry = async (taskId: string,  manHoursSet: number, manHoursCompleted: number) => {
+        try {
+            const response = await axios.post('/api/admin/newPerformanceEntry', {
+                taskId,
+                manHoursSet,
+                manHoursCompleted,
+            })
+            console.log('New performance entry created:', response.data)
+
+            setSelectedName(null);
+            setManHoursCompleted(null);
+
+        } catch (error) {
+            console.error('ERROR creating performance entry:', error.response?.data || error.message)
+        }
+    }
+
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -53,25 +82,7 @@ export default function PerformanceForm() {
         if (selectedTask !== null && manHoursCompleted !== null) {
             console.log("use api to update performance log");
 
-            // task, task ID, date (but would be now by default), man hours set, man hours completed
-
-            const createPerformanceEntry = async (taskId: string,  manHoursSet: number, manHoursCompleted: number) => {
-                try {
-                    const response = await axios.post('/api/admin/newPerformanceEntry', {
-                        taskId,
-                        manHoursSet,
-                        manHoursCompleted,
-                    })
-                    console.log('New performance entry created:', response.data)
-
-                    setSelectedName(null);
-                    setManHoursCompleted(null);
-
-                } catch (error) {
-                    console.error('ERROR creating performance entry:', error.response?.data || error.message)
-                }
-            }
-
+            
             
 
 
@@ -80,9 +91,13 @@ export default function PerformanceForm() {
 
         
             console.log("selected task man hours set is"+selectedTask.manHoursSet);
-            createPerformanceEntry(selectedTask.taskId, selectedTask.manHoursSet, manHoursCompleted);
+            createPerformanceEntry(selectedTask.taskId, selectedTask.manHoursSet, manHoursCompleted); // commented just for debugging
 
-            //UPDATE THE TASK TOO WITH THE NEW AMOUNT OF COMPLETED HOURS
+            //UPDATE THE TASK WITH THE NEW AMOUNT OF COMPLETED HOURS
+
+
+            updateTaskCompletedHours(selectedTask.taskId, manHoursCompleted);
+
 
         }else{
             console.log("one of man hours or selected task is null");

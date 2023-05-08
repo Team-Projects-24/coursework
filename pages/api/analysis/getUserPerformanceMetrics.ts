@@ -1,17 +1,15 @@
 /**
- * 
+ *
  * @asuthor Olivia Gray
- * 
+ *
  * @description Pull all performance metrics of the selected users
- * 
+ *
  */
-
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma, PrismaClient, Team, User } from "@prisma/client";
 import { IPerformance } from "types/analysis/Performance.d";
-
-const prisma = new PrismaClient();
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,9 +25,13 @@ export default async function handler(
       return;
     }
 
-    const results = await prisma.$queryRaw<IPerformance[]>`select userId as "id", sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from Task group by id having id in (${Prisma.join(userIDs)});`
+    const results = await prisma.$queryRaw<
+      IPerformance[]
+    >`select userId as "id", sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from Task group by id having id in (${Prisma.join(
+      userIDs
+    )});`;
 
-    if (results) {  
+    if (results) {
       res.status(200).json(results);
     } else {
       res.status(404).json({ message: "Users not found" });

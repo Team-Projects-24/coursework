@@ -1,17 +1,15 @@
 /**
- * 
+ *
  * @asuthor Olivia Gray
- * 
+ *
  * @description Pull all performance metrics of the selected users over the given timeframe
- * 
+ *
  */
-
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma, PrismaClient, Team, User } from "@prisma/client";
 import { ITimeFramePerformance } from "types/analysis/TimeFramePerformance.d";
-
-const prisma = new PrismaClient();
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,10 +25,14 @@ export default async function handler(
       return;
     }
 
-    const results = await prisma.$queryRaw<ITimeFramePerformance[]>`select userId as "id", date, sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by userId, date having id in (${Prisma.join(userIDs)}) order by date asc;`;
+    const results = await prisma.$queryRaw<
+      ITimeFramePerformance[]
+    >`select userId as "id", date, sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by userId, date having id in (${Prisma.join(
+      userIDs
+    )}) order by date asc;`;
 
     //console.log(results);
-    if (results) {    
+    if (results) {
       res.status(200).json(results);
     } else {
       res.status(404).json({ message: "Users not found" });
@@ -43,7 +45,6 @@ export default async function handler(
   }
 }
 
-
-/** 
+/**
  * select userId as "id", date, sum(manHoursSet) as "manHoursSet", sum(manHoursCompleted) as "manHoursCompleted" from PerformanceLog group by id, date having id in ("Anna","Lynn");
  */

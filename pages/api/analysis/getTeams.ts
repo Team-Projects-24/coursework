@@ -1,21 +1,20 @@
 /**
- * 
+ *
  * @author Olivia Gray
- * 
+ *
  * @description Pull all the team IDs of the team the currently logged in user manages
- * 
+ *
  */
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Team, User } from "@prisma/client";
 import { ITeam } from "types/analysis/Team.d";
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
-
   try {
     const { teamID } = req.body;
 

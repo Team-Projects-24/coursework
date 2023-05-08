@@ -26,7 +26,10 @@ export default function SearchContainer({ hint, onSearch = null, onChange = null
         <SearchIcon className="icon" />
       </Grid>
       <Grid item paddingLeft={4} xs={11}>
-        <input
+        <input style={{
+            outline: "none",
+            color: "#ffffff",
+          }}
           type="search"
           placeholder={hint}
           className="primary-colour search"

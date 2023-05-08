@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import ChatIcon from "@mui/icons-material/Chat";
 import GroupsIcon from "@mui/icons-material/Groups";
-import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { Box, Grid } from "@mui/material";
 import ChatCard from "components/chat/menu/ChatCard";
 import useUserStore from "stores/userStore";
 import { useRouter } from "next/router";
 import SearchContainer from "components/chat/menu/SearchContainer";
+
 
 export default function Chat() {
   const [url, setUrl] = useState<string>("");
@@ -60,7 +60,7 @@ export default function Chat() {
         <Grid item container xs>
           <SearchContainer hint="Search chats" />
         </Grid>
-        <Grid paddingLeft={2} paddingTop={0.8} xs="auto">
+        <Grid item paddingLeft={2} paddingTop={0.8} xs="auto">
           <Box padding={0.3} className="icon-container">
             <FilterListIcon className="icon" />
           </Box>

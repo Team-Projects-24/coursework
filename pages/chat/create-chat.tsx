@@ -33,6 +33,7 @@ export default function createChat() {
         creatorId: user!.userId,
         chatImage: "",
         members: [user!.userId, selectedUser.userId],
+        description: "Chat between users."
       };
       chat = await axios.post("/api/chat/", { room: newRoom });
       const { data } = await axios
@@ -40,7 +41,7 @@ export default function createChat() {
       setUser(data as IUser);
     }
 
-    router.push(`/chat/${chat!.id}`);
+    router.back();
   }
 
   const searchById = (id: string) => setPartialId(id);

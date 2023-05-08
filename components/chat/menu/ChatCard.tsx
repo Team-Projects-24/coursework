@@ -10,13 +10,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { IChatMessage } from "types/ChatMessage.d";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
 import { Chatroom, SeenBy, User } from "@prisma/client";
 import { Message } from "@prisma/client";
+import { Animated} from "react-animated-css";
 
 
 interface ChatCardArgs {
@@ -31,9 +31,8 @@ interface ChatCardArgs {
  * @returns A formatted string depiction of the last time the chat was updated.
  */
 function getChatDate(updatedAt: Date) {
-  const dateDifference = Math.floor(
-    (new Date().getTime() - updatedAt.getTime()) / 86400000
-  );
+  const dateDifference = Math
+    .floor((new Date().getTime() - updatedAt.getTime())/86400000);
 
   if (dateDifference === 0) {
     return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
@@ -66,7 +65,7 @@ function getChatLastMessage(
   if (!lastMessage) {
     return (
       <Box>
-        <Typography className="info-card-text">Start a conversation</Typography>
+        <Typography>Start a conversation</Typography>
       </Box>
     );
   }
@@ -74,23 +73,21 @@ function getChatLastMessage(
   if (lastMessage.senderId === id) {
     return (
       <Grid item container>
-        <Grid item paddingRight={0.5}>
-          <DoneIcon
-            fontSize="small"
-            className={`tick ${lastMessage.seenBy ? "active" : ""}`}
-          />
+        <Grid
+          item
+          paddingRight={0.5}
+          color={lastMessage.seenBy ? "#53bdeb" : "inherit"}>
+          <DoneIcon fontSize="small" />
         </Grid>
         <Grid item xs zeroMinWidth>
-          <Typography className="info-card-text" noWrap>
-            {lastMessage.content}
-          </Typography>
+          <Typography noWrap>{lastMessage.content}</Typography>
         </Grid>
       </Grid>
     );
   }
   return (
     <Box>
-      <Typography className="info-card-text">
+      <Typography>
         {`${!isPrivate ? `${lastMessage.senderId}: ` : ""}${
           lastMessage.content
         }`}
@@ -109,9 +106,9 @@ function getImage(isPrivate: boolean, image: string | null) {
       item
       padding={1.2}
       borderRadius={20}
-      bgcolor="#00a884">
-      {isPrivate ?
-        <PersonIcon className="icon" /> : <GroupIcon className="icon" />}
+      bgcolor="#00a884"
+      color="#aebac1">
+      {isPrivate ? <PersonIcon /> : <GroupIcon />}
     </Grid>
   );
 }
@@ -134,6 +131,7 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
       })
     | null
   >();
+  const [hover, setHover] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -159,9 +157,7 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
     getData();
   }, [chatId]);
 
-  if (!chat || chat.private && !chat.messages.length) {
-    return <></>;
-  }
+  if (!chat || chat.private && !chat.messages.length) { return <></>; }
 
   const chatTitle = chat.private
     ? chat.members.filter((member) => member.userId !== userId).pop()?.name ??
@@ -171,11 +167,27 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
   const enterChat = () => router.push(`/chat/${chat.id}`);
 
   return (
-    <Grid container className="info-card">
+    <Grid
+      sx={{ cursor: "pointer", }}
+      bgcolor={hover ? "#2a3942" : "inherit"}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      color={hover ? "#e9edef" : "#8696a0"}
+      container>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
       <Grid item container xs="auto" padding={2} onClick={enterChat}>
         {getImage(chat.private, chat.chatImage)}
       </Grid>
-      <Grid item container className="info-card-right" xs={11}>
+      <Grid
+        item
+        container
+        borderTop="solid 1.2px"
+        borderColor="#222d34"
+        alignItems="center"
+        display="flex"
+        xs={11}>
         <Grid container direction="column">
           <Grid
             item
@@ -200,10 +212,17 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
             </Grid>
             <Grid
               item
-              className="remove-icon-container"
               alignContent="center"
+              color="#8696a0"
               xs="auto">
-              <CloseIcon />
+              <Animated
+                animationIn="fadeInRight"
+                animationOut="fadeOutRight"
+                animationInDuration={400}
+                animationOutDuration={400}
+                isVisible={hover}>
+                <CloseIcon />
+              </Animated>
             </Grid>
           </Grid>
         </Grid>

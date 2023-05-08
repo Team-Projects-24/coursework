@@ -19,7 +19,8 @@ export default async function handler(
       results.forEach((result) => {
         let task: ITask = {
           taskId: result.taskId,
-          name: result.name
+          name: result.name,
+          manHoursSet: result.manHoursSet
         };
         tasks.push(task);
       });

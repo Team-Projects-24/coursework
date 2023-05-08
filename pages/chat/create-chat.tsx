@@ -40,7 +40,7 @@ export default function createChat() {
       setUser(data as IUser);
     }
 
-    router.push(`/chat/${chat!.id}`);
+    router.back();
   }
 
   const searchById = (id: string) => setPartialId(id);

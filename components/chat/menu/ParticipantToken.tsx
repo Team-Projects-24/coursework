@@ -24,7 +24,7 @@ export default function ParticipantToken({ user, removeResponse, allowRemoval }:
     <Grid
       container
       bgcolor="#182229"
-      borderRadius={10}
+      borderRadius={5}
       direction="row"
       className="info-card">
       <Grid item container xs="auto" padding={2}>
@@ -48,8 +48,8 @@ export default function ParticipantToken({ user, removeResponse, allowRemoval }:
         className="remove-icon-container"
         paddingRight={2}
         xs="auto">
-        { allowRemoval ? 
-          <CloseIcon onClick={(e) => removeResponse(user)} /> : <></> }
+        {allowRemoval ? 
+          <CloseIcon onClick={(e) => removeResponse(user)} /> : <></>}
       </Grid>
     </Grid>
   );

@@ -64,11 +64,6 @@
     display: flex;
 }
 
-.search {
-    color: #ffffff;
-    outline: none;
-}
-
 .arrowBack {
     cursor: pointer;
 }

@@ -33,7 +33,7 @@ export default function PerformanceForm() {
         task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
     );
 
-    
+
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -51,6 +51,10 @@ export default function PerformanceForm() {
                         manHoursCompleted,
                     })
                     console.log('New performance entry created:', response.data)
+
+                    setSelectedName(null);
+                    setManHoursCompleted(null);
+                    
                 } catch (error) {
                     console.error('Error creating performance entry:', error.response?.data || error.message)
                 }
@@ -111,7 +115,7 @@ export default function PerformanceForm() {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        
+
                         <TextField
                             fullWidth
                             name="Man-Hours"

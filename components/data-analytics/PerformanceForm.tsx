@@ -32,14 +32,15 @@ export default function PerformanceForm() {
             setSelectedName(value);
 
             console.log(selectedName);
+            console.log("SEE ABOVE");
 
-            setSelectedTask(value);
+            // setSelectedTask(value);
             console.log("below is selectedTask")
             
             console.log(selectedTask);
             
             console.log("below is man hours set for selectedName")
-            console.log(selectedName?.manHoursSet); // why is this undefined when selectedName value is     
+            console.log(selectedTask?.manHoursSet); // why is this undefined when selectedName value is     
         }
     };
 
@@ -47,6 +48,12 @@ export default function PerformanceForm() {
         task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
     );
 
+    useEffect(() => {
+        if (selectedTask) {
+          console.log("below is man hours set for selectedTask")
+          console.log(selectedTask.manHoursSet);
+        }
+      }, [selectedName]);
 
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {

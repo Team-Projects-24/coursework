@@ -28,6 +28,7 @@ export interface ICreateChatroom {
   creatorId: string;
   chatImage: string;
   members: string[];
+  description: string;
 }
 
 export interface IEditChat {

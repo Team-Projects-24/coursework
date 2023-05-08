@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaChartBar, FaChessKing } from "react-icons/fa";
+import { FaChartBar, FaChessKing, FaMediumM } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FaFileAlt, FaProjectDiagram, FaUsers } from "react-icons/fa";
 import useUserStore from "stores/userStore";
@@ -15,12 +15,19 @@ export default function Nav() {
   const { user } = useUserStore();
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isManager, setIsManager] = useState(false);
+
   useEffect(() => {
     if (user) {
       if (user.role === "admin") {
         setIsAdmin(true);
       } else {
         setIsAdmin(false);
+        if (user.role === "manager") {
+          setIsManager(true);
+        } else {
+          setIsManager(false);
+        }
       }
     }
   }, [user]);
@@ -31,12 +38,14 @@ export default function Nav() {
         {/* <NavButton href="/dashboard" text="Dashboard" icon={FaChartBar} />
         <NavButton href="/projects" text="Projects" icon={FaProjectDiagram} /> */}
         <NavButton href="/chat" text="Chat" icon={FaFileAlt} />
-        <NavButton href="/analytics" text="Analytics" icon={FaChartBar} />
+        <NavButton href="/analytics" text="Progress" icon={FaChartBar} />
+        <NavButton href="/manager" text="Manager" icon={FaMediumM} />
         <NavButton href="/admin" text="Admin" icon={FaChessKing} />
 
         {/* <NavButton href="/tasks" text="Tasks" icon={FaTasks} />
         <NavButton href="/documents" text="Documents" icon={FaFileAlt} /> */}
         {isAdmin && <NavButton href="/users" text="Users" icon={FaUsers} />}
+        {/*isManager && <NavButton href="/manager" text="Manager" icon={FaUsers} />*/}
       </>
     );
   };

@@ -14,8 +14,6 @@ export default function Chat() {
   const user = useUserStore((state) => state.user);
   const router = useRouter();
 
-  var count = 0;
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       setUrl(window.location.href);
@@ -23,12 +21,12 @@ export default function Chat() {
   }, []);
 
   return (
-    <Box className="second-colour" height="100%">
+    <Box bgcolor="#111b21" height="100%">
       <Grid
         container
         justifyContent="center"
         paddingY={1.2}
-        className="primary-colour"
+        bgcolor="#202c33"
         columnSpacing={2}
         margin={0}
         width="100%">
@@ -36,40 +34,41 @@ export default function Chat() {
           <Box
             className="icon-container"
             onClick={() => router.push("/chat/create-chat")}
-            padding={1.1}>
-            <ChatIcon className="icon" />
+            padding={1.1}
+            color="#aebac1">
+            <ChatIcon />
           </Box>
         </Grid>
         <Grid item>
           <Box
             className="icon-container"
             padding={1.1}
-            onClick={() => router.push("/chat/create-group")}>
-            <GroupsIcon className="icon" />
+            onClick={() => router.push("/chat/create-group")}
+            color="#aebac1">
+            <GroupsIcon />
           </Box>
         </Grid>
       </Grid>
       <Grid
         container
-        margin={0}
         paddingY={1}
         justifyContent="center"
         id="top-bar"
         paddingX={2}
-        className="second-colour">
+        bgcolor="#111b21">
         <Grid item container xs>
           <SearchContainer hint="Search chats" />
         </Grid>
         <Grid item paddingLeft={2} paddingTop={0.8} xs="auto">
-          <Box padding={0.3} className="icon-container">
-            <FilterListIcon className="icon" />
+          <Box padding={0.3} className="icon-container" color="#aebac1">
+            <FilterListIcon />
           </Box>
         </Grid>
       </Grid>
       <Box maxHeight="80vh" overflow="auto">
-        {user?.chatrooms.map((chat) => (
-          <ChatCard key={count++} chatId={chat.id} userId={user.userId} />
-        ))}
+        {user?.chatrooms.map((chat) =>
+          <ChatCard key={chat.id} chatId={chat.id} userId={user.userId} />
+        )}
       </Box>
     </Box>
   );

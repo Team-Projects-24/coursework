@@ -16,7 +16,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
 import { Chatroom, SeenBy, User } from "@prisma/client";
 import { Message } from "@prisma/client";
-import { Animated} from "react-animated-css";
+import { Animated } from "react-animated-css";
 
 
 interface ChatCardArgs {
@@ -96,6 +96,13 @@ function getChatLastMessage(
   );
 }
 
+/**
+ * @author Ade Osindero
+ * 
+ * @param isPrivate - Whether or not the chat is private.
+ * @param image - The location of the image.
+ * @returns A grid component having the chat image.
+ */
 function getImage(isPrivate: boolean, image: string | null) {
   // if (image) {
   //   return <></>;
@@ -137,7 +144,7 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
   useEffect(() => {
     async function getData() {
       try {
-        const chatResponse = await axios.get("/api/chat/" + chatId);
+        const chatResponse = await axios.get(`/api/chat/${chatId}`);
 
         setChat(chatResponse.data);
 
@@ -145,7 +152,7 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
           const lastId = chatResponse.data.messages.at(-1)!.id;
 
           const messageResponse = await axios
-            .get("/api/chat/message/" + lastId);
+            .get(`/api/chat/message/${lastId}`);
 
           setLastMessage(messageResponse.data);
         }
@@ -173,6 +180,7 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       color={hover ? "#e9edef" : "#8696a0"}
+      paddingRight={1}
       container>
       <link
         rel="stylesheet"
@@ -187,8 +195,8 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
         borderColor="#222d34"
         alignItems="center"
         display="flex"
-        xs={11}>
-        <Grid container direction="column">
+        xs>
+        <Grid container direction="column" paddingRight={4}>
           <Grid
             item
             container
@@ -207,7 +215,7 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
             </Grid>
           </Grid>
           <Grid item container justifyContent="space-between">
-            <Grid item container xs={11} onClick={enterChat}>
+            <Grid item container onClick={enterChat} xs>
               {getChatLastMessage(lastMessage, chat.private, userId)}
             </Grid>
             <Grid

@@ -14,6 +14,12 @@ interface IconArgs {
   selector: boolean,
 }
 
+/**
+ * @author Ade Osindero
+ * 
+ * @param selector - True for the back arrow, false for the search.
+ * @returns The appropriate icon for the search container.
+ */
 function Icon({ selector }: IconArgs) {
   return selector ? <ArrowBackIcon /> : <SearchIcon />;
 }
@@ -26,7 +32,7 @@ function Icon({ selector }: IconArgs) {
  * @param onChange - The action to perform upon a change in input.
  * @returns A search container.
  */
-export default function SearchContainer({ hint, onSearch = null, onChange = null }: SearchContainerArgs) {
+export default function SearchContainer({ hint, onSearch, onChange }: SearchContainerArgs) {
   const [visible, setVisible] = useState<boolean>(true);
   const [selected, setSelected] = useState<boolean>(false);
 
@@ -42,7 +48,7 @@ export default function SearchContainer({ hint, onSearch = null, onChange = null
       container
       paddingY={1}
       borderRadius={2}
-      className="primary-colour">
+      bgcolor="#202c33">
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
@@ -57,16 +63,17 @@ export default function SearchContainer({ hint, onSearch = null, onChange = null
         </Animated>
       </Grid>
       <Grid item paddingLeft={4} xs={11}>
-        <input style={{
+        <input
+          style={{
+            backgroundColor: "#202c33",
             outline: "none",
             color: "#ffffff",
           }}
           type="search"
           placeholder={hint}
-          className="primary-colour search"
           onChange={(e) => onChange ? onChange(e.currentTarget.value) : null}
           onSubmit={(e) => onSearch ? onSearch(e.currentTarget.value) : null}
-          onClick={flipIcon}
+          onFocus={flipIcon}
           onBlur={flipIcon}/>
       </Grid>
     </Grid>

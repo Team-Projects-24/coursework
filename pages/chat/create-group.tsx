@@ -84,6 +84,7 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
           <Grid item container direction="row">
               <input
                 style={{
+                  backgroundColor: "#111b21",
                   paddingBlock: "10px",
                   borderRadius: "10px",
                   paddingInline: "20px",
@@ -92,12 +93,12 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
                   width: "100%",
                 }}
                 onChange={(e) => setName(e.currentTarget.value)}
-                placeholder="Name"
-                className="second-colour" />
+                placeholder="Name" />
           </Grid>
           <Grid item container direction="row">
             <input
               style={{
+                backgroundColor: "#111b21",
                 paddingBlock: "10px",
                 borderRadius: "10px",
                 paddingInline: "20px",
@@ -106,8 +107,7 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
                 width: "100%",
               }}
               onChange={(e) => setDescription(e.currentTarget.value)}
-              placeholder="Description"
-              className="second-colour" />
+              placeholder="Description" />
           </Grid>
         </Grid>
         <Typography variant="h5" color="#d9dee0">
@@ -205,7 +205,7 @@ export default function CreateGroup() {
   };
 
   return (
-    <Box minHeight="100%" className="second-colour">
+    <Box minHeight="100%" bgcolor="#111b21">
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />

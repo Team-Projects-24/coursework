@@ -32,8 +32,8 @@ export default function ChatHeader(props: ChatHeaderProps) {
         alignItems="center"
         paddingY={1.2}
         margin={0}
-        className="primary-colour"
-        position={"fixed"}
+        bgcolor="#111b21"
+        position="fixed"
       >
         <Grid
           item
@@ -60,7 +60,7 @@ export default function ChatHeader(props: ChatHeaderProps) {
           justifyContent="center"
           alignContent="center"
         >
-          <Typography fontWeight="bold" fontSize={18} color="#e9edef">
+          <Typography fontWeight="bold" fontSize={18} color="#e9edef" noWrap>
             {props.chatName}
           </Typography>
         </Grid>

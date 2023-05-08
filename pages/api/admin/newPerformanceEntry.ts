@@ -3,51 +3,35 @@
 
 // need the person who's doing the work, how many hours they've done, for which task, for which team (maybe) and set it to the current date
 
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { PrismaClient } from '@prisma/client'
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "lib/prisma";
+const prisma = new PrismaClient()
 
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const id = parseInt(req.query.id as string);
-  switch (req.method) {
-    case "GET":
-      return handleGet(id, res);
-    default:
-      res.setHeader("Allow", ["GET"]);
-      res.status(405).end(`Method ${req.method} Not Allowed`);
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    // Handle POST request
+    if (req.method === 'POST') {
+      const { taskId, manHoursSet, manHoursCompleted } = req.body
+    
+      try {
+        const newEntry = await prisma.performanceLog.create({
+          data: {
+            taskId: Number(taskId),
+            manHoursSet: Number(manHoursSet),
+            manHoursCompleted: Number(manHoursCompleted),
+            
+          },
+        })
+    
+        res.status(201).json(newEntry)
+      } catch (error) {
+        res.status(500).json({ message: 'Error creating performance entry', error }) // this is the error occuring 
+      }
+    }
+  } else {
+    // Handle unsupported methods
+    res.status(405).json({ message: 'Method not supported' })
   }
 }
 
-// GET /api/chat/:id
-async function handleGet(id: number, res: NextApiResponse) {
-  try {
-    if (!id) {
-      res
-        .status(400)
-        .json({ message: "Required fields are missing in the request." });
-      return;
-    }
-    const chat = await prisma.chatroom.findFirst({
-      where: {
-        id: id,
-      },
-      include: {
-        members: true,
-        messages: true,
-      },
-    });
-    if (chat) {
-      res.status(200).json(chat);
-    } else {
-      res.status(404).json({ message: "Chat not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error getting chat" });
-  } finally {
-    await prisma.$disconnect();
-  }
-}

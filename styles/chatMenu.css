@@ -19,65 +19,10 @@
     color: #aebac1;
 }
 
-.info-card {
-    color: #8696a0;
-    cursor: pointer;
-}
-
-.info-card:hover,
-.info-card:active {
-    background-color: #2a3942;
-}
-
-.info-card:active {
-    color: #e9edef;
-}
-
-.info-card-right {
-    border-style: solid;
-    border-top-width: 1.4px;
-    border-color: #222d34;
-    display: flex;
-    align-items: center;
-}
-
-.info-card .icon-container {
-    background-color: #00a884;
-}
-
-.info-card .tick {
-    color: #8696a0;
-}
-
-.info-card .tick.active {
-    color: #53bdeb;
-}
-
-.remove-icon-container {
-    display: none;
-    color: #8696a0;
-    animation-name: slide-left;
-    animation-duration: .1s;
-}
-
-.info-card:hover .remove-icon-container {
-    display: flex;
-}
-
 .arrowBack {
     cursor: pointer;
 }
 
 #top-bar .icon-container:active {
     background-color: #00a884;
-}
-
-@keyframes slide-left {
-    from {
-        margin-right: -12px;
-        color: transparent;
-    } to {
-        margin-right: 0;
-        color: auto;
-    }
 }

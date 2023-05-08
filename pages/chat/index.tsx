@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import ChatIcon from "@mui/icons-material/Chat";
 import GroupsIcon from "@mui/icons-material/Groups";
-import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { Box, Grid } from "@mui/material";
 import ChatCard from "components/chat/menu/ChatCard";

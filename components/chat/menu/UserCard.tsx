@@ -8,6 +8,7 @@
 import { Grid, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { IUser } from "types/User.d";
+import { useState } from "react";
 
 interface UserCardArgs {
   user: IUser,
@@ -22,14 +23,35 @@ interface UserCardArgs {
  * @returns A react component (the card) detailing information of the user.
  */
 export default function UserCard({user, response}: UserCardArgs) {
+  const [hover, setHover] = useState<boolean>(false);
+
   return (
-    <Grid container className="info-card" onClick={() => response(user)}>
+    <Grid
+      container
+      sx={{ cursor: "pointer", }}
+      bgcolor={hover ? "#2a3942" : "inherit"}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      color={hover ? "#e9edef" : "#8696a0"}
+      onClick={() => response(user)}>
       <Grid item container xs="auto" padding={2}>
-        <Grid item padding={1.2} bgcolor="#00a884" borderRadius={10}>
-          <PersonIcon className="icon" />
+        <Grid
+          item
+          padding={1.2}
+          bgcolor="#00a884"
+          borderRadius={10}
+          color="#aebac1">
+          <PersonIcon />
         </Grid>
       </Grid>
-      <Grid item container className="info-card-right" xs>
+      <Grid
+        item
+        container
+        borderTop="solid 1.2px"
+        borderColor="#222d34"
+        alignItems="center"
+        display="flex"
+        xs>
         <Grid container direction="column">
           <Grid item xs="auto">
             <Typography color="#e9edef" fontSize={18} noWrap>

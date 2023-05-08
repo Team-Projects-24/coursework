@@ -59,6 +59,7 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
       creatorId: userId,
       chatImage: "",
       members: participants.map((user) => user.userId),
+      description: chatDescription,
     }
     const chat = await axios.post("/api/chat/", { room: newGroup });
 
@@ -81,7 +82,8 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
           paddingBottom={5}
           rowSpacing={2}>
           <Grid item container direction="row">
-              <input style={{
+              <input
+                style={{
                   paddingBlock: "10px",
                   borderRadius: "10px",
                   paddingInline: "20px",
@@ -113,7 +115,7 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
         </Typography>
         <Box maxHeight="400px" marginY={2} paddingX={2} overflow="auto">
           {participants.map((user) =>
-              <Box paddingBottom={1}>
+              <Box paddingBottom={1} key={user.userId}>
                 <ParticipantToken
                   user={user}
                   removeResponse={removeResponse}
@@ -183,7 +185,6 @@ export default function CreateGroup() {
   const { user, setUser } = useUserStore();
   const [participants, setParticipants ] = useState<Array<IUser>>([user!]);
   const [valid, setValid] = useState<boolean>(false);
-  const router = useRouter();
 
   const removeResponse = (selectedUser: IUser) => {
     setParticipants(participants

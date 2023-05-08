@@ -33,6 +33,7 @@ export default function createChat() {
         creatorId: user!.userId,
         chatImage: "",
         members: [user!.userId, selectedUser.userId],
+        description: "Chat between users."
       };
       chat = await axios.post("/api/chat/", { room: newRoom });
       const { data } = await axios

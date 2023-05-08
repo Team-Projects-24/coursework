@@ -2,6 +2,8 @@ import { Grid, Typography } from "@mui/material";
 import { IUser } from "types/User.d";
 import PersonIcon from "@mui/icons-material/Person";
 import CloseIcon from '@mui/icons-material/Close';
+import { useState } from "react";
+import { Animated} from "react-animated-css";
 
 
 interface ParticipantTokenArgs {
@@ -20,16 +22,25 @@ interface ParticipantTokenArgs {
  * @returns The token, having the user's data.
  */
 export default function ParticipantToken({ user, removeResponse, allowRemoval }: ParticipantTokenArgs) {
+  const [hover, setHover] = useState<boolean>(false);
+
   return (
     <Grid
       container
-      bgcolor="#182229"
       borderRadius={5}
       direction="row"
-      className="info-card">
+      sx={{ cursor: "pointer", }}
+      bgcolor={hover ? "#2a3942" : "#182229"}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}>
       <Grid item container xs="auto" padding={2}>
-        <Grid item padding={1.2} bgcolor="#00a884" borderRadius={10}>
-          <PersonIcon className="icon" />
+        <Grid
+          item
+          padding={1.2}
+          bgcolor="#00a884"
+          borderRadius={10}
+          color="#aebac1">
+          <PersonIcon />
         </Grid>
       </Grid>
       <Grid item container direction="column" justifyContent="center" xs>
@@ -45,11 +56,19 @@ export default function ParticipantToken({ user, removeResponse, allowRemoval }:
       <Grid
         item
         alignItems="center"
-        className="remove-icon-container"
+        display="flex"
+        color="#8696a0"
         paddingRight={2}
         xs="auto">
         {allowRemoval ? 
-          <CloseIcon onClick={(e) => removeResponse(user)} /> : <></>}
+          <Animated
+            animationIn="zoomIn"
+            animationOut="zoomOut"
+            animationInDuration={300}
+            animationOutDuration={300}
+            isVisible={hover}>
+            <CloseIcon onClick={(e) => removeResponse(user)} />
+          </Animated> : <></>}
       </Grid>
     </Grid>
   );

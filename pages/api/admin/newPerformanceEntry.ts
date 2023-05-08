@@ -20,12 +20,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             taskId: Number(taskId),
             manHoursSet: Number(manHoursSet),
             manHoursCompleted: Number(manHoursCompleted),
+            
           },
         })
     
         res.status(201).json(newEntry)
       } catch (error) {
-        res.status(500).json({ message: 'Error creating performance entry', error })
+        res.status(500).json({ message: 'Error creating performance entry', error }) // this is the error occuring 
       }
     }
   } else {

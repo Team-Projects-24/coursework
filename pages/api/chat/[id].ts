@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "lib/prisma";
-import { IEditChat } from "types/Chatroom.d"
+import { IEditChat } from "types/Chatroom.d";
 
 export default async function handle(
   req: NextApiRequest,
@@ -62,8 +62,8 @@ async function handlePut(
         .json({ message: "Required fields are missing in the request." });
       return;
     }
-    console.log("id:", id);
-    console.log("editedChat:", editedChat);
+    // console.log("id:", id);
+    // console.log("editedChat:", editedChat);
     const chat = await prisma.chatroom.update({
       where: {
         id: id,
@@ -82,16 +82,15 @@ async function handlePut(
       },
     });
     //console.log("Updated chat:", chat);
-    if (chat){
+    if (chat) {
       res.status(200).json(chat);
-    }else{
-      res.status(404).json({ message: "Chat not found"});
+    } else {
+      res.status(404).json({ message: "Chat not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error updating chat"});
+    res.status(500).json({ message: "Error updating chat" });
   } finally {
     await prisma.$disconnect();
   }
 }
-

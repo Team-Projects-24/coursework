@@ -24,23 +24,14 @@ export default function PerformanceForm() {
     const handleNameSelect = (
         
         event: React.ChangeEvent<{}>,
-        value: { taskId: string; name: string} | null
+        value: { taskId: string; name: string ; manHoursSet?: number} | null
     ) => {
         if (value) {
-            console.log(value);
-            console.log("above is value being set to selected name");
             setSelectedName(value);
+            setSelectedTask(value);
 
-            console.log(selectedName);
-            console.log("SEE ABOVE");
-
-            // setSelectedTask(value);
-            console.log("below is selectedTask")
-            
-            console.log(selectedTask);
-            
-            console.log("below is man hours set for selectedName")
-            console.log(selectedTask?.manHoursSet); // why is this undefined when selectedName value is     
+        }else{
+            setSelectedTask(null)
         }
     };
 
@@ -48,18 +39,18 @@ export default function PerformanceForm() {
         task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
     );
 
+    
     useEffect(() => {
-        if (selectedTask) {
-          console.log("below is man hours set for selectedTask")
-          console.log(selectedTask.manHoursSet);
-        }
-      }, [selectedName]);
+        console.log("selectedName set as: ", selectedName);
+        console.log("selectedTask set as: ", selectedTask);
+    }, [selectedName, selectedTask]);
+
 
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (selectedName && manHoursCompleted !== null) {
+        if (selectedTask !== null && manHoursCompleted !== null) {
             console.log("use api to update performance log");
 
             // task, task ID, date (but would be now by default), man hours set, man hours completed
@@ -84,15 +75,17 @@ export default function PerformanceForm() {
             
 
 
-            console.log(selectedName);
+            // console.log(selectedName);
 
 
+        
+            console.log("selected task man hours set is"+selectedTask.manHoursSet);
+            createPerformanceEntry(selectedTask.taskId, selectedTask.manHoursSet, manHoursCompleted);
 
+            //UPDATE THE TASK TOO WITH THE NEW AMOUNT OF COMPLETED HOURS
 
-            createPerformanceEntry(selectedName.taskId, HARDCODEDMANHOURSSET, manHoursCompleted)
-
-
-
+        }else{
+            console.log("one of man hours or selected task is null");
         }
     }
 

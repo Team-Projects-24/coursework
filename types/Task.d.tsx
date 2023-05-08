@@ -11,7 +11,7 @@ import { IUser } from "./User.d";
 export interface ITask {
   taskId: number;
   name: string;
-  hoursSet: number;
+  manHoursSet: number;
   // description: string;
   // projectName: string | null;
   // status: "to-do" | "in-progress" | "review" | "completed";

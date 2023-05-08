@@ -20,7 +20,7 @@ export default async function handler(
         let task: ITask = {
           taskId: result.taskId,
           name: result.name,
-          hoursSet: result.manHoursSet
+          manHoursSet: result.manHoursSet
         };
         tasks.push(task);
       });

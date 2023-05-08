@@ -79,7 +79,7 @@ export default function PerformanceForm() {
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (selectedTask !== null && manHoursCompleted !== null) {
+        if (selectedTask && manHoursCompleted !== null) {
             console.log("use api to update performance log");
 
             

@@ -10,26 +10,26 @@ const hardcodedUsers = ["User 1", "User 2", "User 3"];
 
 
 export default function NewTaskForm() {
-    const [selectedTeam, setSelectedTeam] = useState<{ teamId: string; name: string} | null>(null);;
-    const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string} | null>(null);;
+    const [selectedTeam, setSelectedTeam] = useState<{ teamId: string; name: string } | null>(null);;
+    const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string } | null>(null);;
     const [taskName, setTaskName] = useState<string>("");
     const [deadline, setDeadline] = useState<string>("");
     const [estimatedManHours, setEstimatedManHours] = useState<number>(0);
 
-    const [users, setUsers] = useState<Array<{ userId: string, name: string}>>([]);
-    const [teams, setTeams] = useState<Array<{ teamId: string, name: string}>>([]);
+    const [users, setUsers] = useState<Array<{ userId: string, name: string }>>([]);
+    const [teams, setTeams] = useState<Array<{ teamId: string, name: string }>>([]);
 
 
 
     const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle team change called");
-        setSelectedTeam({ teamId: '', name: event.target.value}); 
+        setSelectedTeam({ teamId: '', name: event.target.value });
     };
 
     const handleTeamSelect = (
 
         event: React.ChangeEvent<{}>,
-        value: {teamId: string; name: string }
+        value: { teamId: string; name: string }
     ) => {
         if (value) {
             setSelectedTeam(value);
@@ -38,13 +38,13 @@ export default function NewTaskForm() {
 
     const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle user change called");
-        setSelectedUser({ userId: '', name: event.target.value}); 
+        setSelectedUser({ userId: '', name: event.target.value });
     };
 
-     const handleUserSelect = (
+    const handleUserSelect = (
 
         event: React.ChangeEvent<{}>,
-        value: {userId: string; name: string }
+        value: { userId: string; name: string }
     ) => {
         if (value) {
             setSelectedUser(value);
@@ -56,7 +56,17 @@ export default function NewTaskForm() {
 
         // Use API to create a new task here
         console.log("Use API to create a new task");
-        createTask();
+
+
+        console.log(selectedTeam?.teamId);
+
+        if (selectedTeam?.teamId && selectedUser?.userId && deadline && estimatedManHours > 0 && taskName !== "") {
+
+            createTask();
+            // createPerformanceEntry() // INITIALISE THE PERFORAMNCE LOG FOR THIS TASK
+        }else{
+            console.log("one of the entries isn't right")
+        }
     }
 
 
@@ -101,25 +111,26 @@ export default function NewTaskForm() {
 
     async function createTask() {
         try {
-          const response = await axios.post("/api/admin/createTask", {
-            teamId: selectedTeam,
-            userId: selectedUser,
-            deadline: deadline,
-            name: taskName,
-            manHoursSet: estimatedManHours,
-          });
-          console.log("New task created:", response.data);
-      
-          // Reset form values
-          setSelectedTeam("");
-          setSelectedUser("");
-          setTaskName("");
-          setDeadline("");
-          setEstimatedManHours(0);
+            const response = await axios.post("/api/admin/createTask", {
+                teamId: selectedTeam?.teamId,
+                userId: selectedUser?.userId,
+                deadline: deadline,
+                name: taskName,
+                manHoursSet: estimatedManHours,
+            });
+
+            console.log("New task created:", response.data);
+
+            // Reset form values
+            setSelectedTeam(null);
+            setSelectedUser(null);
+            setTaskName("");
+            setDeadline("");
+            setEstimatedManHours(0);
         } catch (error) {
-          console.error("Error creating task:", error.response?.data || error.message);
+            console.error("Error creating task:", error.response?.data || error.message);
         }
-      }
+    }
 
 
 

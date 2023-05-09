@@ -11,6 +11,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
       const { teamId, userId, deadline, name, manHoursSet } = req.body;
   
+      console.log(teamId);
+      console.log(userId);
+      console.log(deadline);
+      console.log(name);
+      console.log(manHoursSet);
+      
+
       try {
         const newTask = await prisma.task.create({
           data: {

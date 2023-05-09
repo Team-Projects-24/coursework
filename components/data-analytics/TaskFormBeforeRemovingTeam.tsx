@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 export default function NewTaskForm() {
-    const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string } | null>(null);
+    const [selectedTeam, setSelectedTeam] = useState<{ teamId: string; name: string } | null>(null);
     const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string } | null>(null);
 
 
@@ -14,11 +14,11 @@ export default function NewTaskForm() {
     const [estimatedManHours, setEstimatedManHours] = useState<number>(0);
 
     const [users, setUsers] = useState<Array<{ userId: string, name: string }>>([]);
-    const [teams, setTeams] = useState<Array<{ id: string, name: string }>>([]);
+    const [teams, setTeams] = useState<Array<{ teamId: string, name: string }>>([]);
 
 
     const [userText, setUserText] = useState<{ userId: string; name: string } | null>(null)
-    const [teamText, setTeamText] = useState<{ id: string; name: string } | null>(null);
+    const [teamText, setTeamText] = useState<{ teamId: string; name: string } | null>(null);
 
 
     const [userId, setUserId] = useState<string>();
@@ -27,8 +27,28 @@ export default function NewTaskForm() {
 
     const [submitted, setSubmitted] = useState<boolean>(false);
 
+    const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("handle team change called");
+        setTeamText({ teamId: '', name: event.target.value });
+        console.log(teamText);
+    };
 
+    const handleTeamSelect = (
 
+        event: React.ChangeEvent<{}>,
+        value: { teamId: string; name: string }
+        
+    ) => {
+        if (value) {
+            console.log("team selected, here's the value:" + value)
+            setSelectedTeam(value);
+            setTeamText(value);
+
+        } else {
+            setSelectedTeam(null);
+            console.log("no value in team selected, set to null");
+        }
+    };
 
     const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle user change called");
@@ -39,7 +59,7 @@ export default function NewTaskForm() {
     const handleUserSelect = (
 
         event: React.ChangeEvent<{}>,
-        value: { userId: string; name: string } | null
+        value: { userId: string; name: string }
     ) => {
         if (value) {
             setSelectedUser(value);
@@ -52,38 +72,17 @@ export default function NewTaskForm() {
 
 
 
-    const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("handle user change called");
-        setTeamText({ id: '', name: event.target.value });
-
-    };
-
-    const handleTeamSelect = (
-
-        event: React.ChangeEvent<{}>,
-        value: { id: string; name: string } | null
-    ) => {
-        if (value) {
-            setSelectedTeam(value);
-            setTeamText(value);
-            // console.log(selectedUser);
-        } else {
-            setSelectedUser(null);
-        }
-    };
-
-
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         // Use API to create a new task here
         console.log("Use API to create a new task");
 
-        setSubmitted(true);
+        setSubmitted(true);        
 
         // const teamId = "1";
         // const userId = "Ade";
-        const deadline2 = new Date("01-02-2003");
+        // const deadline2 = new Date("01-02-2003");
         // const name = "TESTTTTTT";
         // const manHoursSet = 3;
 
@@ -92,12 +91,11 @@ export default function NewTaskForm() {
         console.log(deadline);
         console.log(deadline2);
 
-        console.log(selectedTeam?.id);
         if (selectedTeam && selectedUser && deadline) {
 
-            console.log(selectedTeam.id);
+            console.log(selectedTeam.teamId);
 
-            createTask(selectedTeam.id, estimatedManHours, selectedUser.userId, deadline2, taskName);
+            createTask(selectedTeam.teamId, estimatedManHours, selectedUser.userId, deadline2, taskName);
 
         } else {
             console.log("ashdf;jasld;fjl;sjdflas;dlfasljdf");
@@ -119,7 +117,6 @@ export default function NewTaskForm() {
         try {
             const response = await fetch('/api/admin/getAllUsers');
             const data = await response.json();
-            console.log("fetched users: ", data);
             setUsers(data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -130,7 +127,6 @@ export default function NewTaskForm() {
         try {
             const response = await fetch('/api/admin/getAllTeams');
             const data = await response.json();
-            console.log("fetched teams: ", data);
             setTeams(data);
         } catch (error) {
             console.error('Error fetching teams:', error);
@@ -183,13 +179,21 @@ export default function NewTaskForm() {
     useEffect(() => {
         if (selectedTeam) {
             console.log("here is the team id");
-            console.log(selectedTeam.id); // this is returning 'undefined'. why is that, GPT?
-
+            console.log(selectedTeam.teamId);
+            setTeamId(selectedTeam.teamId);
         }
     }, [selectedTeam]);
 
 
-
+    useEffect(() => {
+        if (userId || teamId) {
+            console.log("user id is ")
+            console.log(userId);
+            console.log("team id is")
+            console.log(teamId)
+        }
+    }, [userId,teamId]);
+    
     return (
         <Box sx={{ margin: 'auto', maxWidth: 600 }}>
             <Typography variant="h4" sx={{ textAlign: 'center', bgcolor: '#ffbf00', color: 'white', p: 2, borderRadius: 5 }}>

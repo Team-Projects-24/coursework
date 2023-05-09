@@ -7,6 +7,10 @@ import { IUser } from "types/User.d";
 import useUserStore from "stores/userStore";
 import router, { Router } from "next/router";
 import { ICreateChatMessage } from "types/ChatMessage.d";
+import { useEffect } from "react";
+import { io, Socket } from "socket.io-client";
+
+let socket: Socket;
 
 /**
  * @author Ben Pritchard
@@ -26,6 +30,18 @@ interface IInputBarProps {
 export default function InputBar({ chatId, userId }: IInputBarProps) {
   const [message, setMessage] = useState<string>("");
 
+  useEffect(() => {
+    socket = io("http://localhost:3001");
+
+    // socket.on("receive-message", (message: string) => {
+    //   console.log(message);
+    // });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   const updateMessage = (e: any) => {
     setMessage(e.target.value);
   };
@@ -39,9 +55,10 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         senderId: userId,
         chatroomId: chatId,
       };
-      console.log(newMessage);
+      // console.log(newMessage);
 
       await axios.post("/api/chat/message/", newMessage);
+      socket.emit("send-message", message);
       setMessage("");
     } catch (err) {
       console.log(err);

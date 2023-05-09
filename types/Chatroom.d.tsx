@@ -28,4 +28,12 @@ export interface ICreateChatroom {
   creatorId: string;
   chatImage: string;
   members: string[];
+  description: string;
+}
+
+export interface IEditChat {
+  name: string;
+  description: string;
+  members: string[];
+  chatImage:string;
 }

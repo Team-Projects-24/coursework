@@ -1,9 +1,7 @@
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Team, User } from "@prisma/client";
-import { IEmployee } from "types/analysis/Employee.d";
-
-const prisma = new PrismaClient();
+import { IEmployee } from "../../../types/analysis/Employee.d";
+import prisma from "../../../lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +10,6 @@ export default async function handler(
   try {
     const { teamID } = req.body;
     //let teamID = [1,2];
-
 
     if (!teamID) {
       res
@@ -23,25 +20,29 @@ export default async function handler(
 
     const members = await prisma.user.findMany({
       include: {
-        teams: true
-      }
-    })
+        teams: true,
+      },
+    });
 
     if (members) {
-
       let employees: IEmployee[] = [];
 
-      members.forEach(member => {
-        (member.teams).forEach(team => {
-          teamID.forEach(id => {
-            if (id === team.teamId){
+      members.forEach((member) => {
+        member.teams.forEach((team) => {
+          teamID.forEach((id) => {
+            if (id === team.teamId) {
               // Put into Employee datatype so its easy to use client-side
-              let employee: IEmployee = {userID: member.userId, name:member.name, role:member.role, teamID:id}
+              let employee: IEmployee = {
+                userID: member.userId,
+                name: member.name,
+                role: member.role,
+                teamID: id,
+              };
               employees.push(employee);
             }
-          })
-        })
-      })
+          });
+        });
+      });
 
       res.status(200).json(employees);
     } else {

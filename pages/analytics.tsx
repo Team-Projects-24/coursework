@@ -1,13 +1,12 @@
 
-import DataAnalyticsWindow from "components/data-analytics/tlmview/DataAnalyticsWindow";
+import IndividualUserView from "components/data-analytics/individual/IndividualWindow";
 
 
 
 function Admin() {
     return (
         <div>
-
-            <DataAnalyticsWindow />
+            <IndividualUserView />
         </div>
 
 

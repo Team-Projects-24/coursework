@@ -1,6 +1,6 @@
 /**
  *
- * @author Olivia Gray
+ * @author Olivia Gray, Euan Hall (Individual view)
  *
  * @description puts all tlm components together to create the view for team leaders and managers
  *
@@ -10,13 +10,17 @@ import { use, useEffect, useState } from "react";
 import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
+import useUserStore from "stores/userStore";
+import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
+import { BarCard } from "components/dashboard/BarCard";
+import { ResponsivePie } from "@nivo/pie";
 import axios from "axios";
 import { getLinearProgressUtilityClass } from "@mui/material";
 import { ITeam } from "types/analysis/Team.d";
 import { IEmployee } from "types/analysis/Employee.d";
 import { time } from "console";
 
-function DataAnalyticsWindow() {
+export default function DataAnalyticsWindow() {
   const [teams, setTeams] = useState();
   const [members, setMembers] = useState<any>();
   const [teamUserState, setTeamUserState] = useState(-1);
@@ -28,8 +32,11 @@ function DataAnalyticsWindow() {
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
 
-  // Get the currently logged in user
+  const { user, setUser } = useUserStore();
+  const loggedInUserID = user?.userId;
+  const loggedInUserRole = user?.role;
 
+  // Get the currently logged in user
   // DYNAMICALLY LOADING THE PAGE
   useEffect(() => {
     loadData();
@@ -43,7 +50,8 @@ function DataAnalyticsWindow() {
   async function loadData() {
     axios
       .post("api/analysis/getTeamIDs", {
-        leaderID: "Liv",
+        leaderID: loggedInUserID,
+        role: loggedInUserRole,
       })
       .then((responseIDs) => {
         axios
@@ -167,7 +175,8 @@ function DataAnalyticsWindow() {
     setSelectedUsers(selectedUsers);
     setSelectedTeams(selectedTeams);
 
-    //console.log(selectedUsers);
+    console.log(selectedUsers);
+    console.log(selectedTeams);
 
     if (selectedTeams.includes(true)) {
       let teamsInput: any[] = [];
@@ -195,10 +204,16 @@ function DataAnalyticsWindow() {
         }
       }
       if (usersInput.length > 0) {
+        // If any users have been selected
         console.log(usersInput);
         setSelectedTeamIDs([]);
         setSelectedUserIDs(usersInput);
         loadPerformanceData([], usersInput, timeFrameState);
+      } else {
+        // If no one has been selected
+        setSelectedTeamIDs([]);
+        setSelectedUserIDs([]);
+        loadPerformanceData([], [], timeFrameState);
       }
     }
   };
@@ -245,9 +260,6 @@ function DataAnalyticsWindow() {
           <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
         </div>
       </div>
-      {/* <button onClick={}> Go to Admin Page </button> */}
     </div>
   );
 }
-
-export default DataAnalyticsWindow;

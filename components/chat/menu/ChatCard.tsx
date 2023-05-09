@@ -10,14 +10,19 @@ import PersonIcon from "@mui/icons-material/Person";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { IChatMessage } from "types/ChatMessage.d";
 import DoneIcon from "@mui/icons-material/Done";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from "@mui/icons-material/Group";
-import { IChatMenu } from "types/ChatMenu.d";
 import { useRouter } from "next/router";
 import { Chatroom, SeenBy, User } from "@prisma/client";
 import { Message } from "@prisma/client";
+import { Animated } from "react-animated-css";
+
+
+interface ChatCardArgs {
+  chatId: number;
+  userId: string;
+}
 
 /**
  * @author Ade Osindero
@@ -26,9 +31,8 @@ import { Message } from "@prisma/client";
  * @returns A formatted string depiction of the last time the chat was updated.
  */
 function getChatDate(updatedAt: Date) {
-  const dateDifference = Math.floor(
-    (new Date().getTime() - updatedAt.getTime()) / 86400000
-  );
+  const dateDifference = Math
+    .floor((new Date().getTime() - updatedAt.getTime())/86400000);
 
   if (dateDifference === 0) {
     return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
@@ -61,7 +65,7 @@ function getChatLastMessage(
   if (!lastMessage) {
     return (
       <Box>
-        <Typography className="info-card-text">Start a conversation</Typography>
+        <Typography>Start a conversation</Typography>
       </Box>
     );
   }
@@ -69,23 +73,21 @@ function getChatLastMessage(
   if (lastMessage.senderId === id) {
     return (
       <Grid item container>
-        <Grid item paddingRight={0.5}>
-          <DoneIcon
-            fontSize="small"
-            className={`tick ${lastMessage.seenBy ? "active" : ""}`}
-          />
+        <Grid
+          item
+          paddingRight={0.5}
+          color={lastMessage.seenBy ? "#53bdeb" : "inherit"}>
+          <DoneIcon fontSize="small" />
         </Grid>
         <Grid item xs zeroMinWidth>
-          <Typography className="info-card-text" noWrap>
-            {lastMessage.content}
-          </Typography>
+          <Typography noWrap>{lastMessage.content}</Typography>
         </Grid>
       </Grid>
     );
   }
   return (
     <Box>
-      <Typography className="info-card-text">
+      <Typography>
         {`${!isPrivate ? `${lastMessage.senderId}: ` : ""}${
           lastMessage.content
         }`}
@@ -94,18 +96,26 @@ function getChatLastMessage(
   );
 }
 
+/**
+ * @author Ade Osindero
+ * 
+ * @param isPrivate - Whether or not the chat is private.
+ * @param image - The location of the image.
+ * @returns A grid component having the chat image.
+ */
 function getImage(isPrivate: boolean, image: string | null) {
-  if (image) {
-    return <></>;
-  }
+  // if (image) {
+  //   return <></>;
+  // }
 
   return (
-    <Grid item padding={1.2} className="icon-container">
-      {isPrivate ? (
-        <PersonIcon className="icon" />
-      ) : (
-        <GroupIcon className="icon" />
-      )}
+    <Grid
+      item
+      padding={1.2}
+      borderRadius={20}
+      bgcolor="#00a884"
+      color="#aebac1">
+      {isPrivate ? <PersonIcon /> : <GroupIcon />}
     </Grid>
   );
 }
@@ -117,13 +127,7 @@ function getImage(isPrivate: boolean, image: string | null) {
  * @param userId - The id of the current user.
  * @returns A react component (the card) detailing information of the chat.
  */
-export default function ChatCard({
-  chatId,
-  userId,
-}: {
-  chatId: number;
-  userId: string;
-}) {
+export default function ChatCard({ chatId, userId }: ChatCardArgs) {
   const [lastMessage, setLastMessage] = useState<
     (Message & { seenBy: SeenBy[] }) | null
   >(null);
@@ -134,78 +138,103 @@ export default function ChatCard({
       })
     | null
   >();
+  const [hover, setHover] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
     async function getData() {
       try {
-        const chatResponse = await axios.get("/api/chat/" + chatId);
+        const chatResponse = await axios.get(`/api/chat/${chatId}`);
+
         setChat(chatResponse.data);
 
         if (chatResponse.data.messages.length) {
           const lastId = chatResponse.data.messages.at(-1)!.id;
-          const messageResponse = await axios.get(
-            "/api/chat/message/" + lastId
-          );
+
+          const messageResponse = await axios
+            .get(`/api/chat/message/${lastId}`);
+
           setLastMessage(messageResponse.data);
         }
       } catch (error) {
         console.error("Error fetching chat data:", error);
       }
     }
+
     getData();
   }, [chatId]);
 
-  if (!chat || (chat.private && !chat.messages.length)) {
-    return <></>;
-  }
+  if (!chat || chat.private && !chat.messages.length) { return <></>; }
 
   const chatTitle = chat.private
     ? chat.members.filter((member) => member.userId !== userId).pop()?.name ??
       `${chat.members.at(0)?.name} (You)`
     : chat.name;
 
-  const enterChat = () => {
-    router.push(`/chat/${chat.id}`);
-  };
+  const enterChat = () => router.push(`/chat/${chat.id}`);
 
   return (
-    <>
-      <Grid container className="info-card">
-        <Grid item container xs="auto" padding={2} onClick={enterChat}>
-          {getImage(chat.private, chat.chatImage)}
-        </Grid>
-        <Grid item container className="info-card-right" xs={11}>
-          <Grid container direction="column">
+    <Grid
+      sx={{ cursor: "pointer", }}
+      bgcolor={hover ? "#2a3942" : "inherit"}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      color={hover ? "#e9edef" : "#8696a0"}
+      paddingRight={1}
+      container>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+      <Grid item container xs="auto" padding={2} onClick={enterChat}>
+        {getImage(chat.private, chat.chatImage)}
+      </Grid>
+      <Grid
+        item
+        container
+        borderTop="solid 1.2px"
+        borderColor="#222d34"
+        alignItems="center"
+        display="flex"
+        xs>
+        <Grid container direction="column" paddingRight={4}>
+          <Grid
+            item
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            onClick={enterChat}>
+            <Grid item xs="auto">
+              <Typography color="#e9edef" fontSize={18}>
+                {chatTitle}
+              </Typography>
+            </Grid>
+            <Grid item xs="auto">
+              <Typography fontSize={15} color="#8696a0">
+                {getChatDate(new Date(chat.updatedAt))}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item container justifyContent="space-between">
+            <Grid item container onClick={enterChat} xs>
+              {getChatLastMessage(lastMessage, chat.private, userId)}
+            </Grid>
             <Grid
               item
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              onClick={enterChat}
-            >
-              <Grid item xs="auto">
-                <Typography color="#e9edef" fontSize={18}>
-                  {chatTitle}
-                </Typography>
-              </Grid>
-              <Grid item xs="auto">
-                <Typography fontSize={15} color="#8696a0">
-                  {getChatDate(new Date(chat.updatedAt))}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item container justifyContent="space-between">
-              <Grid item container xs={11} onClick={enterChat}>
-                {getChatLastMessage(lastMessage, chat.private, userId)}
-              </Grid>
-              <Grid item className="dropdown" xs="auto">
-                <KeyboardArrowDownIcon className="down-arrow" />
-              </Grid>
+              alignContent="center"
+              color="#8696a0"
+              xs="auto">
+              <Animated
+                animationIn="fadeInRight"
+                animationOut="fadeOutRight"
+                animationInDuration={400}
+                animationOutDuration={400}
+                isVisible={hover}>
+                <CloseIcon />
+              </Animated>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }

@@ -1,11 +1,3 @@
-.primary-colour {
-    background-color: #202c33;
-}
-
-.second-colour {
-    background-color: #111b21;
-}
-
 .icon-container {
     border-radius: 20px;
     cursor: pointer;
@@ -15,89 +7,6 @@
     background-color: #374248;
 }
 
-.icon {
-    color: #aebac1;
-}
-
-.info-card {
-    color: #8696a0;
-    cursor: pointer;
-}
-
-.info-card:hover,
-.info-card:active {
-    background-color: #2a3942;
-}
-
-.info-card:active {
-    color: #e9edef;
-}
-
-.info-card-right {
-    border-style: solid;
-    border-top-width: 1.4px;
-    border-color: #222d34;
-    display: flex;
-    align-items: center;
-}
-
-.info-card .icon-container {
-    background-color: #00a884;
-}
-
-.info-card .tick {
-    color: #8696a0;
-}
-
-.info-card .tick.active {
-    color: #53bdeb;
-}
-
-.info-card .down-arrow {
-    display: none;
-    color: #8696a0;
-    animation-name: info-card-dropdown;
-    animation-duration: .1s;
-}
-
-.info-card:hover .down-arrow {
-    display: block;
-}
-
-.dropdown-content {
-    display: none;
-    border-radius: 3px;
-    padding-block: 5px;
-}
-
-.dropdown-content > li {
-    text-align: center;
-}
-
-.dropdown-content.active {
-    display: block;
-}
-
-.search {
-    color: #ffffff;
-    outline: none;
-}
-
-.arrowBack {
-    cursor: pointer;
-}
-
 #top-bar .icon-container:active {
     background-color: #00a884;
-}
-
-@keyframes info-card-dropdown {
-    from {
-        margin-right: -12px;
-        color: transparent;
-    }
-    to {
-        margin-right: 0px;
-        color: auto;
-    }
 }

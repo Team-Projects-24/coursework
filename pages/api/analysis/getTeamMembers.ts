@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient} from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { IEmployee } from "types/analysis/Employee.d";
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
   try {
     const { teamID } = req.body;
 
@@ -45,8 +45,7 @@ export default async function handler(
           });
         });
         employees.push(teamMembers);
-      }      
-
+      }
 
       res.status(200).json(employees);
     } else {

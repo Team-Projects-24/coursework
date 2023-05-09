@@ -1,16 +1,14 @@
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Team, User } from "@prisma/client";
 import { ITeam } from "types/analysis/Team.d";
-
-const prisma = new PrismaClient();
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const { leaderID } = req.body;
+    const { leaderID, role } = req.body;
 
     if (!leaderID) {
       res
@@ -19,19 +17,23 @@ export default async function handler(
       return;
     }
 
-    const results = await prisma.team.findMany({
-      where: {
-        leaderId: leaderID
-      }
-    })
+    let results;
+    if (role === "TEAMLEADER") {
+      results = await prisma.team.findMany({
+        where: {
+          leaderId: leaderID,
+        },
+      });
+    } else {
+      results = await prisma.team.findMany({});
+    }
 
     if (results) {
-
       let teamIDs: String[] = [];
 
-      results.forEach(result => {
+      results.forEach((result) => {
         teamIDs.push(result.id);
-      })      
+      });
 
       res.status(200).json(teamIDs);
     } else {

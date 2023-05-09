@@ -50,6 +50,7 @@ export default function ChatContainer({
       <style jsx>{`
         .messages {
           justify-content: flex-end;
+          background-color: "#111b21";
           overflow-y: auto;
           height: 100%;
           width: 100%;

@@ -7,6 +7,8 @@ import axios from "axios";
 const hardcodedTeams = ["Team A", "Team B", "Team C"];
 const hardcodedUsers = ["User 1", "User 2", "User 3"];
 
+
+
 export default function NewTaskForm() {
     const [selectedTeam, setSelectedTeam] = useState<{ teamId: string; name: string} | null>(null);;
     const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string} | null>(null);;
@@ -54,7 +56,9 @@ export default function NewTaskForm() {
 
         // Use API to create a new task here
         console.log("Use API to create a new task");
+        createTask();
     }
+
 
 
     useEffect(() => {
@@ -93,6 +97,29 @@ export default function NewTaskForm() {
     const filteredTeams = teams.filter((team) =>
         team.name.toLowerCase().includes(selectedTeam?.name.toLowerCase() || "")
     );
+
+
+    async function createTask() {
+        try {
+          const response = await axios.post("/api/admin/createTask", {
+            teamId: selectedTeam,
+            userId: selectedUser,
+            deadline: deadline,
+            name: taskName,
+            manHoursSet: estimatedManHours,
+          });
+          console.log("New task created:", response.data);
+      
+          // Reset form values
+          setSelectedTeam("");
+          setSelectedUser("");
+          setTaskName("");
+          setDeadline("");
+          setEstimatedManHours(0);
+        } catch (error) {
+          console.error("Error creating task:", error.response?.data || error.message);
+        }
+      }
 
 
 

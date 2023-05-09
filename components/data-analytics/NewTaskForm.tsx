@@ -188,6 +188,15 @@ export default function NewTaskForm() {
         }
     }, [selectedTeam]);
 
+    function formatDate(date: Date | undefined): string {
+        if (!date) {
+          return '';
+        }
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+      }
 
 
     return (
@@ -251,7 +260,7 @@ export default function NewTaskForm() {
                             type="date"
                             // InputLabelProps={{ shrink: true }}
                             InputProps={{ inputProps: { min: new Date().toISOString().split("T")[0] } }}
-                            value={deadline}
+                            value={formatDate(deadline)}
                             onChange={(e) => setDeadline(new Date(e.target.value))}
                         />
                     </Grid>

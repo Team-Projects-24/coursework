@@ -33,7 +33,7 @@ export default function ChatContainer({
 
   return (
     <>
-      <div className="messages justify-content:flex-end overflow-y:auto sc">
+      <div className="messages overflow-y:auto sc">
         {messages?.map(
           (message: Message) => (
             <MessageBubble
@@ -49,7 +49,10 @@ export default function ChatContainer({
       </div>
       <style jsx>{`
         .messages {
-          justify-content: flex-end;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
           background-color: "#111b21";
           overflow-y: auto;
           height: 100%;

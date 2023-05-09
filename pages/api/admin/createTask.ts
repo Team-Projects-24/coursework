@@ -3,9 +3,11 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import { Console } from "console";
 
 const prisma = new PrismaClient();
 
+console.log("this file is reached");
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {

@@ -10,8 +10,8 @@ const hardcodedUsers = ["User 1", "User 2", "User 3"];
 
 
 export default function NewTaskForm() {
-    const [selectedTeam, setSelectedTeam] = useState<{ teamId: string; name: string } | null>(null);;
-    const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string } | null>(null);;
+    const [selectedTeam, setSelectedTeam] = useState<{ teamId: string; name: string } | null>(null);
+    const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string } | null>(null);
     const [taskName, setTaskName] = useState<string>("");
     const [deadline, setDeadline] = useState<string>("");
     const [estimatedManHours, setEstimatedManHours] = useState<number>(0);
@@ -20,10 +20,15 @@ export default function NewTaskForm() {
     const [teams, setTeams] = useState<Array<{ teamId: string, name: string }>>([]);
 
 
+    const [userText, setUserText] = useState<{ userId: string; name: string } | null>(null)
+    const [teamText, setTeamText] = useState<{ teamId: string; name: string } | null>(null);
+
+
 
     const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle team change called");
-        setSelectedTeam({ teamId: '', name: event.target.value });
+        setTeamText({ teamId: '', name: event.target.value });
+        // console.log(selectedTeam);
     };
 
     const handleTeamSelect = (
@@ -33,12 +38,18 @@ export default function NewTaskForm() {
     ) => {
         if (value) {
             setSelectedTeam(value);
+            setTeamText(value);
+            // console.log(selectedTeam);
+
+        } else {
+            setSelectedTeam(null);
         }
     };
 
     const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle user change called");
-        setSelectedUser({ userId: '', name: event.target.value });
+        setUserText({ userId: '', name: event.target.value });
+        // console.log(selectedUser);
     };
 
     const handleUserSelect = (
@@ -48,8 +59,20 @@ export default function NewTaskForm() {
     ) => {
         if (value) {
             setSelectedUser(value);
+            setUserText(value);
+            // console.log(selectedUser);
+        } else {
+            setSelectedUser(null);
         }
     };
+
+    useEffect(() => {
+        console.log("selectedTeam set as: ", selectedTeam);
+        console.log("selectedUser set as: ", selectedUser);
+
+
+    }, [selectedUser, selectedTeam]);
+
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -59,13 +82,14 @@ export default function NewTaskForm() {
 
 
         console.log(selectedTeam?.teamId);
+        console.log(selectedUser?.userId);
 
-        if (selectedTeam?.teamId && selectedUser?.userId && deadline && estimatedManHours > 0 && taskName !== "") {
+        if (selectedTeam && selectedUser) {
+            createTask(selectedTeam?.teamId, selectedUser?.userId, taskName, deadline, estimatedManHours); //GPT - I NEED TO CREATE THE API AND FUNCTION FOR THIS
 
-            createTask();
             // createPerformanceEntry() // INITIALISE THE PERFORAMNCE LOG FOR THIS TASK
-        }else{
-            console.log("one of the entries isn't right")
+        } else {
+            console.error("please select a team and user");
         }
     }
 
@@ -75,6 +99,9 @@ export default function NewTaskForm() {
         fetchUsers();
         fetchTeams();
     }, []);
+
+
+
 
 
     async function fetchUsers() {
@@ -101,36 +128,31 @@ export default function NewTaskForm() {
 
 
     const filteredUsers = users.filter((user) =>
-        user.name.toLowerCase().includes(selectedUser?.name.toLowerCase() || "")
+        user.name.toLowerCase().includes(userText?.name.toLowerCase() || "")
     );
 
     const filteredTeams = teams.filter((team) =>
-        team.name.toLowerCase().includes(selectedTeam?.name.toLowerCase() || "")
+        team.name.toLowerCase().includes(teamText?.name.toLowerCase() || "")
     );
 
 
-    async function createTask() {
+
+    async function createTask(teamId: any, userId: any, taskName: any, deadline: any, estimatedManHours: any) {
         try {
             const response = await axios.post("/api/admin/createTask", {
-                teamId: selectedTeam?.teamId,
-                userId: selectedUser?.userId,
-                deadline: deadline,
-                name: taskName,
-                manHoursSet: estimatedManHours,
+                teamId,
+                userId,
+                taskName,
+                deadline,
+                estimatedManHours,
             });
 
-            console.log("New task created:", response.data);
-
-            // Reset form values
-            setSelectedTeam(null);
-            setSelectedUser(null);
-            setTaskName("");
-            setDeadline("");
-            setEstimatedManHours(0);
+            console.log("Task created:", response.data);
         } catch (error) {
-            console.error("Error creating task:", error.response?.data || error.message);
+            console.error("Error creating task:", error);
         }
     }
+
 
 
 
@@ -144,9 +166,9 @@ export default function NewTaskForm() {
                 <Grid container spacing={2} sx={{ my: 2 }}>
                     <Grid item xs={12}>
                         <Autocomplete
-                            value={selectedTeam}
+                            value={teamText}
                             onChange={handleTeamSelect}
-                            inputValue={selectedTeam?.name || ""}
+                            inputValue={teamText?.name || ""} // not sure if this needs switching
                             onInputChange={(_, value) => handleTeamChange({ target: { value } } as any)}
                             id="team-select"
                             options={filteredTeams}
@@ -162,9 +184,9 @@ export default function NewTaskForm() {
                     </Grid>
                     <Grid item xs={12}>
                         <Autocomplete
-                            value={selectedUser}
+                            value={userText}
                             onChange={handleUserSelect}
-                            inputValue={selectedUser?.name || ""}
+                            inputValue={userText?.name || ""}
                             onInputChange={(_, value) => handleUserChange({ target: { value } } as any)}
                             id="user-select"
                             options={filteredUsers}

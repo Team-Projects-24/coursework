@@ -33,12 +33,13 @@ export default function InfoPage() {
   const [newMember, setNewMember] = useState("");
   const [removeMember, setRemoveMember] = useState("");
 
+  var change = 0;
+
   useEffect(() => {
     const fetchOptions = async () => {
       const response = await axios.get("/api/users/getUsers");
       setOptions(response.data);
     };
-
     fetchOptions();
   }, []);
 
@@ -63,7 +64,7 @@ export default function InfoPage() {
       setLoading(false);
     }
     getData();
-  }, [id]);
+  }, [change]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -96,6 +97,7 @@ export default function InfoPage() {
     };
 
     handleUpdateMembersList();
+    change++;
   }
 
   function removeMemberFromChat() {
@@ -117,6 +119,7 @@ export default function InfoPage() {
     };
 
     handleRemoveMemberFromChat();
+    change++;
   }
 
   function updateChatName() {
@@ -135,6 +138,7 @@ export default function InfoPage() {
     };
 
     handleUpdateChangeChatName();
+    change++;
   }
 
   function updateChatDesc() {
@@ -153,6 +157,7 @@ export default function InfoPage() {
     };
 
     handleUpdateChatDesc();
+    change++;
   }
 
   function clearingField() {

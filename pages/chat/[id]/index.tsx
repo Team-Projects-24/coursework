@@ -54,7 +54,7 @@ export default function ChatPage() {
         console.log("/api/chat/" + chatroomId);
         const { data } = await axios.get("/api/chat/" + chatroomId);
         setChatData(data);
-        setLoading(false);
+        // setLoading(false);
       }
       getData();
     });
@@ -81,18 +81,24 @@ export default function ChatPage() {
 
   return (
     <Grid container direction="column" height="100%" width="100%">
-      <Grid item container height="7.5%" zIndex={1}>
-        <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
-      </Grid>
-      <Grid item container height="85%" zIndex={0}>
-        <ChatContainer
-          messages={chatData?.messages as unknown as Message[]}
-          userId={user?.userId as string}
-        />
-      </Grid>
-      <Grid item container height="7.5%" zIndex={1}>
-        <InputBar chatId={chatroomId} userId={user?.userId as string} />
-      </Grid>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <Grid item container height="7.5%" zIndex={1}>
+            <ChatHeader chatName={chatName!} chatImage="" chatId={chatroomId} />
+          </Grid>
+          <Grid item container height="85%" zIndex={0}>
+            <ChatContainer
+              messages={chatData?.messages as unknown as Message[]}
+              userId={user?.userId as string}
+            />
+          </Grid>
+          <Grid item container height="7.5%" zIndex={1}>
+            <InputBar chatId={chatroomId} userId={user?.userId as string} />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 }

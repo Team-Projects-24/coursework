@@ -197,7 +197,9 @@ function RightSection({ response }: RightSectionArgs) {
 
 export default function CreateGroup() {
   const { user, setUser } = useUserStore();
-  const [participants, setParticipants] = useState<Array<IUser>>([user!]);
+  const [participants, setParticipants] = useState<Array<IUser>>(
+    user ? [user] : []
+  );
   const [valid, setValid] = useState<boolean>(false);
 
   const removeResponse = (selectedUser: IUser) => {

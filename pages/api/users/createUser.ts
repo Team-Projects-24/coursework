@@ -51,21 +51,6 @@ export default async function handler(
       });
     }
 
-    //remove referral code from database
-    try {
-      const removeReferral = await prisma.referral.delete({
-        where: {
-          code: referral,
-        },
-      });
-    } catch {
-      console.log("Referral code not found");
-      return sendSuccessResponse(res, {
-        created: false,
-        message: "Invalid referral code",
-      });
-    }
-
     const user = await prisma.user.create({
       data: {
         name: name,

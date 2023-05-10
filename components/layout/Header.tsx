@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ProfilePopover from "../profile/ProfilePopover";
-import Notifications from "../notifications/Notifications";
+// import Notifications from "../notifications/Notifications";
 
 /**
  * @author Tom Whitticase

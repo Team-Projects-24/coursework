@@ -1,43 +1,229 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { TextField, Autocomplete, Box, Grid, Typography, FormControl, Button } from "@mui/material";
 import axios from "axios";
 
 
 
-const hardcodedTeams = ["Team A", "Team B", "Team C"];
-const hardcodedUsers = ["User 1", "User 2", "User 3"];
-
 export default function NewTaskForm() {
-    const [selectedTeam, setSelectedTeam] = useState<string>("");
-    const [selectedUser, setSelectedUser] = useState<string>("");
+    const [selectedTeam, setSelectedTeam] = useState<{ id: string; name: string } | null>(null);
+    const [selectedUser, setSelectedUser] = useState<{ userId: string; name: string } | null>(null);
+
+
     const [taskName, setTaskName] = useState<string>("");
-    const [deadline, setDeadline] = useState<string>("");
+    const [deadline, setDeadline] = useState<Date>();
     const [estimatedManHours, setEstimatedManHours] = useState<number>(0);
 
-    const handleTeamSelect = (
-        event: React.ChangeEvent<{}>,
-        value: string | null | undefined
-    ) => {
-        if (value) {
-            setSelectedTeam(value);
-        }
+    const [users, setUsers] = useState<Array<{ userId: string, name: string }>>([]);
+    const [teams, setTeams] = useState<Array<{ id: string, name: string }>>([]);
+
+
+    const [userText, setUserText] = useState<{ userId: string; name: string } | null>(null)
+    const [teamText, setTeamText] = useState<{ id: string; name: string } | null>(null);
+
+
+    const [userId, setUserId] = useState<string>();
+    const [teamId, setTeamId] = useState<string>();
+
+
+    const [submitted, setSubmitted] = useState<boolean>(false);
+
+
+
+
+    const handleUserChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("handle user change called");
+        setUserText({ userId: '', name: event.target.value });
+
     };
 
     const handleUserSelect = (
+
         event: React.ChangeEvent<{}>,
-        value: string | null | undefined
+        value: { userId: string; name: string } | null
     ) => {
         if (value) {
             setSelectedUser(value);
+            setUserText(value);
+            // console.log(selectedUser);
+        } else {
+            setSelectedUser(null);
         }
     };
 
-    function handleSubmit(event: FormEvent<HTMLFormElement>) {
+
+
+    const handleTeamChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("handle user change called");
+        setTeamText({ id: '', name: event.target.value });
+
+    };
+
+    const handleTeamSelect = (
+
+        event: React.ChangeEvent<{}>,
+        value: { id: string; name: string } | null
+    ) => {
+        if (value) {
+            setSelectedTeam(value);
+            setTeamText(value);
+            // console.log(selectedUser);
+        } else {
+            setSelectedUser(null);
+        }
+    };
+
+
+    const createPerformanceEntry = async (taskId: string, manHoursSet: number, manHoursCompleted: number) => {
+        try {
+            const response = await axios.post('/api/admin/newPerformanceEntry', {
+                taskId,
+                manHoursSet,
+                manHoursCompleted,
+            })
+            console.log('New performance entry created:', response.data)
+
+
+
+        } catch (error) {
+            console.error('ERROR creating performance entry:', error.response?.data || error.message)
+        }
+    }
+
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         // Use API to create a new task here
         console.log("Use API to create a new task");
+
+        setSubmitted(true);
+
+        // const teamId = "1";
+        // const userId = "Ade";
+        const deadline2 = new Date("01-02-2003");
+        // const name = "TESTTTTTT";
+        // const manHoursSet = 3;
+
+
+
+        console.log(deadline);
+        console.log(deadline2);
+
+        console.log(selectedTeam?.id);
+        if (selectedTeam && selectedUser && deadline) {
+
+            console.log(selectedTeam.id);
+
+            createTask(selectedTeam.id, estimatedManHours, selectedUser.userId, deadline, taskName);
+
+            
+
+            //RESET VALUES IN FORM
+
+
+        } else {
+            console.log("ashdf;jasld;fjl;sjdflas;dlfasljdf");
+        }
     }
+
+
+
+    useEffect(() => {
+        fetchUsers();
+        fetchTeams();
+    }, []);
+
+
+
+
+
+    async function fetchUsers() {
+        try {
+            const response = await fetch('/api/admin/getAllUsers');
+            const data = await response.json();
+            console.log("fetched users: ", data);
+            setUsers(data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
+
+    async function fetchTeams() {
+        try {
+            const response = await fetch('/api/admin/getAllTeams');
+            const data = await response.json();
+            console.log("fetched teams: ", data);
+            setTeams(data);
+        } catch (error) {
+            console.error('Error fetching teams:', error);
+        }
+    }
+
+
+
+
+    const filteredUsers = users.filter((user) =>
+        user.name.toLowerCase().includes(userText?.name.toLowerCase() || "")
+    );
+
+    const filteredTeams = teams.filter((team) =>
+        team.name.toLowerCase().includes(teamText?.name.toLowerCase() || "")
+    );
+
+
+
+    const createTask = async (teamId: string, manHoursSet: number, userId: string, deadline: Date, name: string) => {
+        try {
+            const response = await axios.post('/api/admin/createTask', {
+                teamId,
+                manHoursSet,
+                userId,
+                deadline,
+                name,
+                manHoursCompleted: "0",
+            })
+            console.log('New task entry created:', response.data)
+
+            const taskId = response.data.taskId;
+         
+            createPerformanceEntry(taskId, estimatedManHours, 0);
+
+
+            // setSelectedName(null);
+            // setManHoursCompleted(null);
+
+        } catch (error) {
+            console.error('ERROR creating task entry:', error.response?.data || error.message)
+        }
+    }
+
+
+
+    useEffect(() => {
+        if (selectedUser) {
+            console.log("hereis the user");
+            console.log(selectedUser.userId);
+            setUserId(selectedUser.userId);
+        }
+    }, [selectedUser]);
+
+    useEffect(() => {
+        if (selectedTeam) {
+            console.log("here is the team id");
+            console.log(selectedTeam.id); // this is returning 'undefined'. why is that, GPT?
+
+        }
+    }, [selectedTeam]);
+
+    function formatDate(date: Date | undefined): string {
+        if (!date) {
+            return '';
+        }
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + date.getDate()).slice(-2);
+        return `${year}-${month}-${day}`;
+    }
+
 
     return (
         <Box sx={{ margin: 'auto', maxWidth: 600 }}>
@@ -49,11 +235,13 @@ export default function NewTaskForm() {
                 <Grid container spacing={2} sx={{ my: 2 }}>
                     <Grid item xs={12}>
                         <Autocomplete
-                            value={selectedTeam}
+                            value={teamText}
                             onChange={handleTeamSelect}
+                            inputValue={teamText?.name || ""} // not sure if this needs switching
+                            onInputChange={(_, value) => handleTeamChange({ target: { value } } as any)}
                             id="team-select"
-                            options={hardcodedTeams}
-                            getOptionLabel={(team) => team}
+                            options={filteredTeams}
+                            getOptionLabel={(team) => team.name}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -65,11 +253,13 @@ export default function NewTaskForm() {
                     </Grid>
                     <Grid item xs={12}>
                         <Autocomplete
-                            value={selectedUser}
+                            value={userText}
                             onChange={handleUserSelect}
+                            inputValue={userText?.name || ""}
+                            onInputChange={(_, value) => handleUserChange({ target: { value } } as any)}
                             id="user-select"
-                            options={hardcodedUsers}
-                            getOptionLabel={(user) => user}
+                            options={filteredUsers}
+                            getOptionLabel={(user) => user.name}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -96,8 +286,8 @@ export default function NewTaskForm() {
                             type="date"
                             // InputLabelProps={{ shrink: true }}
                             InputProps={{ inputProps: { min: new Date().toISOString().split("T")[0] } }}
-                            value={deadline}
-                            onChange={(e) => setDeadline(e.target.value)}
+                            value={formatDate(deadline)}
+                            onChange={(e) => setDeadline(new Date(e.target.value))}
                         />
                     </Grid>
                     <Grid item xs={12}>

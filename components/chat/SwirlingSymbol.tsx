@@ -14,7 +14,12 @@ const textureUrl =
 const SwirlingSymbol: React.FC = () => {
   // This reference will give us direct access to the mesh
   //   const mesh = React.useRef<THREE.Mesh>(null!);
-  const mesh = useRef<Mesh>(null!);
+  // const mesh = useRef<Mesh>(null!);
+  const mesh = useRef<THREE.Mesh>(null!);
+  let mouseX = 0;
+  let mouseY = 0;
+  const windowHalfX = window.innerWidth / 2;
+  const windowHalfY = window.innerHeight / 2;
 
   const speed = 0.01;
   let angle = 0;
@@ -22,19 +27,36 @@ const SwirlingSymbol: React.FC = () => {
   const texture = useLoader(TextureLoader, textureUrl);
 
   // Rotate mesh every frame, this is outside of React without overhead
-  useFrame(() => {
-    // mesh.current.rotation.x += 0.01;
-    mesh.current.rotation.y += 0.01;
-    angle += speed;
-    // mesh.current.position.x = Math.cos(angle);
-    // mesh.current.position.y = Math.sin(angle);
-    // mesh.current.position.z = angle * 0.1;
-  });
+  // useFrame(() => {
+  //   // mesh.current.rotation.x += 0.01;
+  //   mesh.current.rotation.y += 0.01;
+  //   angle += speed;
+  //   // mesh.current.position.x = Math.cos(angle);
+  //   // mesh.current.position.y = Math.sin(angle);
+  //   // mesh.current.position.z = angle * 0.1;
+  // });
 
   useEffect(() => {
     // Set the initial tilt of the globe
     mesh.current.rotation.x = 20 * (Math.PI / 180); // convert degrees to radians
   }, []);
+
+  const onDocumentMouseMove = (event: MouseEvent) => {
+    mouseX = (event.clientX - windowHalfX) / 5;
+    // mouseY = (event.clientY - windowHalfY) / 2;
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousemove", onDocumentMouseMove, false);
+    return () => {
+      document.removeEventListener("mousemove", onDocumentMouseMove);
+    };
+  }, []);
+
+  useFrame(() => {
+    // mesh.current.rotation.x += (mouseY - mesh.current.rotation.x) * 0.01;
+    mesh.current.rotation.y += (mouseX - mesh.current.rotation.y) * 0.0005;
+  });
 
   return (
     <>

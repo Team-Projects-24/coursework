@@ -91,6 +91,7 @@
     "@types/socket.io-client": "^3.0.0",
     "@types/ws": "^8.5.4",
     "autoprefixer": "^10.4.13",
+    "eslint": "^8.40.0",
     "file-loader": "^6.2.0",
     "nodemon": "^2.0.22",
     "postcss": "^8.4.19",

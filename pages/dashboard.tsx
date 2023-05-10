@@ -9,6 +9,7 @@ import { BarCard } from "components/dashboard/BarCard";
 import { ResponsivePie } from "@nivo/pie";
 import { ITask } from "types/Task.d";
 import OverdueTasksCard from "components/dashboard/OverdueTasksCard";
+import LoadingScreen from "components/chat/LoadingScreen";
 
 /**
  * @author Luke Chester
@@ -307,6 +308,7 @@ export default function Dashboard() {
           </Box>
         </>
       )} */}
+      <LoadingScreen />
     </>
   );
 }

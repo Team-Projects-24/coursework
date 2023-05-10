@@ -12,6 +12,7 @@ import { TextField } from "@mui/material";
 import { Select } from "@mui/material";
 import MembersList from "components/chat/info/Members";
 import { List } from "react-content-loader";
+import LoadingScreen from "components/chat/LoadingScreen";
 
 export default function InfoPage() {
   const router = useRouter();
@@ -57,12 +58,16 @@ export default function InfoPage() {
     (option) => !members.some((member) => member.userId === option.userId)
   );
 
+  async function getData() {
+    setLoading(true);
+    const { data } = await axios.get("/api/chat/" + chatroomId);
+    setChatData(data);
+    const response = await axios.get("/api/users/getUsers");
+    setOptions(response.data);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    async function getData() {
-      const { data } = await axios.get("/api/chat/" + chatroomId);
-      setChatData(data);
-      setLoading(false);
-    }
     getData();
   }, [change]);
 
@@ -73,12 +78,6 @@ export default function InfoPage() {
   }, []);
 
   const [url, setUrl] = useState<string>("");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setUrl(window.location.href);
-    }
-  }, []);
 
   function updateMembersList() {
     const handleUpdateMembersList = async () => {
@@ -97,7 +96,7 @@ export default function InfoPage() {
     };
 
     handleUpdateMembersList();
-    change++;
+    getData();
   }
 
   function removeMemberFromChat() {
@@ -119,7 +118,7 @@ export default function InfoPage() {
     };
 
     handleRemoveMemberFromChat();
-    change++;
+    getData();
   }
 
   function updateChatName() {
@@ -138,7 +137,7 @@ export default function InfoPage() {
     };
 
     handleUpdateChangeChatName();
-    change++;
+    getData();
   }
 
   function updateChatDesc() {
@@ -157,7 +156,7 @@ export default function InfoPage() {
     };
 
     handleUpdateChatDesc();
-    change++;
+    getData();
   }
 
   function clearingField() {
@@ -191,130 +190,167 @@ export default function InfoPage() {
 
   return (
     <>
-      <Grid container direction="column">
-        <Grid item alignContent={"center"} alignSelf={"center"} xs={12} md={8}>
-          {
-            <Info
-              name={chatData?.name as string}
-              description={chatData?.description as string}
-              chatImage={""}
-            />
-          }
-        </Grid>
-        <Grid
-          container
-          direction="column"
-          alignContent={"center"}
-          alignSelf={"center"}
-          paddingTop={5}
-        ></Grid>
-
-        <Grid
-          item
-          alignContent={"center"}
-          alignSelf={"center"}
-          justifyContent={"center"}
-          xs={12}
-          md={4}
-        >
-          <Members members={chatData?.members as User[]} />
-        </Grid>
-
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          paddingBottom={3}
-        >
-          <FormControl style={{ minWidth: 230 }}>
-            <InputLabel id="newMem">Choose a member</InputLabel>
-            <Select
-              onChange={(e) => setNewMember(e.target.value as string)}
-              id="newMem"
-              MenuProps={{
-                style: {
-                  maxHeight: 200,
-                },
-              }}
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          <Grid container direction="column">
+            <Grid
+              item
+              alignContent={"center"}
+              alignSelf={"center"}
+              xs={12}
+              md={8}
             >
-              {filteredUsers.map((option) => (
-                <MenuItem key={option.userId} value={option.userId}>
-                  {option.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              {
+                <Info
+                  name={chatData?.name as string}
+                  description={chatData?.description as string}
+                  chatImage={""}
+                />
+              }
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              alignContent={"center"}
+              alignSelf={"center"}
+              paddingTop={5}
+            ></Grid>
 
-          <Button variant="contained" onClick={updateMembersList}>
-            Add
-          </Button>
-        </Grid>
-      </Grid>
+            <Grid
+              item
+              alignContent={"center"}
+              alignSelf={"center"}
+              justifyContent={"center"}
+              xs={12}
+              md={4}
+            >
+              <Members members={chatData?.members as User[]} />
+            </Grid>
 
-      <Grid
-        container
-        direction="column"
-        alignContent={"center"}
-        alignSelf={"center"}
-      >
-        <Grid container direction="row" justifyContent="center">
-          <TextField
-            id="proposedDesc"
-            name="proposedDesc"
-            label="Enter chat description"
-            variant="outlined"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <Button type="submit" variant="contained" onClick={updateChatDesc}>
-            Submit
-          </Button>
-        </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              paddingBottom={3}
+            >
+              <FormControl style={{ minWidth: 230 }}>
+                <InputLabel id="newMem">Choose a member</InputLabel>
+                <Select
+                  onChange={(e) => setNewMember(e.target.value as string)}
+                  id="newMem"
+                  MenuProps={{
+                    style: {
+                      maxHeight: 200,
+                    },
+                  }}
+                >
+                  {filteredUsers.map((option) => (
+                    <MenuItem key={option.userId} value={option.userId}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-        <Grid container direction="row" justifyContent="center" paddingTop={3}>
-          <TextField
-            id="proposedName"
-            name="proposedName"
-            label="Enter New Name"
-            variant="outlined"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Button type="submit" variant="contained" onClick={updateChatName}>
-            Submit
-          </Button>
-        </Grid>
-      </Grid>
-      <Grid container direction="row" justifyContent="center" paddingTop={3}>
-        <FormControl style={{ minWidth: 230 }}>
-          <InputLabel id="removeMem">Choose a member</InputLabel>
-          <Select
-            onChange={(e) => setRemoveMember(e.target.value as string)}
-            id="removeMem"
-            MenuProps={{
-              style: {
-                maxHeight: 200,
-              },
-            }}
+              <Button variant="contained" onClick={updateMembersList}>
+                Add
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            direction="column"
+            alignContent={"center"}
+            alignSelf={"center"}
           >
-            {members.map((option) => (
-              <MenuItem key={option.userId} value={option.userId}>
-                {option.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button variant="contained" onClick={removeMemberFromChat}>
-          Remove
-        </Button>
-      </Grid>
-      <Grid container direction="row" justifyContent="center" paddingTop={3}>
-        <Button variant="contained" onClick={handleClick}>
-          Back
-        </Button>
-      </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              paddingTop={3}
+            >
+              <TextField
+                id="proposedName"
+                name="proposedName"
+                label="Enter New Name"
+                variant="outlined"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={updateChatName}
+              >
+                Submit
+              </Button>
+            </Grid>
+
+            <Grid container direction="row" justifyContent="center">
+              <TextField
+                id="proposedDesc"
+                name="proposedDesc"
+                label="Enter chat description"
+                variant="outlined"
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={updateChatDesc}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            paddingTop={3}
+          >
+            <FormControl style={{ minWidth: 230 }}>
+              <InputLabel id="removeMem">Choose a member</InputLabel>
+              <Select
+                onChange={(e) => setRemoveMember(e.target.value as string)}
+                id="removeMem"
+                MenuProps={{
+                  style: {
+                    maxHeight: 200,
+                  },
+                }}
+              >
+                {members.map((option) => (
+                  <MenuItem key={option.userId} value={option.userId}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button variant="contained" onClick={removeMemberFromChat}>
+              Remove
+            </Button>
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            paddingTop={3}
+          >
+            <Button variant="contained" onClick={handleClick}>
+              Back
+            </Button>
+          </Grid>
+        </>
+      )}
     </>
   );
 }

@@ -14,6 +14,8 @@ import axios from "axios";
 import ChatContainer from "components/chat/ChatContainer";
 import { Chatroom, Message, User } from "@prisma/client";
 import { io, Socket } from "socket.io-client";
+import LoadingScreen from "components/chat/LoadingScreen";
+import LoadingPage from "components/misc/LoadingPage";
 
 let socket: Socket;
 
@@ -82,7 +84,7 @@ export default function ChatPage() {
   return (
     <Grid container direction="column" height="100%" width="100%">
       {loading ? (
-        <div>Loading...</div>
+        <LoadingScreen />
       ) : (
         <>
           <Grid item container height="7.5%" zIndex={1}>

@@ -234,7 +234,7 @@ export default function CreateGroup() {
         <LeftSection
           participants={participants}
           removeResponse={removeResponse}
-          userId={user!.userId}
+          userId={user?.userId}
           valid={valid}
           setUser={setUser}
         />

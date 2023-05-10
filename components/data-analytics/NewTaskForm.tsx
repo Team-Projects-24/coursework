@@ -73,6 +73,22 @@ export default function NewTaskForm() {
     };
 
 
+    const createPerformanceEntry = async (taskId: string, manHoursSet: number, manHoursCompleted: number) => {
+        try {
+            const response = await axios.post('/api/admin/newPerformanceEntry', {
+                taskId,
+                manHoursSet,
+                manHoursCompleted,
+            })
+            console.log('New performance entry created:', response.data)
+
+
+
+        } catch (error) {
+            console.error('ERROR creating performance entry:', error.response?.data || error.message)
+        }
+    }
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -97,7 +113,12 @@ export default function NewTaskForm() {
 
             console.log(selectedTeam.id);
 
-            createTask(selectedTeam.id, estimatedManHours, selectedUser.userId, deadline2, taskName);
+            createTask(selectedTeam.id, estimatedManHours, selectedUser.userId, deadline, taskName);
+
+            
+
+            //RESET VALUES IN FORM
+
 
         } else {
             console.log("ashdf;jasld;fjl;sjdflas;dlfasljdf");
@@ -162,6 +183,11 @@ export default function NewTaskForm() {
             })
             console.log('New task entry created:', response.data)
 
+            const taskId = response.data.taskId;
+         
+            createPerformanceEntry(taskId, estimatedManHours, 0);
+
+
             // setSelectedName(null);
             // setManHoursCompleted(null);
 
@@ -190,13 +216,13 @@ export default function NewTaskForm() {
 
     function formatDate(date: Date | undefined): string {
         if (!date) {
-          return '';
+            return '';
         }
         const year = date.getFullYear();
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
         const day = ('0' + date.getDate()).slice(-2);
         return `${year}-${month}-${day}`;
-      }
+    }
 
 
     return (

@@ -10,6 +10,7 @@ import { ICreateChatroom } from "types/Chatroom.d";
 import ChatroomCreationHeader from "components/chat/menu/ChatroomCreationHeader";
 import SearchContainer from "components/chat/menu/SearchContainer";
 
+
 export default function createChat() {
   const [partialId, setPartialId] = useState<string>("");
   const { user, setUser } = useUserStore();
@@ -47,7 +48,7 @@ export default function createChat() {
   const searchById = (id: string) => setPartialId(id);
 
   return (
-    <Box minHeight="100%" className="second-colour">
+    <Box minHeight="100%" bgcolor="#111b21">
       <ChatroomCreationHeader title="New chat" />
       <Box>
         <Box paddingX={2} paddingTop={1}>

@@ -15,7 +15,7 @@ function getChatDate(updatedAt: Date) {
 
 export default function MessageBubble({ message, sent }: MessageBubbleProps) {
   //   const stringSentAt = message.sentAt.toLocaleTimeString();
-  console.log(message.sentAt);
+  // console.log(message.sentAt);
   return (
     <div>
       <div className={`speech-bubble ${sent ? "sent" : "received"}`}>

@@ -13,6 +13,9 @@ import { IChatroomInfo } from "types/Chatroom.d";
 import axios from "axios";
 import ChatContainer from "components/chat/ChatContainer";
 import { Chatroom, Message, User } from "@prisma/client";
+import { io, Socket } from "socket.io-client";
+
+let socket: Socket;
 
 // const message = "Hello World! page";
 
@@ -41,7 +44,25 @@ export default function ChatPage() {
       setLoading(false);
     }
     getData();
-  }, [id]);
+  }, []);
+
+  useEffect(() => {
+    const socket = io("http://localhost:3001");
+    socket.on("receive-message", (message: string) => {
+      console.log(message);
+      async function getData() {
+        console.log("/api/chat/" + chatroomId);
+        const { data } = await axios.get("/api/chat/" + chatroomId);
+        setChatData(data);
+        setLoading(false);
+      }
+      getData();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -49,7 +70,7 @@ export default function ChatPage() {
     }
   }, []);
 
-  console.log(chatData);
+  // console.log(chatData);
 
   const chatName = chatData?.private
     ? chatData.members.filter((member) => member.userId !== user?.userId).at(0)

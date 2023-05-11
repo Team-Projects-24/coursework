@@ -11,17 +11,10 @@ import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 import useUserStore from "stores/userStore";
-import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
-// import { BarCard } from "components/dashboard/BarCard";
-import { ResponsivePie } from "@nivo/pie";
 import axios from "axios";
-import { getLinearProgressUtilityClass } from "@mui/material";
-import { ITeam } from "types/analysis/Team.d";
-import { IEmployee } from "types/analysis/Employee.d";
-import { time } from "console";
 
 export default function DataAnalyticsWindow() {
-  const [teams, setTeams] = useState(null);
+  const [teams, setTeams] = useState();
   const [members, setMembers] = useState<any>();
   const [teamUserState, setTeamUserState] = useState(-1);
   const [selectedTeams, setSelectedTeams] = useState<boolean[] | null>(null);
@@ -29,6 +22,7 @@ export default function DataAnalyticsWindow() {
   const [selectedTeamIDs, setSelectedTeamIDs] = useState<number[]>([]);
   const [selectedUserIDs, setSelectedUserIDs] = useState<String[]>([]);
   const [timeFrameState, setTimeFrameState] = useState(false);
+  const [timeFrame, setTimeFrame] = useState("day");
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
 
@@ -76,13 +70,15 @@ export default function DataAnalyticsWindow() {
   async function loadPerformanceData(
     teamInputs: number[],
     userInputs: String[],
-    timeFrame: boolean
+    timeFrameState: boolean,
+    timeFrame: String
   ) {
     console.log("getting performance data");
     console.log(teamInputs);
     console.log(userInputs);
     console.log(timeFrameState);
-    if (teamInputs.length === 1 && !timeFrame) {
+    console.log(timeFrame);
+    if (teamInputs.length === 1 && !timeFrameState) {
       // Get a single team's performance
       console.log("single team");
       setGraphState(0);
@@ -94,7 +90,7 @@ export default function DataAnalyticsWindow() {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (userInputs.length === 1 && !timeFrame) {
+    } else if (userInputs.length === 1 && !timeFrameState) {
       console.log("single user");
       setGraphState(0);
       // Get a single employee's performance
@@ -108,7 +104,7 @@ export default function DataAnalyticsWindow() {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (teamInputs.length > 0 && !timeFrame) {
+    } else if (teamInputs.length > 0 && !timeFrameState) {
       console.log("multiple teams");
       setGraphState(1);
       // Compare teams in a bar chart
@@ -120,7 +116,7 @@ export default function DataAnalyticsWindow() {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (userInputs.length > 0 && !timeFrame) {
+    } else if (userInputs.length > 0 && !timeFrameState) {
       console.log("multiple users");
       setGraphState(1);
       // Compare users in a bar chart
@@ -132,25 +128,27 @@ export default function DataAnalyticsWindow() {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (teamInputs.length > 0 && timeFrame) {
+    } else if (teamInputs.length > 0 && timeFrameState) {
       console.log("line graph for teams");
       setGraphState(2);
       // View / display performance over a time period for teams
       axios
         .post("api/analysis/getTeamTimePerformanceMetrics", {
           teamIDs: teamInputs,
+          timeframe: timeFrame,
         })
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (userInputs.length > 0 && timeFrame) {
+    } else if (userInputs.length > 0 && timeFrameState) {
       console.log("line graph for users");
       setGraphState(2);
       // View / display performance over a time period for users
       axios
         .post("api/analysis/getUserTimePerformanceMetrics", {
           userIDs: userInputs,
+          timeframe: timeFrame,
         })
         .then((response) => {
           //console.log(response.data);
@@ -192,7 +190,7 @@ export default function DataAnalyticsWindow() {
       console.log(teamsInput);
       setSelectedTeamIDs(teamsInput);
       setSelectedUserIDs([]);
-      loadPerformanceData(teamsInput, [], timeFrameState);
+      loadPerformanceData(teamsInput, [], timeFrameState, timeFrame);
     } else {
       let usersInput: any[] = [];
       // Determine the corresponding users from selectedUsers
@@ -208,19 +206,35 @@ export default function DataAnalyticsWindow() {
         console.log(usersInput);
         setSelectedTeamIDs([]);
         setSelectedUserIDs(usersInput);
-        loadPerformanceData([], usersInput, timeFrameState);
+        loadPerformanceData([], usersInput, timeFrameState, timeFrame);
       } else {
         // If no one has been selected
         setSelectedTeamIDs([]);
         setSelectedUserIDs([]);
-        loadPerformanceData([], [], timeFrameState);
+        loadPerformanceData([], [], timeFrameState, timeFrame);
       }
     }
   };
 
   const handleTimeFrameToggle = (newState: boolean) => {
     setTimeFrameState(newState);
-    loadPerformanceData(selectedTeamIDs, selectedUserIDs, newState);
+    loadPerformanceData(selectedTeamIDs, selectedUserIDs, newState, timeFrame);
+  };
+
+  const handleTimeFrameSlider = (newState: number) => {
+    let timeframePeriod = "day";
+    if (newState == 1) {
+      timeframePeriod = "week";
+    } else if (newState == 2) {
+      timeframePeriod = "month";
+    }
+    setTimeFrame(timeframePeriod);
+    loadPerformanceData(
+      selectedTeamIDs,
+      selectedUserIDs,
+      timeFrameState,
+      timeframePeriod
+    );
   };
 
   // Figure out what kind of graph should be displayed
@@ -257,7 +271,10 @@ export default function DataAnalyticsWindow() {
         </div>
         <div className="col">
           <GraphContainer graphState={graphState} data={performanceData} />
-          <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
+          <TimeFrameContainer
+            onToggleTimeFrame={handleTimeFrameToggle}
+            onChangeTimeFrame={handleTimeFrameSlider}
+          />
         </div>
       </div>
     </div>

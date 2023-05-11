@@ -6,7 +6,7 @@ const app = express();
 const httpServer: HTTPServer = createServer(app);
 const io = new IOServer(httpServer, {
   cors: {
-    origin: "http://localhost", // Replace with your site's URL in production
+    origin: "http://34.174.26.133", // Replace with your site's URL in production
   },
 });
 

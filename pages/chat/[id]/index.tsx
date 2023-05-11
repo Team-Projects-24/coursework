@@ -49,7 +49,7 @@ export default function ChatPage() {
   }, []);
 
   useEffect(() => {
-    const socket = io("http://localhost:3001");
+    const socket = io("http://localhost:4444");
     socket.on("receive-message", (message: string) => {
       console.log(message);
       async function getData() {

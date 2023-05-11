@@ -184,7 +184,7 @@ export default function DataAnalyticsWindow() {
         // If selectedTeams[i] is true then we want to get the performance data of this team
         if (selectedTeams[i]) {
           //console.log(teams?.[i]);
-          teamsInput.push(teams?.[i]["teamID"]);
+          teamsInput.push(teams?.[i]?.["teamID"]);
         }
       }
       console.log(teamsInput);
@@ -197,7 +197,7 @@ export default function DataAnalyticsWindow() {
       for (let i = 0; i < selectedUsers.length; i++) {
         for (let j = 0; j < selectedUsers[i].length; j++) {
           if (selectedUsers[i][j]) {
-            usersInput.push(members?.[i]?.[j]["userID"]);
+            usersInput.push(members?.[i]?.[j]?.["userID"]);
           }
         }
       }

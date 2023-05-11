@@ -31,7 +31,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    socket = io("http://localhost:4444");
+    socket = io("http://34.175.26.133:4444");
 
     // socket.on("receive-message", (message: string) => {
     //   console.log(message);

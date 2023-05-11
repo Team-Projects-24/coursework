@@ -7,7 +7,7 @@ var app = (0, express_1)();
 var httpServer = (0, http_1.createServer)(app);
 var io = new socket_io_1.Server(httpServer, {
   cors: {
-    origin: "34.175.26.133", // Replace with your site's URL in production
+    origin: "http://34.175.26.133", // Replace with your site's URL in production
   },
 });
 io.on("connection", function (socket) {

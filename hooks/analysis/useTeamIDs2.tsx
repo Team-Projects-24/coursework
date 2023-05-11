@@ -39,5 +39,5 @@ export function useTeamIDs2(id: String) {
   const response = axios.post("api/analysis/getTeamIDs", {
     leaderID: id,
   });
-  const { data } = response;
+  const data = response;
 }

@@ -3,6 +3,7 @@ import { IChatMessage } from "types/ChatMessage.d";
 import MessageBubble from "./MessageBubble";
 import { Message } from "@prisma/client";
 import { useEffect, useRef } from "react";
+import LoadingScreen from "./LoadingScreen";
 
 /**
  * @author Ben Pritchard
@@ -33,7 +34,10 @@ export default function ChatContainer({
 
   return (
     <>
-      <div className="messages overflow-y:auto sc">
+      <div
+        style={{ backgroundColor: "rgba(255, 255, 255, 0.7)" }}
+        className="messages overflow-y:auto backgroundColour:rgba(255,255,255,0.7)"
+      >
         {messages?.map(
           (message: Message) => (
             <MessageBubble
@@ -53,7 +57,6 @@ export default function ChatContainer({
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          background-color: "#111b21";
           overflow-y: auto;
           height: 100%;
           width: 100%;

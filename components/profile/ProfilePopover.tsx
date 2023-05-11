@@ -7,7 +7,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import Modal from "../misc/Modal";
-import ManageProfile from "./ManageProfile";
+// import ManageProfile from "./ManageProfile";
 import Invite from "../misc/Invite";
 import UserAvatar from "../user/UserAvatar";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -66,7 +66,7 @@ export default function ProfilePopover() {
           }
         >
           <div className="flex flex-col">
-            <div className="flex gap-4 p-4">
+            {/* <div className="flex gap-4 p-4">
               <UserAvatar size={"medium"} user={user} clickable={false} />
               <div className="flex flex-col justify-start">
                 <div className="text-xl">{user.name}</div>
@@ -87,11 +87,11 @@ export default function ProfilePopover() {
                   />
                 </Modal>
               </div>
-            </div>
+            </div> */}
             <Divider />
 
             <List disablePadding>
-              <ListItem disablePadding>
+              {/* <ListItem disablePadding>
                 <Modal
                   button={
                     <ListItemButton>
@@ -104,7 +104,7 @@ export default function ProfilePopover() {
                 >
                   <Invite user={user} />
                 </Modal>
-              </ListItem>
+              </ListItem> */}
 
               <ListItem disablePadding>
                 <ListItemButton onClick={() => signOut()}>

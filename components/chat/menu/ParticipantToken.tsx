@@ -1,27 +1,29 @@
 import { Grid, Typography } from "@mui/material";
 import { IUser } from "types/User.d";
 import PersonIcon from "@mui/icons-material/Person";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
-import { Animated} from "react-animated-css";
-
+import { Animated } from "react-animated-css";
 
 interface ParticipantTokenArgs {
-  user: IUser,
-  removeResponse: ((user: IUser) => void),
-  allowRemoval: boolean,
+  user: IUser;
+  removeResponse: (user: IUser) => void;
+  allowRemoval: boolean;
 }
-
 
 /**
  * @author Ade Osindero
- * 
+ *
  * @param user - The user who's data is being put on the token.
  * @param removeResponse - A function to run when the token is removed.
- * @param allowRemoval - A boolean indicating whether or not the token should be removable. 
+ * @param allowRemoval - A boolean indicating whether or not the token should be removable.
  * @returns The token, having the user's data.
  */
-export default function ParticipantToken({ user, removeResponse, allowRemoval }: ParticipantTokenArgs) {
+export default function ParticipantToken({
+  user,
+  removeResponse,
+  allowRemoval,
+}: ParticipantTokenArgs) {
   const [hover, setHover] = useState<boolean>(false);
 
   return (
@@ -29,17 +31,19 @@ export default function ParticipantToken({ user, removeResponse, allowRemoval }:
       container
       borderRadius={5}
       direction="row"
-      sx={{ cursor: "pointer", }}
+      sx={{ cursor: "pointer" }}
       bgcolor={hover ? "#2a3942" : "#182229"}
       onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}>
+      onMouseLeave={() => setHover(false)}
+    >
       <Grid item container xs="auto" padding={2}>
         <Grid
           item
           padding={1.2}
           bgcolor="#00a884"
           borderRadius={10}
-          color="#aebac1">
+          color="#aebac1"
+        >
           <PersonIcon />
         </Grid>
       </Grid>
@@ -50,7 +54,9 @@ export default function ParticipantToken({ user, removeResponse, allowRemoval }:
           </Typography>
         </Grid>
         <Grid item>
-          <Typography color="#8696a0" noWrap>ID: {user.userId}</Typography>
+          <Typography color="#8696a0" noWrap>
+            ID: {user.userId}
+          </Typography>
         </Grid>
       </Grid>
       <Grid
@@ -59,16 +65,22 @@ export default function ParticipantToken({ user, removeResponse, allowRemoval }:
         display="flex"
         color="#8696a0"
         paddingRight={2}
-        xs="auto">
-        {allowRemoval ? 
+        xs="auto"
+      >
+        {allowRemoval ? (
+          /* @ts-ignore */
           <Animated
             animationIn="zoomIn"
             animationOut="zoomOut"
             animationInDuration={300}
             animationOutDuration={300}
-            isVisible={hover}>
+            isVisible={hover}
+          >
             <CloseIcon onClick={(e) => removeResponse(user)} />
-          </Animated> : <></>}
+          </Animated>
+        ) : (
+          <></>
+        )}
       </Grid>
     </Grid>
   );

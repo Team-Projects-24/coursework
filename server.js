@@ -7,7 +7,7 @@ var app = (0, express_1)();
 var httpServer = (0, http_1.createServer)(app);
 var io = new socket_io_1.Server(httpServer, {
   cors: {
-    origin: "*", // Replace with your site's URL in production
+    origin: "http://34.175.26.133", // Replace with your site's URL in production
   },
 });
 io.on("connection", function (socket) {
@@ -19,7 +19,7 @@ io.on("connection", function (socket) {
     console.log("User disconnected");
   });
 });
-var PORT = 3001;
+var PORT = 4444;
 httpServer.listen(PORT, function () {
   console.log("Server running on port ".concat(PORT));
 });

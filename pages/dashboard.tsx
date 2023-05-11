@@ -5,10 +5,11 @@ import LoadingPage from "components/misc/LoadingPage";
 import useUserStore from "stores/userStore";
 import UpcomingTasksCard from "components/dashboard/UpcomingTasksCard";
 import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
-import { BarCard } from "components/dashboard/BarCard";
+// import { BarCard } from "components/dashboard/BarCard";
 import { ResponsivePie } from "@nivo/pie";
 import { ITask } from "types/Task.d";
 import OverdueTasksCard from "components/dashboard/OverdueTasksCard";
+import LoadingScreen from "components/chat/LoadingScreen";
 
 /**
  * @author Luke Chester
@@ -307,6 +308,7 @@ export default function Dashboard() {
           </Box>
         </>
       )} */}
+      <LoadingScreen />
     </>
   );
 }

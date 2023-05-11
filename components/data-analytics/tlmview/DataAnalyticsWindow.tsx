@@ -12,7 +12,7 @@ import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 import useUserStore from "stores/userStore";
 import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
-import { BarCard } from "components/dashboard/BarCard";
+// import { BarCard } from "components/dashboard/BarCard";
 import { ResponsivePie } from "@nivo/pie";
 import axios from "axios";
 import { getLinearProgressUtilityClass } from "@mui/material";
@@ -21,7 +21,7 @@ import { IEmployee } from "types/analysis/Employee.d";
 import { time } from "console";
 
 export default function DataAnalyticsWindow() {
-  const [teams, setTeams] = useState();
+  const [teams, setTeams] = useState(null);
   const [members, setMembers] = useState<any>();
   const [teamUserState, setTeamUserState] = useState(-1);
   const [selectedTeams, setSelectedTeams] = useState<boolean[] | null>(null);

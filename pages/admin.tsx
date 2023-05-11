@@ -10,9 +10,8 @@ import NewTaskForm from "components/data-analytics/NewTaskForm";
 function Admin() {
     return (
         <div>
-            <h1 >Admin Page for showing off the functionality of our api</h1>
-
-            <div>
+            <h1 style={{textAlign: "center"}}> Admin Page </h1>
+            <div  style={{ paddingTop: "20px" }}>
                 <SearchableDropdown />
             </div>
 
@@ -20,13 +19,13 @@ function Admin() {
                 <NewTaskForm/>
             </div>
 
-            <div>
+            {/* <div>
                 <TaskForm />
             </div>
             <div>
                 <EmployeeForm />
             </div>
-            
+             */}
 
 
         </div>
@@ -36,15 +35,3 @@ function Admin() {
 export default
     Admin;
 
-// function loadData() {
-
-
-//     // this should be the same as load data used in liv window
-
-//     axios
-//       .post("api/admin/getTaskIDs", {
-//       })
-
-//       throw new Error("Function not implemented.");
-      
-// }

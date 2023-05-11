@@ -44,6 +44,7 @@ export default function ChatContainer({
               key={message.id}
               message={message}
               sent={userId === message.senderId}
+              sentBy={message.senderId}
             />
           )
 

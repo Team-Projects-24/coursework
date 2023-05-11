@@ -51,7 +51,7 @@ export default function createChat() {
       <ChatroomCreationHeader title="New chat" />
       <Box>
         <Box paddingX={2} paddingTop={1}>
-          <SearchContainer hint="Search user by id" />
+          <SearchContainer hint="Search user by id" searchResponse={searchById} />
         </Box>
         <Box maxHeight="80vh" overflow="auto" marginY={1}>
           <ProfileWrack partialId={partialId} response={response} />

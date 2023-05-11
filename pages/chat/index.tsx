@@ -21,7 +21,10 @@ interface ChatContainerArgs {
 }
 
 function ChatContainer({ unreadChats, searchKey, chatData }: ChatContainerArgs) {
-  chatData = chatData.filter(data => !data.isPrivate || data.lastMessage);
+  chatData = chatData.filter(data =>
+    (!data.isPrivate || data.lastMessage) && (!unreadChats || 0 < data.unreadCount));
+
+  chatData.sort((a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime());
 
   if (!searchKey) {
     return (
@@ -33,7 +36,7 @@ function ChatContainer({ unreadChats, searchKey, chatData }: ChatContainerArgs) 
 
   return (
     <Box maxHeight="80vh" overflow="auto">
-      {chatData.filter(data => data.title.includes(searchKey))
+      {chatData.filter(data => data.title.startsWith(searchKey))
         .map(data => <ChatCard {...data} />)}
     </Box>
   );
@@ -44,8 +47,8 @@ export default function Chat() {
   const [chatData, setChatData] = useState<ChatCardArgs[]>([]);
   const [indicator, setIndicator] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState<string>("");
-  const { user, setUser } = useUserStore();
   const [url, setUrl] = useState<string>("");
+  const { user, setUser } = useUserStore();
   const router = useRouter();
 
   const createGroup = () => router.push("/chat/create-group");
@@ -71,13 +74,19 @@ export default function Chat() {
           .at(0)
           .userId;
 
+        chat_.messages.filter(message =>
+          console.log(message.seenBy));
+
+        const unreadCount = chat_.messages.filter(message =>
+          message.seenBy.every(seenBy => seenBy.userId !== user.userId)).length;
+
         var data: ChatCardArgs = {
-          lastUpdated: new Date(chat_.updatedAt),
+          lastUpdated: new Date(chat_.createdAt),
           isPrivate: chat_.private,
           image: chat_.chatImage,
           sentByUser: false,
           id: chat_.id,
-          read: false,
+          unreadCount,
           title,
         };
 
@@ -88,9 +97,9 @@ export default function Chat() {
           
           data = {
             ...data,
-            read: message.seenBy.length === chat_.members.length,
             sentByUser: message.senderId === user?.userId,
             lastMessage: message.content as string,
+            lastUpdated: new Date(message.sentAt),
             senderId: message.senderId,
           }
         }
@@ -104,13 +113,12 @@ export default function Chat() {
   }, [user]);
 
   useEffect(() => {
-    const socket = io("http://localhost:3001");
+    const socket = io("http://localhost:4444");
     socket.on("receive-message", async (message: string) => {
       const { data } = await axios
         .post("/api/users/getUserInfo", { username: user!.name });
 
       setUser(data as IUser);
-      console.log(user);
     });
 
     return () => {

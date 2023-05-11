@@ -40,26 +40,35 @@ export default function ChatPage() {
 
   useEffect(() => {
     async function getData() {
-      console.log("/api/chat/" + chatroomId);
       const { data } = await axios.get("/api/chat/" + chatroomId);
       setChatData(data);
       setLoading(false);
+
+      data.messages.forEach(async (message) => {
+        axios.post("/api/chat/seenby", {
+          messageId: message.id, userId: user.userId
+        });
+      }); // mark all chat messages as read.
     }
     getData();
   }, []);
 
   useEffect(() => {
-    const socket = io("http://34.175.26.133:4444");
+    const socket = io("http://localhost:4444");
     socket.on("receive-message", (message: string) => {
-      console.log(message);
       async function getData() {
-        console.log("/api/chat/" + chatroomId);
         const { data } = await axios.get("/api/chat/" + chatroomId);
         setChatData(data);
+
         // setLoading(false);
       }
       getData();
     });
+
+    socket.emit("chat-updated", { 
+      updateType: "read",
+      chatId: id, 
+    })
 
     return () => {
       socket.disconnect();

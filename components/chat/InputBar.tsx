@@ -31,7 +31,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    socket = io("http://34.175.26.133:4444");
+    socket = io("http://localhost:4444");
 
     // socket.on("receive-message", (message: string) => {
     //   console.log(message);
@@ -57,7 +57,13 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
       };
       // console.log(newMessage);
 
-      await axios.post("/api/chat/message/", newMessage);
+      const { data } = await axios.post("/api/chat/message/", newMessage);
+
+      axios.post("/api/chat/seenBy", {
+        messageId: data.id,
+        userId: userId,  
+      }); // mark as read
+
       socket.emit("send-message", message);
       setMessage("");
     } catch (err) {

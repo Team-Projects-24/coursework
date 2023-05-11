@@ -7,17 +7,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
 import { Animated } from "react-animated-css";
+import { cr } from "chart.js/dist/chunks/helpers.core";
 
 
 export interface ChatCardArgs {
   lastMessage?: string,
   sentByUser: boolean,
+  unreadCount: number,
   isPrivate: boolean,
   senderId?: string,
   lastUpdated: Date,
   image: string,
   title: string,
-  read: boolean,
   id: string,
 }
 
@@ -52,15 +53,7 @@ function formatDate(updatedAt: Date) {
  * @param read - Boolean confirming whether or not the message was read.
  * @returns A react component which formats the display of the last message sent in the chat.
  */
-function formatMessage(message: string | undefined, isPrivate: boolean, senderId: string | undefined, sentByUser: boolean, read: boolean) {
-  if (!message) {
-    return (
-      <Box>
-        <Typography>Start a conversation</Typography>
-      </Box>
-    );
-  }
-
+function formatMessage(message: string, isPrivate: boolean, senderId: string, sentByUser: boolean, read: boolean) {
   if (sentByUser) {
     return (
       <Grid item container>
@@ -110,18 +103,28 @@ function getImage(isPrivate: boolean, image: string | null) {
   );
 }
 
-export function ChatCard({ lastMessage, lastUpdated, image, title, senderId, sentByUser, read, id, isPrivate }: ChatCardArgs) {
+export function ChatCard({ lastMessage, lastUpdated, image, title, senderId, sentByUser, unreadCount, id, isPrivate }: ChatCardArgs) {
   const [hover, setHover] = useState<boolean>(false);
+  const [crossDisplay, setCrossDisplay] = useState<string>("none");
   const router = useRouter();
 
-  const enterChat = () => router.push(`/chat/${id}`);
+  const enterChat = () => router.push("/chat/".concat(id));
+
+  const onHover = () => {
+    setCrossDisplay("flex");
+    setHover(true);
+  }
+  const onBlur = async () => {
+    setHover(false);
+    setCrossDisplay("none");
+  }
 
   return (
     <Grid
       sx={{ cursor: "pointer", }}
       bgcolor={hover ? "#2a3942" : "inherit"}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={onHover}
+      onMouseLeave={onBlur}
       color={hover ? "#e9edef" : "#8696a0"}
       paddingRight={1}
       container>
@@ -152,26 +155,50 @@ export function ChatCard({ lastMessage, lastUpdated, image, title, senderId, sen
               </Typography>
             </Grid>
             <Grid item xs="auto">
-              <Typography fontSize={15} color="#8696a0">
+              <Typography
+                fontSize={15}
+                color={0 < unreadCount ? "#03a987" : "#8696a0"}>
                 {formatDate(lastUpdated)}
               </Typography>
             </Grid>
           </Grid>
           <Grid item container justifyContent="space-between">
             <Grid item container onClick={enterChat} xs>
-              {formatMessage(lastMessage,
-                  isPrivate, senderId, sentByUser, read)}
+              {!lastMessage ? <Box>
+                  <Typography>Start a conversation</Typography>
+                </Box> : formatMessage(lastMessage,
+                  isPrivate, senderId, sentByUser, unreadCount < 1)}
             </Grid>
+            {unreadCount < 1 ? null :
+              <Grid
+                item
+                bgcolor="#03a987"
+                xs="auto"
+                justifyContent="center"
+                display="flex"
+                borderRadius={10}>
+                <Box
+                  width={25}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center">
+                  <Typography fontSize={15} color="#121b22" noWrap>
+                    {unreadCount}
+                  </Typography>
+                </Box>
+              </Grid>
+            }
             <Grid
               item
-              alignContent="center"
               color="#8696a0"
+              display={crossDisplay}
+              paddingLeft={1}
               xs="auto">
               <Animated
                 animationIn="fadeInRight"
                 animationOut="fadeOutRight"
-                animationInDuration={400}
-                animationOutDuration={400}
+                animationInDuration={100}
+                animationOutDuration={100}
                 isVisible={hover}>
                 <CloseIcon />
               </Animated>

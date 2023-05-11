@@ -75,7 +75,7 @@ export default function SearchContainer({ hint, searchResponse }: SearchContaine
           }}
           type="search"
           placeholder={hint}
-          onSubmit={onSubmit}
+          onChange={onSubmit}
           onFocus={flipIcon}
           onBlur={flipIcon} />
       </Grid>

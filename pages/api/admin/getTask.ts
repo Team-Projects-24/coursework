@@ -16,10 +16,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { taskId } = req.body;
+    const { userID } = req.body;
     // console.log(userID, typeof userID);
 
-    if (!taskId) {
+    if (!userID) {
       res
         .status(400)
         .json({ message: "Required fields are missing in the request." });
@@ -34,7 +34,7 @@ export default async function handler(
 
     const tasks: Task[] = await prisma.task.findMany({
       where: {
-        taskId: taskId,
+        userId: userID,
       },
     });
 

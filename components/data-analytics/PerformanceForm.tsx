@@ -16,6 +16,8 @@ export default function PerformanceForm() {
     const HARDCODEDMANHOURSSET = 8000; // can remove this once the task has the number of set hours with it 
 
 
+    const [manHoursCap, setManHoursCap] = useState<number | null>(null);
+
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log("handle name change called");
         setSelectedName({ taskId: '', name: event.target.value });
@@ -29,6 +31,8 @@ export default function PerformanceForm() {
         if (value) {
             setSelectedName(value);
             setSelectedTask(value);
+            
+            // do api call and set the cap 
 
         } else {
             setSelectedTask(null)
@@ -79,7 +83,7 @@ export default function PerformanceForm() {
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (selectedTask  && manHoursCompleted !== null) {
+        if (selectedTask && manHoursCompleted !== null) {
             console.log("use api to update performance log");
 
 
@@ -121,6 +125,25 @@ export default function PerformanceForm() {
     }, []);
 
 
+    const fetchTask = async (taskId: number) => {
+        try {
+            const response = await axios.post("/api/admin/getTask", {
+                taskId: taskId
+            });
+            // setTasks(response.data);
+
+            let totalMH = response.data.manHoursSet;
+            let completedMH = response.data.manHoursCompleted;
+
+            setManHoursCap(totalMH-completedMH);
+
+
+            console.log("Fetched tasks:", response.data);
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    };
+    
 
     return (
 
@@ -163,7 +186,20 @@ export default function PerformanceForm() {
                             placeholder="man hours you've completed"
                             type="number"
                             value={manHoursCompleted || ""}
-                            onChange={(event) => setManHoursCompleted(Number(event.target.value))}
+                            onChange={event => {
+                                if (manHoursCap !== null) {
+                                    if (Number(event.target.value) <= manHoursCap) {
+                                        setManHoursCompleted(Number(event.target.value));
+                                    } else {
+                                        alert("invalid amount of hours");
+                                    }
+                                } else {
+                                    alert("Man hours cap not set");
+                                }
+                            }}
+                            
+
+
                         />
                     </Grid>
 

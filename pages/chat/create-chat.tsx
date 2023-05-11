@@ -4,7 +4,6 @@ import { useState } from "react";
 import { IUser } from "types/User.d";
 import axios from "axios";
 import ProfileWrack from "components/chat/menu/ProfileWrack";
-import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 import { ICreateChatroom } from "types/Chatroom.d";
 import ChatroomCreationHeader from "components/chat/menu/ChatroomCreationHeader";
@@ -42,7 +41,7 @@ export default function createChat() {
       setUser(data as IUser);
     }
 
-    router.back();
+    router.push(`${chat?.id}`);
   }
 
   const searchById = (id: string) => setPartialId(id);

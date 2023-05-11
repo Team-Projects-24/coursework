@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import useUserStore from "stores/userStore";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { IUser } from "types/User.d";
 import ProfileWrack from "components/chat/menu/ProfileWrack";
 import { useRouter } from "next/router";

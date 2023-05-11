@@ -1,13 +1,12 @@
 import { Grid } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Animated } from "react-animated-css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface SearchContainerArgs {
   hint: string,
-  onSearch?: null | ((arg0: string) => void),
-  onChange?: null | ((arg0: string) => void),
+  searchResponse?: ((arg0: string) => void),
 }
 
 interface IconArgs {
@@ -28,11 +27,10 @@ function Icon({ selector }: IconArgs) {
  * @author Ade Osindero
  * 
  * @param hint - The hint to be displayed in the container.
- * @param onSearch - The action to perform upon a search.
- * @param onChange - The action to perform upon a change in input.
+ * @param searchResponse - The action to perform upon a search.
  * @returns A search container.
  */
-export default function SearchContainer({ hint, onSearch, onChange }: SearchContainerArgs) {
+export default function SearchContainer({ hint, searchResponse }: SearchContainerArgs) {
   const [visible, setVisible] = useState<boolean>(true);
   const [selected, setSelected] = useState<boolean>(false);
 
@@ -43,16 +41,21 @@ export default function SearchContainer({ hint, onSearch, onChange }: SearchCont
     setVisible(true);
   }
 
+  const onSubmit = (e: FormEvent<HTMLInputElement>) =>
+    searchResponse ? searchResponse(e.currentTarget.value) : null;
+
   return (
     <Grid
       container
       paddingY={1}
       borderRadius={2}
-      bgcolor="#202c33">
+      bgcolor="#202c33"
+      columnGap={4}
+      paddingX={2}>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
-      <Grid item paddingLeft={2} xs="auto" color={selected ? "#00a884" : "#aebac1"}>
+      <Grid item xs="auto" color={selected ? "#00a884" : "#aebac1"}>
         <Animated
           animationIn="rotateIn"
           animationOut="rotateOut"
@@ -62,19 +65,19 @@ export default function SearchContainer({ hint, onSearch, onChange }: SearchCont
           <Icon selector={selected} />
         </Animated>
       </Grid>
-      <Grid item paddingLeft={4} xs={11}>
+      <Grid item xs>
         <input
           style={{
             backgroundColor: "#202c33",
             outline: "none",
             color: "#ffffff",
+            width: "100%",
           }}
           type="search"
           placeholder={hint}
-          onChange={(e) => onChange ? onChange(e.currentTarget.value) : null}
-          onSubmit={(e) => onSearch ? onSearch(e.currentTarget.value) : null}
+          onSubmit={onSubmit}
           onFocus={flipIcon}
-          onBlur={flipIcon}/>
+          onBlur={flipIcon} />
       </Grid>
     </Grid>
   )

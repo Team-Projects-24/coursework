@@ -19,7 +19,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { teamIDs, timeframe } = req.body;
+    //const { teamIDs, timeframe } = req.body;
+    const { query } = req;
+    let teamIDs = query.teamIDs;
+    let timeframe = query.timeframe;
+    if (typeof teamIDs === 'string' || teamIDs instanceof String){
+      teamIDs = teamIDs.split(",");
+    }
 
     if (!teamIDs && !timeframe) {
       res

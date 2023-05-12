@@ -78,6 +78,109 @@ export default function DataAnalyticsWindow() {
     console.log(userInputs);
     console.log(timeFrameState);
     console.log(timeFrame);
+
+    // Format arrays into string for URL GET request
+    const teamInputsString = teamInputs.join(",");
+    const userInputsString = userInputs.join(",");
+
+    if (teamInputs.length === 1 && !timeFrameState) {
+      // Get a single team's performance
+      console.log("single team");
+      setGraphState(0);
+      axios
+        .get(
+          "api/analysis/getTeamPerformanceMetrics?teamIDs=" + teamInputsString
+        )
+        .then((response) => {
+          //console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else if (userInputs.length === 1 && !timeFrameState) {
+      console.log("single user");
+      setGraphState(0);
+      // Get a single employee's performance
+      //let requestedUsers = getSelectedUserIDs();
+      //console.log(requestedUsers);
+      axios
+        .get(
+          "api/analysis/getUserPerformanceMetrics?userIDs=" + userInputsString
+        )
+        .then((response) => {
+          //console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else if (teamInputs.length > 0 && !timeFrameState) {
+      console.log("multiple teams");
+      setGraphState(1);
+      // Compare teams in a bar chart
+      axios
+        .get(
+          "api/analysis/getTeamPerformanceMetrics?teamIDs=" + teamInputsString
+        )
+        .then((response) => {
+          //console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else if (userInputs.length > 0 && !timeFrameState) {
+      console.log("multiple users");
+      setGraphState(1);
+      // Compare users in a bar chart
+      axios
+        .get(
+          "api/analysis/getUserPerformanceMetrics?userIDs=" + userInputsString
+        )
+        .then((response) => {
+          //console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else if (teamInputs.length > 0 && timeFrameState) {
+      console.log("line graph for teams");
+      setGraphState(2);
+      // View / display performance over a time period for teams
+      axios
+        .get(
+          "api/analysis/getTeamTimePerformanceMetrics?teamIDs=" +
+            teamInputsString +
+            "&timeframe=" +
+            timeFrame
+        )
+        .then((response) => {
+          //console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else if (userInputs.length > 0 && timeFrameState) {
+      console.log("line graph for users");
+      setGraphState(2);
+      // View / display performance over a time period for users
+      axios
+        .get(
+          "api/analysis/getUserTimePerformanceMetrics?userIDs=" +
+            userInputsString +
+            "&timeframe=" +
+            timeFrame
+        )
+        .then((response) => {
+          //console.log(response.data);
+          setPerformanceData(response.data);
+        });
+    } else {
+      // Nothing selected
+      console.log("nothing selected");
+      setGraphState(-1);
+    }
+  }
+
+  async function loadPerformanceDataPOST(
+    teamInputs: number[],
+    userInputs: String[],
+    timeFrameState: boolean,
+    timeFrame: String
+  ) {
+    console.log("getting performance data");
+    console.log(teamInputs);
+    console.log(userInputs);
+    console.log(timeFrameState);
+    console.log(timeFrame);
     if (teamInputs.length === 1 && !timeFrameState) {
       // Get a single team's performance
       console.log("single team");

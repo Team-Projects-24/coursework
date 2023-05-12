@@ -14,7 +14,7 @@ import useUserStore from "stores/userStore";
 import axios from "axios";
 
 export default function DataAnalyticsWindow() {
-  const [teams, setTeams] = useState();
+  const [teams, setTeams] = useState(null);
   const [members, setMembers] = useState<any>();
   const [teamUserState, setTeamUserState] = useState(-1);
   const [selectedTeams, setSelectedTeams] = useState<boolean[] | null>(null);

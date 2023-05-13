@@ -12,32 +12,43 @@ import { Chatroom, User } from "@prisma/client";
 import { io } from "socket.io-client";
 import { IUser } from "types/User.d";
 
-
 interface ChatContainerArgs {
-  chatData: ChatCardArgs[],
-  unreadChats: boolean,
-  searchKey: string,
-  userId: string,
+  chatData: ChatCardArgs[];
+  unreadChats: boolean;
+  searchKey: string;
+  userId: string;
 }
 
-function ChatContainer({ unreadChats, searchKey, chatData }: ChatContainerArgs) {
-  chatData = chatData.filter(data =>
-    (!data.isPrivate || data.lastMessage) && (!unreadChats || 0 < data.unreadCount));
+function ChatContainer({
+  unreadChats,
+  searchKey,
+  chatData,
+}: ChatContainerArgs) {
+  chatData = chatData.filter(
+    (data) =>
+      (!data.isPrivate || data.lastMessage) &&
+      (!unreadChats || 0 < data.unreadCount)
+  );
 
   chatData.sort((a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime());
 
   if (!searchKey) {
     return (
       <Box maxHeight="80vh" overflow="auto">
-        {chatData.map(data => <ChatCard {...data} />)}
+        {chatData.map((data) => (
+          <ChatCard {...data} />
+        ))}
       </Box>
     );
   }
 
   return (
     <Box maxHeight="80vh" overflow="auto">
-      {chatData.filter(data => data.title.startsWith(searchKey))
-        .map(data => <ChatCard {...data} />)}
+      {chatData
+        .filter((data) => data.title.startsWith(searchKey))
+        .map((data) => (
+          <ChatCard {...data} />
+        ))}
     </Box>
   );
 }
@@ -64,17 +75,21 @@ export default function Chat() {
   useEffect(() => {
     var memory: ChatCardArgs[] = [];
 
-    user!.chatrooms.forEach(async chat => {
+    user!.chatrooms.forEach(async (chat) => {
       try {
         const { data: chat_ } = await axios.get(`/api/chat/${chat.id}`);
-        
-        const title = !chat_.private ? chat_.name : chat_.members
-          .filter((participant: User) => participant.userId !== user?.userId)
-          .at(0)
-          .userId;
 
-        const unreadCount = chat_.messages.filter(message =>
-          message.seenBy.every(seenBy => seenBy.userId !== user.userId)).length;
+        const title = !chat_.private
+          ? chat_.name
+          : chat_.members
+              .filter(
+                (participant: User) => participant.userId !== user?.userId
+              )
+              .at(0).userId;
+
+        const unreadCount = chat_.messages.filter((message) =>
+          message.seenBy.every((seenBy) => seenBy.userId !== user?.userId)
+        ).length;
 
         var data: ChatCardArgs = {
           lastUpdated: new Date(chat_.createdAt),
@@ -89,9 +104,10 @@ export default function Chat() {
 
         if (0 < chat_.messages.length) {
           const lastId = chat_.messages.at(-1)?.id;
-          const { data: message } = await axios
-            .get(`/api/chat/message/${lastId}`);
-          
+          const { data: message } = await axios.get(
+            `/api/chat/message/${lastId}`
+          );
+
           data = {
             ...data,
             read: message.seenBy.length === chat_.members.length,
@@ -99,7 +115,7 @@ export default function Chat() {
             lastMessage: message.content as string,
             lastUpdated: new Date(message.sentAt),
             senderId: message.senderId,
-          }
+          };
         }
 
         memory = [...memory, data];
@@ -107,14 +123,15 @@ export default function Chat() {
       } catch (error) {
         console.error("Error fetching chat data:", error);
       }
-    })
+    });
   }, [user]);
 
   useEffect(() => {
     const socket = io("http://localhost:4444");
     socket.on("update-chat", async () => {
-      const { data } = await axios
-        .post("/api/users/getUserInfo", { username: user!.name });
+      const { data } = await axios.post("/api/users/getUserInfo", {
+        username: user!.name,
+      });
 
       setUser(data as IUser);
     });
@@ -133,7 +150,8 @@ export default function Chat() {
         bgcolor="#202c33"
         columnSpacing={2}
         margin={0}
-        width="100%">
+        width="100%"
+      >
         <Grid item>
           <Box
             sx={{
@@ -143,7 +161,8 @@ export default function Chat() {
             className="icon-container"
             onClick={createChat}
             padding={1.1}
-            color="#aebac1">
+            color="#aebac1"
+          >
             <ChatIcon />
           </Box>
         </Grid>
@@ -156,7 +175,8 @@ export default function Chat() {
             className="icon-container"
             padding={1.1}
             onClick={createGroup}
-            color="#aebac1">
+            color="#aebac1"
+          >
             <GroupsIcon />
           </Box>
         </Grid>
@@ -166,7 +186,8 @@ export default function Chat() {
         paddingY={1}
         justifyContent="center"
         paddingX={2}
-        bgcolor="#111b21">
+        bgcolor="#111b21"
+      >
         <Grid item container xs>
           <SearchContainer hint="Search chats" searchResponse={onSearch} />
         </Grid>
@@ -179,7 +200,8 @@ export default function Chat() {
             onClick={() => setUnreadChats(!unreadChats)}
             borderRadius={5}
             padding={0.6}
-            color="#aebac1">
+            color="#aebac1"
+          >
             <FilterListIcon />
           </Box>
         </Grid>
@@ -188,7 +210,8 @@ export default function Chat() {
         unreadChats={unreadChats}
         searchKey={searchKey}
         chatData={chatData}
-        userId={user!.userId} />
+        userId={user?.userId}
+      />
       <style>
         {`
           icon-container:active {

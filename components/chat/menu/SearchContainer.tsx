@@ -5,17 +5,17 @@ import { Animated } from "react-animated-css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface SearchContainerArgs {
-  hint: string,
-  searchResponse?: ((arg0: string) => void),
+  hint: string;
+  searchResponse?: (arg0: string) => void;
 }
 
 interface IconArgs {
-  selector: boolean,
+  selector: boolean;
 }
 
 /**
  * @author Ade Osindero
- * 
+ *
  * @param selector - True for the back arrow, false for the search.
  * @returns The appropriate icon for the search container.
  */
@@ -25,21 +25,24 @@ function Icon({ selector }: IconArgs) {
 
 /**
  * @author Ade Osindero
- * 
+ *
  * @param hint - The hint to be displayed in the container.
  * @param searchResponse - The action to perform upon a search.
  * @returns A search container.
  */
-export default function SearchContainer({ hint, searchResponse }: SearchContainerArgs) {
+export default function SearchContainer({
+  hint,
+  searchResponse,
+}: SearchContainerArgs) {
   const [visible, setVisible] = useState<boolean>(true);
   const [selected, setSelected] = useState<boolean>(false);
 
   const flipIcon = async () => {
     setVisible(false);
-    await new Promise(f => setTimeout(f, 100));
+    await new Promise((f) => setTimeout(f, 100));
     setSelected(!selected);
     setVisible(true);
-  }
+  };
 
   const onSubmit = (e: FormEvent<HTMLInputElement>) =>
     searchResponse ? searchResponse(e.currentTarget.value) : null;
@@ -51,17 +54,21 @@ export default function SearchContainer({ hint, searchResponse }: SearchContaine
       borderRadius={2}
       bgcolor="#202c33"
       columnGap={4}
-      paddingX={2}>
+      paddingX={2}
+    >
       <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
+      />
       <Grid item xs="auto" color={selected ? "#00a884" : "#aebac1"}>
+        {/* @ts-ignore */}
         <Animated
           animationIn="rotateIn"
           animationOut="rotateOut"
           animationInDuration={200}
           animationOutDuration={200}
-          isVisible={visible}>
+          isVisible={visible}
+        >
           <Icon selector={selected} />
         </Animated>
       </Grid>
@@ -77,8 +84,9 @@ export default function SearchContainer({ hint, searchResponse }: SearchContaine
           placeholder={hint}
           onChange={onSubmit}
           onFocus={flipIcon}
-          onBlur={flipIcon} />
+          onBlur={flipIcon}
+        />
       </Grid>
     </Grid>
-  )
+  );
 }

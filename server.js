@@ -7,13 +7,16 @@ var app = (0, express_1)();
 var httpServer = (0, http_1.createServer)(app);
 var io = new socket_io_1.Server(httpServer, {
   cors: {
-    origin: "http://34.175.26.133", // Replace with your site's URL in production
+    origin: "*", // Replace with your site's URL in production
   },
 });
 io.on("connection", function (socket) {
-  socket.on("send-message", function (message) {
-    console.log(message);
-    io.emit("receive-message", message);
+  console.log("new connection");
+  socket.on("send-message", function (chatID) {
+    io.emit("receive-message", chatID);
+  });
+  socket.on("updated-chat", function () {
+    io.emit("update-chat");
   });
   socket.on("disconnect", function () {
     console.log("User disconnected");

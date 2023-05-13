@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import useUserStore from "stores/userStore";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { IUser } from "types/User.d";
 import ProfileWrack from "components/chat/menu/ProfileWrack";
 import { useRouter } from "next/router";
@@ -67,7 +67,6 @@ function LeftSection({
       members: participants.map((user) => user.userId),
       description: chatDescription,
     };
-    const chat = await axios.post("/api/chat/", { room: newGroup });
 
     const { data } = await axios.post("/api/users/getUserInfo", {
       username: userId,
@@ -183,10 +182,11 @@ function RightSection({ response }: RightSectionArgs) {
       borderColor="#262f34"
       paddingTop={4}
       display="block"
-      xs={6}
-    >
+      xs={6}>
       <Box paddingX="20px">
-        <SearchContainer hint="Search users by id" />
+        <SearchContainer
+          hint="Search users by id"
+          searchResponse={(partialId) => setPartialId(partialId)} />
       </Box>
       <Box maxHeight="75vh" overflow="auto" marginY={2}>
         <ProfileWrack partialId={partialId} response={response} />
@@ -227,8 +227,7 @@ export default function CreateGroup() {
     <Box minHeight="100%" bgcolor="#111b21">
       <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
-      />
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
       <ChatroomCreationHeader title="New group" />
       <Grid container direction="row">
         <LeftSection

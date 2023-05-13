@@ -1,9 +1,10 @@
-import { Box, DialogContent, DialogContentText } from "@mui/material";
+import { Box, CardContent, DialogContent, DialogContentText, Grid } from "@mui/material";
 import { IChatMessage } from "types/ChatMessage.d";
 import MessageBubble from "./MessageBubble";
-import { Message } from "@prisma/client";
+import { Message, SeenBy } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import LoadingScreen from "./LoadingScreen";
+import MessageSection from "./MessageSection";
 
 /**
  * @author Ben Pritchard
@@ -17,11 +18,30 @@ import LoadingScreen from "./LoadingScreen";
 interface ChatContainerProps {
   messages: Message[];
   userId: string;
+  isPrivate: boolean,
+  chatSize: number,
+}
+
+function stringToColor(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+  for (let i = 0; i < 3; i++) {
+    let value = (hash >> (i * 8)) & 0xff;
+    color += value.toString(16).padStart(2, '0');
+  }
+
+  return color;
 }
 
 export default function ChatContainer({
   messages,
   userId,
+  isPrivate,
+  chatSize,
 }: ChatContainerProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,36 +53,46 @@ export default function ChatContainer({
   }, [messages]);
 
   return (
-    <>
-      <div
-        style={{ backgroundColor: "rgba(255, 255, 255, 0.7)" }}
-        className="messages overflow-y:auto backgroundColour:rgba(255,255,255,0.7)"
-      >
+    <CardContent
+      sx={{
+        overflow: "auto",
+        display: "flex",
+        height: "calc(100% - 130px)",
+      }}>
+      <Grid
+        container
+        direction="row"
+        display="block"
+        margin={0}>
         {messages?.map(
-          (message: Message) => (
-            <MessageBubble
-              key={message.id}
-              message={message}
-              sent={userId === message.senderId}
-              sentBy={message.senderId}
-            />
-          )
+          (message: (Message & {
+              seenBy: SeenBy[];
+          })) => {
+            const time = new Date(message.updatedAt);
 
-          // other people
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-      <style jsx>{`
-        .messages {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          overflow-y: auto;
-          height: 100%;
-          width: 100%;
-        }
-      `}</style>
-    </>
+            const timeString = time
+              .toLocaleString("en-uk", { timeStyle: "short" });
+
+            console.log(message);
+
+            return (
+              <MessageSection
+                senderID={message.senderId}
+                content={message.content}
+                sent={userId === message.senderId}
+                isPrivate={isPrivate}
+                idColour={stringToColor(message.senderId)}
+                time={timeString}
+                read={message.seenBy.length == chatSize} />
+            // <MessageBubble
+            //   key={message.id}
+            //   message={message}
+            //   sent={userId === message.senderId}
+            // />
+            );
+        })}
+        <div style={{ height: 10, }} ref={messagesEndRef} />
+      </Grid>
+    </CardContent>
   );
 }

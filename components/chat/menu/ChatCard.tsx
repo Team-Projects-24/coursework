@@ -7,7 +7,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
 import { Animated } from "react-animated-css";
-import { cr } from "chart.js/dist/chunks/helpers.core";
 
 
 export interface ChatCardArgs {
@@ -17,6 +16,7 @@ export interface ChatCardArgs {
   isPrivate: boolean,
   senderId?: string,
   lastUpdated: Date,
+  read: boolean,
   image: string,
   title: string,
   id: string,
@@ -32,15 +32,17 @@ function formatDate(updatedAt: Date) {
   const dateDifference = Math
     .floor((new Date().getTime() - updatedAt.getTime())/86400000);
 
-  if (dateDifference === 0) {
-    return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
-  } else if (dateDifference === 1) {
-    return "Yesterday";
-  } else if (dateDifference < 7) {
-    return updatedAt.toLocaleString("en-uk", { weekday: "long" });
-  } else {
-    return updatedAt.toLocaleDateString("en-uk");
-  }
+  switch (dateDifference) {
+    case (0):
+      return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
+    case (1):
+      return "Yesterday";
+    default:
+      return dateDifference < 7 ? updatedAt.toLocaleString(
+        "en-uk",
+        { weekday: "long" }
+      ) : updatedAt.toLocaleDateString("en-uk"); 
+    }
 }
 
 /**
@@ -53,57 +55,41 @@ function formatDate(updatedAt: Date) {
  * @param read - Boolean confirming whether or not the message was read.
  * @returns A react component which formats the display of the last message sent in the chat.
  */
-function formatMessage(message: string, isPrivate: boolean, senderId: string, sentByUser: boolean, read: boolean) {
-  if (sentByUser) {
-    return (
-      <Grid item container>
-        <Grid
-          item
-          paddingRight={0.5}
-          color={read ? "#53bdeb" : "inherit"}>
-          <DoneIcon fontSize="small" />
-        </Grid>
-        <Grid item xs zeroMinWidth>
-          <Typography noWrap>{message}</Typography>
-        </Grid>
-      </Grid>
-    );
-  }
-
-  return (
-    <Box>
-      <Typography>
-        {`${!isPrivate ? `${senderId}: ` : ""}${message}`}
-      </Typography>
-    </Box>
-  );
-}
-
-/**
- * @author Ade Osindero
- * 
- * @param isPrivate - Whether or not the chat is private.
- * @param image - The location of the image.
- * @returns A grid component having the chat image.
- */
-function getImage(isPrivate: boolean, image: string | null) {
-  // if (image) {
-  //   return <></>;
-  // }
-
-  return (
+function formatMessage(
+  message: string,
+  isPrivate: boolean,
+  senderId: string,
+  sentByUser: boolean,
+  read: boolean
+) {
+  return sentByUser ? <Grid item container>
     <Grid
       item
-      padding={1.2}
-      borderRadius={20}
-      bgcolor="#00a884"
-      color="#aebac1">
-      {isPrivate ? <PersonIcon /> : <GroupIcon />}
+      paddingRight={0.5}
+      color={read ? "#53bdeb" : "inherit"}>
+      <DoneIcon fontSize="small" />
     </Grid>
-  );
+    <Grid item xs zeroMinWidth>
+      <Typography noWrap>{message}</Typography>
+    </Grid>
+  </Grid> : <Box>
+      <Typography>
+      {`${!isPrivate ? `${senderId}: ` : ""}${message}`}
+    </Typography>
+  </Box>;
 }
 
-export function ChatCard({ lastMessage, lastUpdated, image, title, senderId, sentByUser, unreadCount, id, isPrivate }: ChatCardArgs) {
+export function ChatCard({
+  lastMessage,
+  lastUpdated,
+  read,
+  title,
+  senderId,
+  sentByUser,
+  unreadCount,
+  id,
+  isPrivate
+}: ChatCardArgs) {
   const [hover, setHover] = useState<boolean>(false);
   const [crossDisplay, setCrossDisplay] = useState<string>("none");
   const router = useRouter();
@@ -132,7 +118,14 @@ export function ChatCard({ lastMessage, lastUpdated, image, title, senderId, sen
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
       <Grid item container xs="auto" padding={2} onClick={enterChat}>
-        {getImage(isPrivate, image)}
+      <Grid
+        item
+        padding={1.2}
+        borderRadius={20}
+        bgcolor="#00a884"
+        color="#aebac1">
+        {isPrivate ? <PersonIcon /> : <GroupIcon />}
+      </Grid>
       </Grid>
       <Grid
         item
@@ -166,8 +159,13 @@ export function ChatCard({ lastMessage, lastUpdated, image, title, senderId, sen
             <Grid item container onClick={enterChat} xs>
               {!lastMessage ? <Box>
                   <Typography>Start a conversation</Typography>
-                </Box> : formatMessage(lastMessage,
-                  isPrivate, senderId, sentByUser, unreadCount < 1)}
+                </Box> : formatMessage(
+                  lastMessage,
+                  isPrivate,
+                  senderId,
+                  sentByUser,
+                  read,
+                )}
             </Grid>
             {unreadCount < 1 ? null :
               <Grid

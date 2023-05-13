@@ -45,7 +45,6 @@ function ChatContainer({ unreadChats, searchKey, chatData }: ChatContainerArgs) 
 export default function Chat() {
   const [unreadChats, setUnreadChats] = useState<boolean>(false);
   const [chatData, setChatData] = useState<ChatCardArgs[]>([]);
-  const [indicator, setIndicator] = useState<boolean>(false);
   const [searchKey, setSearchKey] = useState<string>("");
   const [url, setUrl] = useState<string>("");
   const { user, setUser } = useUserStore();
@@ -74,9 +73,6 @@ export default function Chat() {
           .at(0)
           .userId;
 
-        chat_.messages.filter(message =>
-          console.log(message.seenBy));
-
         const unreadCount = chat_.messages.filter(message =>
           message.seenBy.every(seenBy => seenBy.userId !== user.userId)).length;
 
@@ -87,6 +83,7 @@ export default function Chat() {
           sentByUser: false,
           id: chat_.id,
           unreadCount,
+          read: false,
           title,
         };
 
@@ -97,6 +94,7 @@ export default function Chat() {
           
           data = {
             ...data,
+            read: message.seenBy.length === chat_.members.length,
             sentByUser: message.senderId === user?.userId,
             lastMessage: message.content as string,
             lastUpdated: new Date(message.sentAt),
@@ -114,7 +112,7 @@ export default function Chat() {
 
   useEffect(() => {
     const socket = io("http://localhost:4444");
-    socket.on("receive-message", async (message: string) => {
+    socket.on("update-chat", async () => {
       const { data } = await axios
         .post("/api/users/getUserInfo", { username: user!.name });
 

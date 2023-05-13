@@ -27,7 +27,14 @@ async function handlePut(messageId: number, userId: string, res: NextApiResponse
       return;
     }
 
-    await prisma.seenBy.upsert({
+    const count = await prisma.seenBy.count({
+      where: {
+        userId,
+        messageId,
+      },
+    });
+
+    if (count < 1) await prisma.seenBy.upsert({
       create: {
         userId,
         messageId,
@@ -40,8 +47,11 @@ async function handlePut(messageId: number, userId: string, res: NextApiResponse
       },
       update: {},
     })
-
-    res.status(200).json({ message: "seenBy created" });
+    
+    res.status(200).json({ 
+      created: count < 1,
+      message: "seenBy created.",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error creating seenBy." });

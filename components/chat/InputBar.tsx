@@ -1,4 +1,11 @@
-import { Button, CardActionArea, Container, FormControl, Grid, TextField } from "@mui/material";
+import {
+  Button,
+  CardActionArea,
+  Container,
+  FormControl,
+  Grid,
+  TextField,
+} from "@mui/material";
 import { createElement, useState } from "react";
 import { AiOutlinePaperClip, AiOutlineSend } from "react-icons/ai";
 import { IconType } from "react-icons";
@@ -9,8 +16,8 @@ import router, { Router } from "next/router";
 import { ICreateChatMessage } from "types/ChatMessage.d";
 import { useEffect } from "react";
 import { io, Socket } from "socket.io-client";
-import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import SendIcon from '@mui/icons-material/Send';
+import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
+import SendIcon from "@mui/icons-material/Send";
 
 let socket: Socket;
 
@@ -33,7 +40,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    socket = io("http://localhost:4444");
+    socket = io("http://34.175.26.133:4444");
 
     // socket.on("receive-message", (message: string) => {
     //   console.log(message);
@@ -61,7 +68,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
 
       await axios.post("/api/chat/seenby", {
         messageId: data.id,
-        userId: userId,  
+        userId: userId,
       }); // mark as read
 
       socket.emit("send-message");
@@ -84,21 +91,19 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         left: `10rem`,
         bottom: 0,
         backgroundColor: "#202c33",
-        cursor: "default"
+        cursor: "default",
       }}
-      disableRipple>
-      <Grid
-        container
-        direction="row"
-        paddingX={5}
-        columnGap={2}>
+      disableRipple
+    >
+      <Grid container direction="row" paddingX={5} columnGap={2}>
         <Grid
           item
           xs="auto"
           display="flex"
           marginBottom={1}
           alignItems="flex-end"
-          color="#aebac1">
+          color="#aebac1"
+        >
           <AttachFileOutlinedIcon />
         </Grid>
         <Grid item display="flex" xs>
@@ -114,17 +119,19 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
             }}
             value={message}
             onInput={updateMessage}
-            placeholder="Type a message" />
+            placeholder="Type a message"
+          />
         </Grid>
         <Grid
           item
-          style={{ cursor: "pointer", }}
+          style={{ cursor: "pointer" }}
           xs="auto"
           display="flex"
           marginBottom={1}
           alignItems="flex-end"
           color="#aebac1"
-          onClick={onSendMessage}>
+          onClick={onSendMessage}
+        >
           <SendIcon />
         </Grid>
       </Grid>

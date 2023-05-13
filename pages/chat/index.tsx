@@ -127,7 +127,7 @@ export default function Chat() {
   }, [user]);
 
   useEffect(() => {
-    const socket = io("http://localhost:4444");
+    const socket = io("http://34.175.26.133:4444");
     socket.on("update-chat", async () => {
       const { data } = await axios.post("/api/users/getUserInfo", {
         username: user!.name,

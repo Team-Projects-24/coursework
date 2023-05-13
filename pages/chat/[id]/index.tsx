@@ -5,7 +5,14 @@ import { useChatroom } from "hooks/useChatroom";
 import { IChatMessage } from "types/ChatMessage.d";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
-import { Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+} from "@mui/material";
 import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
 import { IChatroomInfo } from "types/Chatroom.d";
@@ -42,25 +49,25 @@ export default function ChatPage() {
     const { data } = await axios.get("/api/chat/" + chatroomId);
     setChatData(data);
     setLoading(false);
-    
+
     let newRead = false;
 
     await data.messages.forEach(async (message) => {
       const { data } = await axios.post("/api/chat/seenby", {
         messageId: message.id,
-        userId: user.userId
+        userId: user.userId,
       });
-      
+
       newRead ||= !data.created;
     }); // mark all chat messages as read.
 
     if (newRead) socket.emit("updated-chat");
-  }
+  };
 
   useEffect(() => {
-    socket = io("http://localhost:4444");
+    socket = io("http://34.175.26.133:4444");
     getData();
-    
+
     socket.on("recieve-message", (chatID: number) => {
       if (chatID === chatroomId) getData();
     });
@@ -87,14 +94,17 @@ export default function ChatPage() {
 
   const loadingMessage = "loading...";
 
-  return loading ? <LoadingScreen /> : (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <Card
       sx={{
         height: "100%",
         width: "100%",
         borderRadius: 0,
         maxHeight: "100%",
-      }}>
+      }}
+    >
       <ChatHeader chatName={chatName} chatId={chatData.id} />
       <ChatContainer
         messages={chatData?.messages as unknown as Message[]}

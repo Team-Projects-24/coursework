@@ -11,14 +11,7 @@ import GraphContainer from "./graph/GraphContainer";
 import TeamUserList from "./teamuserlists/TeamUserList";
 import TimeFrameContainer from "./timeframe/TimeFrameContainer";
 import useUserStore from "stores/userStore";
-import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
-// import { BarCard } from "components/dashboard/BarCard";
-import { ResponsivePie } from "@nivo/pie";
 import axios from "axios";
-import { getLinearProgressUtilityClass } from "@mui/material";
-import { ITeam } from "types/analysis/Team.d";
-import { IEmployee } from "types/analysis/Employee.d";
-import { time } from "console";
 
 export default function DataAnalyticsWindow() {
   const [teams, setTeams] = useState(null);
@@ -29,6 +22,7 @@ export default function DataAnalyticsWindow() {
   const [selectedTeamIDs, setSelectedTeamIDs] = useState<number[]>([]);
   const [selectedUserIDs, setSelectedUserIDs] = useState<String[]>([]);
   const [timeFrameState, setTimeFrameState] = useState(false);
+  const [timeFrame, setTimeFrame] = useState("day");
   const [graphState, setGraphState] = useState(-1);
   const [performanceData, setPerformanceData] = useState<any | null>(null);
 
@@ -49,26 +43,24 @@ export default function DataAnalyticsWindow() {
 
   async function loadData() {
     axios
-      .post("api/analysis/getTeamIDs", {
-        leaderID: loggedInUserID,
-        role: loggedInUserRole,
-      })
+      .get(
+        "api/analysis/getTeamIDs?leaderID=" +
+          loggedInUserID +
+          "&role=" +
+          loggedInUserRole
+      )
       .then((responseIDs) => {
         axios
-          .post("api/analysis/getTeams", {
-            teamID: responseIDs.data,
-          })
+          .get("api/analysis/getTeams?teamID=" + responseIDs.data)
           .then((responseTeams) => {
             //console.log(responseTeams.data);
             setTeams(responseTeams.data);
-            axios
-              .post("api/analysis/getTeamMembers", {
-                teamID: responseIDs.data,
-              })
-              .then((responseMembers) => {
-                //console.log(responseMembers.data);
-                setMembers(responseMembers.data);
-              });
+          });
+        axios
+          .get("api/analysis/getTeamMembers?teamID=" + responseIDs.data)
+          .then((responseMembers) => {
+            //console.log(responseMembers.data);
+            setMembers(responseMembers.data);
           });
       });
   }
@@ -76,82 +68,95 @@ export default function DataAnalyticsWindow() {
   async function loadPerformanceData(
     teamInputs: number[],
     userInputs: String[],
-    timeFrame: boolean
+    timeFrameState: boolean,
+    timeFrame: String
   ) {
     console.log("getting performance data");
     console.log(teamInputs);
     console.log(userInputs);
     console.log(timeFrameState);
-    if (teamInputs.length === 1 && !timeFrame) {
+    console.log(timeFrame);
+
+    // Format arrays into string for URL GET request
+    const teamInputsString = teamInputs.join(",");
+    const userInputsString = userInputs.join(",");
+
+    if (teamInputs.length === 1 && !timeFrameState) {
       // Get a single team's performance
       console.log("single team");
       setGraphState(0);
       axios
-        .post("api/analysis/getTeamPerformanceMetrics", {
-          teamIDs: teamInputs,
-        })
+        .get(
+          "api/analysis/getTeamPerformanceMetrics?teamIDs=" + teamInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (userInputs.length === 1 && !timeFrame) {
+    } else if (userInputs.length === 1 && !timeFrameState) {
       console.log("single user");
       setGraphState(0);
       // Get a single employee's performance
       //let requestedUsers = getSelectedUserIDs();
       //console.log(requestedUsers);
       axios
-        .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: userInputs,
-        })
+        .get(
+          "api/analysis/getUserPerformanceMetrics?userIDs=" + userInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (teamInputs.length > 0 && !timeFrame) {
+    } else if (teamInputs.length > 0 && !timeFrameState) {
       console.log("multiple teams");
       setGraphState(1);
       // Compare teams in a bar chart
       axios
-        .post("api/analysis/getTeamPerformanceMetrics", {
-          teamIDs: teamInputs,
-        })
+        .get(
+          "api/analysis/getTeamPerformanceMetrics?teamIDs=" + teamInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (userInputs.length > 0 && !timeFrame) {
+    } else if (userInputs.length > 0 && !timeFrameState) {
       console.log("multiple users");
       setGraphState(1);
       // Compare users in a bar chart
       axios
-        .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: userInputs,
-        })
+        .get(
+          "api/analysis/getUserPerformanceMetrics?userIDs=" + userInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (teamInputs.length > 0 && timeFrame) {
+    } else if (teamInputs.length > 0 && timeFrameState) {
       console.log("line graph for teams");
       setGraphState(2);
       // View / display performance over a time period for teams
       axios
-        .post("api/analysis/getTeamTimePerformanceMetrics", {
-          teamIDs: teamInputs,
-        })
+        .get(
+          "api/analysis/getTeamTimePerformanceMetrics?teamIDs=" +
+            teamInputsString +
+            "&timeframe=" +
+            timeFrame
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
         });
-    } else if (userInputs.length > 0 && timeFrame) {
+    } else if (userInputs.length > 0 && timeFrameState) {
       console.log("line graph for users");
       setGraphState(2);
       // View / display performance over a time period for users
       axios
-        .post("api/analysis/getUserTimePerformanceMetrics", {
-          userIDs: userInputs,
-        })
+        .get(
+          "api/analysis/getUserTimePerformanceMetrics?userIDs=" +
+            userInputsString +
+            "&timeframe=" +
+            timeFrame
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
@@ -186,20 +191,20 @@ export default function DataAnalyticsWindow() {
         // If selectedTeams[i] is true then we want to get the performance data of this team
         if (selectedTeams[i]) {
           //console.log(teams?.[i]);
-          teamsInput.push(teams?.[i]["teamID"]);
+          teamsInput.push(teams?.[i]?.["teamID"]);
         }
       }
       console.log(teamsInput);
       setSelectedTeamIDs(teamsInput);
       setSelectedUserIDs([]);
-      loadPerformanceData(teamsInput, [], timeFrameState);
+      loadPerformanceData(teamsInput, [], timeFrameState, timeFrame);
     } else {
       let usersInput: any[] = [];
       // Determine the corresponding users from selectedUsers
       for (let i = 0; i < selectedUsers.length; i++) {
         for (let j = 0; j < selectedUsers[i].length; j++) {
           if (selectedUsers[i][j]) {
-            usersInput.push(members?.[i]?.[j]["userID"]);
+            usersInput.push(members?.[i]?.[j]?.["userID"]);
           }
         }
       }
@@ -208,19 +213,35 @@ export default function DataAnalyticsWindow() {
         console.log(usersInput);
         setSelectedTeamIDs([]);
         setSelectedUserIDs(usersInput);
-        loadPerformanceData([], usersInput, timeFrameState);
+        loadPerformanceData([], usersInput, timeFrameState, timeFrame);
       } else {
         // If no one has been selected
         setSelectedTeamIDs([]);
         setSelectedUserIDs([]);
-        loadPerformanceData([], [], timeFrameState);
+        loadPerformanceData([], [], timeFrameState, timeFrame);
       }
     }
   };
 
   const handleTimeFrameToggle = (newState: boolean) => {
     setTimeFrameState(newState);
-    loadPerformanceData(selectedTeamIDs, selectedUserIDs, newState);
+    loadPerformanceData(selectedTeamIDs, selectedUserIDs, newState, timeFrame);
+  };
+
+  const handleTimeFrameSlider = (newState: number) => {
+    let timeframePeriod = "day";
+    if (newState == 1) {
+      timeframePeriod = "week";
+    } else if (newState == 2) {
+      timeframePeriod = "month";
+    }
+    setTimeFrame(timeframePeriod);
+    loadPerformanceData(
+      selectedTeamIDs,
+      selectedUserIDs,
+      timeFrameState,
+      timeframePeriod
+    );
   };
 
   // Figure out what kind of graph should be displayed
@@ -257,7 +278,10 @@ export default function DataAnalyticsWindow() {
         </div>
         <div className="col">
           <GraphContainer graphState={graphState} data={performanceData} />
-          <TimeFrameContainer onToggleTimeFrame={handleTimeFrameToggle} />
+          <TimeFrameContainer
+            onToggleTimeFrame={handleTimeFrameToggle}
+            onChangeTimeFrame={handleTimeFrameSlider}
+          />
         </div>
       </div>
     </div>

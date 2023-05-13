@@ -40,6 +40,10 @@ export default function PerformanceForm() {
   );
   const HARDCODEDMANHOURSSET = 8000; // can remove this once the task has the number of set hours with it
 
+
+  const [manHoursCap, setManHoursCap] = useState<number | null>(null);
+
+
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handle name change called");
     setSelectedName({ taskId: "", name: event.target.value });
@@ -63,7 +67,18 @@ export default function PerformanceForm() {
 
   useEffect(() => {
     console.log("selectedName set as: ", selectedName);
-    console.log("selectedTask set as: ", selectedTask);
+
+    if (selectedTask) {
+      console.log("selectedTask set as: ", selectedTask);
+
+      console.log("selected task id is: ", selectedTask.taskId);
+
+      console.log(Number(selectedTask.taskId));
+
+      fetchTask(Number(selectedTask.taskId));
+    }
+
+
   }, [selectedName, selectedTask]);
 
   const updateTaskCompletedHours = async (
@@ -112,7 +127,7 @@ export default function PerformanceForm() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (selectedTask && manHoursCompleted !== null) {
+    if (selectedTask && manHoursCompleted > 0 && manHoursCompleted<= manHoursCap && manHoursCompleted!==null) {
       console.log("use api to update performance log");
 
       // console.log(selectedName);
@@ -128,7 +143,7 @@ export default function PerformanceForm() {
 
       updateTaskCompletedHours(selectedTask.taskId, manHoursCompleted);
     } else {
-      console.log("one of man hours or selected task is null");
+      console.log("one of man hours or selected task is null or invalid");
     }
   }
 
@@ -141,6 +156,33 @@ export default function PerformanceForm() {
       console.error("Error fetching tasks:", error);
     }
   };
+
+  const fetchTask = async (taskId: number) => {
+    try {
+      const response = await axios.post("/api/admin/getTask", {
+        taskId: taskId
+      });
+      // setTasks(response.data);
+
+      let task = response.data[0];
+      let totalMH = task.manHoursSet;
+      let completedMH = task.manHoursCompleted;
+
+      console.log(response.data);
+      console.log("total MH is: ", totalMH);
+      console.log("completed MH is: ", completedMH);
+      console.log("difference is: ", (totalMH - completedMH));
+
+      setManHoursCap(totalMH - completedMH);
+
+
+      console.log("Fetched tasks:", response.data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+
 
   useEffect(() => {
     fetchTasks();
@@ -180,7 +222,7 @@ export default function PerformanceForm() {
                   {...params}
                   label="Search for a name"
                   variant="outlined"
-                  // onChange={handleNameChange}
+                // onChange={handleNameChange}
                 />
               )}
             />
@@ -193,9 +235,17 @@ export default function PerformanceForm() {
               placeholder="man hours you've completed"
               type="number"
               value={manHoursCompleted || ""}
-              onChange={(event) =>
-                setManHoursCompleted(Number(event.target.value))
-              }
+              onChange={event => {
+                if (manHoursCap !== null) {
+                  if (Number(event.target.value) <= manHoursCap) {
+                    setManHoursCompleted(Number(event.target.value));
+                  } else {
+                    alert("invalid amount of hours");
+                  }
+                } else {
+                  alert("Man hours cap not set");
+                }
+              }}
             />
           </Grid>
 

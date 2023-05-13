@@ -18,7 +18,7 @@ export default function Info(props: InfoProps) {
         padding : "0.2rem",
         textTransform : 'uppercase'
       }}>{props.name}</p>
-      <img src={props.chatImage} alt="image" />       </div>
+      {/*<img src={props.chatImage} alt="image" />    */}   </div>
       <p style={{
         fontSize : "1.25rem",
       }}>{props.description}</p>

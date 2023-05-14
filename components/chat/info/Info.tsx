@@ -14,13 +14,13 @@ export default function Info(props: InfoProps) {
       alignItems : 'center'
     }}>
       <p style={{
-        fontSize : "1.75rem",
+        fontSize : "2rem",
         padding : "0.2rem",
-        textTransform : 'uppercase'
+        textTransform : 'uppercase',
       }}>{props.name}</p>
       {/*<img src={props.chatImage} alt="image" />    */}   </div>
       <p style={{
-        fontSize : "1.25rem",
+        fontSize : "1.1rem",
       }}>{props.description}</p>
     </>
   );

@@ -45,7 +45,8 @@ function ChatContainer({
   return (
     <Box maxHeight="80vh" overflow="auto">
       {chatData
-        .filter((data) => data.title.startsWith(searchKey))
+        .filter((data) => data.title.toLowerCase()
+          .startsWith(searchKey.toLowerCase()))
         .map((data) => (
           <ChatCard {...data} />
         ))}

@@ -241,7 +241,7 @@ export default function InfoPage() {
                   <TextField
                     id="proposedName"
                     name="proposedName"
-                    label="Enter New Name"
+                    label="Enter New Chat Name"
                     variant="outlined"
                     type="text"
                     value={name}
@@ -263,7 +263,7 @@ export default function InfoPage() {
             <Grid container direction="row" justifyContent="center">
               <Grid item alignContent={"center"} alignSelf={"center"} xs={4}>
                 <FormControl style={{ minWidth: 230 }} size="small">
-                  <InputLabel id="newMem">Choose a member</InputLabel>
+                  <InputLabel id="newMem">Select a Member</InputLabel>
                   <Select
                     onChange={(e) => setNewMember(e.target.value as string)}
                     id="newMem"
@@ -283,7 +283,7 @@ export default function InfoPage() {
                 </Button>
                 <Grid item paddingBottom={2}></Grid>
                 <FormControl style={{ minWidth: 230 }} size="small">
-                  <InputLabel id="removeMem">Choose a member</InputLabel>
+                  <InputLabel id="removeMem">Select a Member</InputLabel>
                   <Select
                     onChange={(e) => setRemoveMember(e.target.value as string)}
                     id="removeMem"
@@ -314,7 +314,7 @@ export default function InfoPage() {
                 <TextField
                   id="proposedDesc"
                   name="proposedDesc"
-                  label="Enter new description"
+                  label="Enter New Chat Description"
                   variant="outlined"
                   type="text"
                   value={description}

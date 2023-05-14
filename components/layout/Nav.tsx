@@ -14,23 +14,23 @@ import NavButton from "./NavButton";
 export default function Nav() {
   const { user } = useUserStore();
 
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isManager, setIsManager] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
+  // const [isManager, setIsManager] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === "admin") {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-        if (user.role === "manager") {
-          setIsManager(true);
-        } else {
-          setIsManager(false);
-        }
-      }
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     if (user.role === "admin") {
+  //       setIsAdmin(true);
+  //     } else {
+  //       setIsAdmin(false);
+  //       if (user.role === "manager") {
+  //         setIsManager(true);
+  //       } else {
+  //         setIsManager(false);
+  //       }
+  //     }
+  //   }
+  // }, [user]);
 
   const NavButtons = () => {
     return (
@@ -44,7 +44,7 @@ export default function Nav() {
 
         {/* <NavButton href="/tasks" text="Tasks" icon={FaTasks} />
         <NavButton href="/documents" text="Documents" icon={FaFileAlt} /> */}
-        {isAdmin && <NavButton href="/users" text="Users" icon={FaUsers} />}
+        {/* {isAdmin && <NavButton href="/users" text="Users" icon={FaUsers} />} */}
         {/*isManager && <NavButton href="/manager" text="Manager" icon={FaUsers} />*/}
       </>
     );

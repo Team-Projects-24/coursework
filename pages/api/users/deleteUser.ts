@@ -9,8 +9,8 @@ import {
   sendSuccessResponse,
 } from "../responses";
 import { PrismaClient } from "@prisma/client";
-import Tasks from "pages/tasks";
-import Task from "components/tasks/Task";
+// import Tasks from "pages/tasks";
+// import Task from "components/tasks/Task";
 
 export default async function handler(
   req: NextApiRequest,

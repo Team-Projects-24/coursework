@@ -62,17 +62,16 @@ export function LineGraph({ data }: Props) {
     let labels: string[] = [];
     let datasetNames: string[] = [];
     for (let i = 0; i < data.length; i++) {
-      // date from db comes in datetime format - I only want date
-      let date = data?.[i]?.date;
-      if (!labels.includes(date?.slice(0, 10))) {
-        labels.push(date?.slice(0, 10));
+      let date = data?.[i]?.dateFormatted;
+      if (!labels.includes(date)) {
+        labels.push(date);
       }
       let name = data?.[i]?.id;
       if (!datasetNames.includes(name)) {
         datasetNames.push(name);
       }
     }
-    //console.log(labels);
+    console.log(labels);
 
     // Now build dataset
     let groups = [];
@@ -81,7 +80,7 @@ export function LineGraph({ data }: Props) {
       let groupData = new Array(labels.length).fill(0);
       for (let j = 0; j < data.length; j++) {
         if (data?.[j]?.id === datasetNames[i]) {
-          let index = labels.indexOf(data?.[j]?.date?.slice(0, 10));
+          let index = labels.indexOf(data?.[j]?.dateFormatted);
           groupData[index] = data?.[j]?.manHoursCompleted;
         }
       }

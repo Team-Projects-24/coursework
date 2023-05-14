@@ -6,23 +6,22 @@ const app = express();
 const httpServer: HTTPServer = createServer(app);
 const io = new IOServer(httpServer, {
   cors: {
-    origin: "http://localhost", // Replace with your site's URL in production
+    origin: "http://34.174.26.133", // Replace with your site's URL in production
   },
 });
 
 io.on("connection", (socket) => {
   console.log("New connection");
 
-  socket.on("send-message", (message: string) => {
-    io.emit("receive-message", message);
+  socket.on("updated-chat", (chatID: string) => {
+    io.emit("update-chat", chatID);
   });
-
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
 });
 
-const PORT = 3001;
+const PORT = 4444;
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

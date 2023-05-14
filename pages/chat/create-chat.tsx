@@ -4,7 +4,6 @@ import { useState } from "react";
 import { IUser } from "types/User.d";
 import axios from "axios";
 import ProfileWrack from "components/chat/menu/ProfileWrack";
-import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from "next/router";
 import { ICreateChatroom } from "types/Chatroom.d";
 import ChatroomCreationHeader from "components/chat/menu/ChatroomCreationHeader";
@@ -17,15 +16,14 @@ export default function createChat() {
   const router = useRouter();
 
   const response = async (selectedUser: IUser) => {
-    var chat = user?.chatrooms
+    let chat = user?.chatrooms
       .filter(
         (chatroom) =>
           chatroom.private && chatroom
             .members
             .map((member) => member.userId)
             .includes(selectedUser.userId)
-      )
-      .at(0);
+      ).at(0);
 
     if (!chat) {
       const newRoom: ICreateChatroom = {
@@ -36,13 +34,17 @@ export default function createChat() {
         members: [user!.userId, selectedUser.userId],
         description: "Chat between users."
       };
-      chat = await axios.post("/api/chat/", { room: newRoom });
-      const { data } = await axios
+      const { data: createdRoom } = await axios
+        .post("/api/chat", { room: newRoom });
+
+      chat = createdRoom;
+
+      const { data: updatedUser } = await axios
         .post("/api/users/getUserInfo", { username: user?.userId });
-      setUser(data as IUser);
+      setUser(updatedUser as IUser);
     }
 
-    router.back();
+    router.push(`${chat?.id}`);
   }
 
   const searchById = (id: string) => setPartialId(id);
@@ -52,7 +54,7 @@ export default function createChat() {
       <ChatroomCreationHeader title="New chat" />
       <Box>
         <Box paddingX={2} paddingTop={1}>
-          <SearchContainer hint="Search user by id" />
+          <SearchContainer hint="Search user by id" searchResponse={searchById} />
         </Box>
         <Box maxHeight="80vh" overflow="auto" marginY={1}>
           <ProfileWrack partialId={partialId} response={response} />

@@ -103,13 +103,13 @@ export default function UserChip({ userEmail, clickable = true }: IProps) {
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => {
-                    window.location.href = "mailto:" + user.email;
+                    window.location.href = "mailto:" + user.userId;
                   }}
                 >
                   <ListItemIcon>
                     <EmailIcon />
                   </ListItemIcon>
-                  <ListItemText primary={user.email} />
+                  <ListItemText primary={user.userId} />
                 </ListItemButton>
               </ListItem>
             </List>

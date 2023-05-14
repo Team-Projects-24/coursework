@@ -1,9 +1,9 @@
 /**
- * 
- * @author Olivia Gray 
- * 
+ *
+ * @author Olivia Gray
+ *
  * @description container for all timeframe components
- * 
+ *
  */
 
 import TimeFrameSlider from "./TimeFrameSlider";
@@ -11,11 +11,15 @@ import TimeFrameToggle from "./TimeFrameToggle";
 
 interface Props {
   onToggleTimeFrame: (useTimeFrame: boolean) => void;
+  onChangeTimeFrame?: (timeframe: number) => void;
 }
 
-function TimeFrameContainer({ onToggleTimeFrame }: Props) {
+function TimeFrameContainer({ onToggleTimeFrame, onChangeTimeFrame }: Props) {
   const handleSelectToggle = (useTimeFrame: boolean) => {
     onToggleTimeFrame(useTimeFrame);
+  };
+  const handleSlider = (timeframe: number) => {
+    onChangeTimeFrame(timeframe);
   };
 
   return (
@@ -28,7 +32,7 @@ function TimeFrameContainer({ onToggleTimeFrame }: Props) {
               <TimeFrameToggle onSelectToggle={handleSelectToggle} />
             </div>
             <div className="col">
-              <TimeFrameSlider />
+              <TimeFrameSlider onChangeSlider={handleSlider} />
             </div>
           </div>
         </div>

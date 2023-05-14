@@ -35,6 +35,7 @@ export default async function handler(
     const tasks: Task[] = await prisma.task.findMany({
       where: {
         userId: userID,
+
       },
     });
 

@@ -1,0 +1,11 @@
+apps:
+  - name: next-app
+    script: npm
+    args: start
+    env:
+      PORT: 3000
+  - name: socket-server
+    script: server.js
+    exec_interpreter: node
+    env:
+      PORT: 4444

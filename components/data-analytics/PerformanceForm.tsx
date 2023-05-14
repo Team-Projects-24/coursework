@@ -1,8 +1,22 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { TextField, Autocomplete, Box, Grid, Typography, FormControl, Button } from "@mui/material";
+import {
+  TextField,
+  Autocomplete,
+  Box,
+  Grid,
+  Typography,
+  FormControl,
+  Button,
+} from "@mui/material";
 import axios from "axios";
 
-const hardcodedTasks = ["task1", "task twoo", "tasks four", "3 - third", "9ine"];
+const hardcodedTasks = [
+  "task1",
+  "task twoo",
+  "tasks four",
+  "3 - third",
+  "9ine",
+];
 
 export default function PerformanceForm() {
     // const [selectedName, setSelectedName] = useState<string>("");
@@ -39,75 +53,129 @@ export default function PerformanceForm() {
         }
     };
 
-    const filteredNames = tasks.filter((task) =>
-        task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
-    );
 
+  const filteredNames = tasks.filter((task) =>
+    task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
+  );
 
-    useEffect(() => {
-        console.log("selectedName set as: ", selectedName);
-        console.log("selectedTask set as: ", selectedTask);
-    }, [selectedName, selectedTask]);
+  useEffect(() => {
+    console.log("selectedName set as: ", selectedName);
 
+    if (selectedTask) {
+      console.log("selectedTask set as: ", selectedTask);
 
-    const updateTaskCompletedHours = async (taskId: string, additionalHours: number) => {
-        try {
-            const response = await axios.put(`/api/admin/updateCompletedHours?id=${taskId}`, {
-                additionalHours,
-            });
-            console.log("Updated task:", response.data);
-        } catch (error) {
-            console.error("Error updating task:", error.response?.data || error.message);
-        }
-    };
+      console.log("selected task id is: ", selectedTask.taskId);
 
+      console.log(Number(selectedTask.taskId));
 
-    const createPerformanceEntry = async (taskId: string, manHoursSet: number, manHoursCompleted: number) => {
-        try {
-            const response = await axios.post('/api/admin/newPerformanceEntry', {
-                taskId,
-                manHoursSet,
-                manHoursCompleted,
-            })
-            console.log('New performance entry created:', response.data)
-
-            setSelectedName(null);
-            setManHoursCompleted(null);
-
-        } catch (error) {
-            console.error('ERROR creating performance entry:', error.response?.data || error.message)
-        }
+      fetchTask(Number(selectedTask.taskId));
     }
 
 
+  }, [selectedName, selectedTask]);
+
+  const updateTaskCompletedHours = async (
+    taskId: string,
+    additionalHours: number
+  ) => {
+    try {
+      const response = await axios.put(
+        `/api/admin/updateCompletedHours?id=${taskId}`,
+        {
+          additionalHours,
+        }
+      );
+      console.log("Updated task:", response.data);
+    } catch (error) {
+      console.error(
+        "Error updating task:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const createPerformanceEntry = async (
+    taskId: string,
+    manHoursSet: number,
+    manHoursCompleted: number
+  ) => {
+    try {
+      const response = await axios.post("/api/admin/newPerformanceEntry", {
+        taskId,
+        manHoursSet,
+        manHoursCompleted,
+      });
+      console.log("New performance entry created:", response.data);
+
+      setSelectedName(null);
+      setManHoursCompleted(null);
+    } catch (error) {
+      console.error(
+        "ERROR creating performance entry:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (selectedTask && manHoursCompleted !== null) {
             console.log("use api to update performance log");
 
+      // console.log(selectedName);
 
+      console.log("selected task man hours set is" + selectedTask.manHoursSet);
+      createPerformanceEntry(
+        selectedTask.taskId,
+        selectedTask.manHoursSet,
+        manHoursCompleted
+      ); // commented just for debugging
 
+      //UPDATE THE TASK WITH THE NEW AMOUNT OF COMPLETED HOURS
 
-
-            // console.log(selectedName);
-
-
-
-            console.log("selected task man hours set is" + selectedTask.manHoursSet);
-            createPerformanceEntry(selectedTask.taskId, selectedTask.manHoursSet, manHoursCompleted); // commented just for debugging
-
-            //UPDATE THE TASK WITH THE NEW AMOUNT OF COMPLETED HOURS
-
-
-            updateTaskCompletedHours(selectedTask.taskId, manHoursCompleted);
-
-
-        } else {
-            console.log("one of man hours or selected task is null");
-        }
+      updateTaskCompletedHours(selectedTask.taskId, manHoursCompleted);
+    } else {
+      console.log("one of man hours or selected task is null or invalid");
     }
+  }
 
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get("/api/admin/getTaskIDs");
+      setTasks(response.data);
+      console.log("Fetched tasks:", response.data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+  const fetchTask = async (taskId: number) => {
+    try {
+      const response = await axios.post("/api/admin/getTask", {
+        taskId: taskId
+      });
+      // setTasks(response.data);
+
+      let task = response.data[0];
+      let totalMH = task.manHoursSet;
+      let completedMH = task.manHoursCompleted;
+
+      console.log(response.data);
+      console.log("total MH is: ", totalMH);
+      console.log("completed MH is: ", completedMH);
+      console.log("difference is: ", (totalMH - completedMH));
+
+      setManHoursCap(totalMH - completedMH);
+
+
+      console.log("Fetched tasks:", response.data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
 
 
     const fetchTasks = async () => {

@@ -25,7 +25,6 @@ export default async function handler(
           include: {
             members: true,
           },
-          orderBy: { updatedAt: "desc" },
         },
       }
     });

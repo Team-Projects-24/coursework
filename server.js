@@ -11,15 +11,17 @@ var io = new socket_io_1.Server(httpServer, {
   },
 });
 io.on("connection", function (socket) {
-  socket.on("send-message", function (message) {
-    console.log(message);
-    io.emit("receive-message", message);
+  console.log("new connection");
+
+  socket.on("updated-chat", function (chatID) {
+    console.log("{server} Everyone, update: ".concat(chatID));
+    io.emit("update-chat", chatID);
   });
   socket.on("disconnect", function () {
     console.log("User disconnected");
   });
 });
-var PORT = 3001;
+var PORT = 4444;
 httpServer.listen(PORT, function () {
   console.log("Server running on port ".concat(PORT));
 });

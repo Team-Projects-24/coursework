@@ -1,33 +1,32 @@
 import { Box, Grid, Typography } from "@mui/material";
 import useUserStore from "stores/userStore";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { IUser } from "types/User.d";
 import ProfileWrack from "components/chat/menu/ProfileWrack";
 import { useRouter } from "next/router";
 import ChatroomCreationHeader from "components/chat/menu/ChatroomCreationHeader";
 import SearchContainer from "components/chat/menu/SearchContainer";
 import ParticipantToken from "components/chat/menu/ParticipantToken";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Animated } from "react-animated-css";
 import { ICreateChatroom } from "types/Chatroom.d";
 import axios from "axios";
 
-
 interface LeftSectionArgs {
-  participants: Array<IUser>,
-  removeResponse: ((user: IUser) => void),
-  userId: string,
-  valid: boolean,
-  setUser: (user: IUser | null) => void,
+  participants: Array<IUser>;
+  removeResponse: (user: IUser) => void;
+  userId: string;
+  valid: boolean;
+  setUser: (user: IUser | null) => void;
 }
 
 interface RightSectionArgs {
-  response: ((arg0: IUser) => void),
+  response: (arg0: IUser) => void;
 }
 
 /**
  * @author Ade Osindero
- * 
+ *
  * @param participants - An array of selected users for the group.
  * @param removeResponse - The function used to remove a user from the participants pool.
  * @param userId - The id of the sogned in user.
@@ -35,7 +34,13 @@ interface RightSectionArgs {
  * @param setUser - The method used to set the signed in user.
  * @returns The left section of the CreateGroup page.
  */
-function LeftSection({ participants, removeResponse, userId, valid, setUser }: LeftSectionArgs) {
+function LeftSection({
+  participants,
+  removeResponse,
+  userId,
+  valid,
+  setUser,
+}: LeftSectionArgs) {
   const [hover, setHover] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -50,7 +55,8 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
     }
 
     if (!description) {
-      chatDescription = "A chat, that was not bothered to be described, between users.";
+      chatDescription =
+        "A chat, that was not bothered to be described, between users.";
     }
 
     const newGroup: ICreateChatroom = {
@@ -60,40 +66,44 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
       chatImage: "",
       members: participants.map((user) => user.userId),
       description: chatDescription,
-    }
-    const chat = await axios.post("/api/chat/", { room: newGroup });
+    };
 
-    const { data } = await axios
-      .post("/api/users/getUserInfo", { username: userId });
+    const { data } = await axios.post("/api/users/getUserInfo", {
+      username: userId,
+    });
     setUser(data as IUser);
-    
+
     router.back();
   };
 
   return (
     <Grid item container xs={6} padding={5} display="block">
       <Box bgcolor="#222e35" padding={3} borderRadius={3} height="700px">
-        <Typography variant="h5" color="#d9dee0"><b>Details</b></Typography>
+        <Typography variant="h5" color="#d9dee0">
+          <b>Details</b>
+        </Typography>
         <Grid
           container
           direction="column"
           paddingX={3}
           paddingTop={3}
           paddingBottom={5}
-          rowSpacing={2}>
+          rowSpacing={2}
+        >
           <Grid item container direction="row">
-              <input
-                style={{
-                  backgroundColor: "#111b21",
-                  paddingBlock: "10px",
-                  borderRadius: "10px",
-                  paddingInline: "20px",
-                  color: "#ffffff",
-                  outline: "none",
-                  width: "100%",
-                }}
-                onChange={(e) => setName(e.currentTarget.value)}
-                placeholder="Name" />
+            <input
+              style={{
+                backgroundColor: "#111b21",
+                paddingBlock: "10px",
+                borderRadius: "10px",
+                paddingInline: "20px",
+                color: "#ffffff",
+                outline: "none",
+                width: "100%",
+              }}
+              onChange={(e) => setName(e.currentTarget.value)}
+              placeholder="Name"
+            />
           </Grid>
           <Grid item container direction="row">
             <input
@@ -107,31 +117,34 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
                 width: "100%",
               }}
               onChange={(e) => setDescription(e.currentTarget.value)}
-              placeholder="Description" />
+              placeholder="Description"
+            />
           </Grid>
         </Grid>
         <Typography variant="h5" color="#d9dee0">
           <b>Participants</b>
         </Typography>
         <Box maxHeight="400px" marginY={2} paddingX={2} overflow="auto">
-          {participants.map((user) =>
-              <Box paddingBottom={1} key={user.userId}>
-                <ParticipantToken
-                  user={user}
-                  removeResponse={removeResponse}
-                  allowRemoval={user.userId !== userId} />
-              </Box>
-            )
-          }
+          {participants.map((user) => (
+            <Box paddingBottom={1} key={user.userId}>
+              <ParticipantToken
+                user={user}
+                removeResponse={removeResponse}
+                allowRemoval={user.userId !== userId}
+              />
+            </Box>
+          ))}
         </Box>
       </Box>
       <Box justifyContent="center" display="flex" paddingTop={2}>
+        {/* @ts-ignore */}
         <Animated
           animationIn="zoomIn"
           animationOut="zoomOut"
           animationInDuration={500}
           animationOutDuration={500}
-          isVisible={valid}>
+          isVisible={valid}
+        >
           <button
             style={{
               backgroundColor: hover ? "#06cf9c" : "#00a884",
@@ -142,7 +155,8 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
             }}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
-            onClick={createGroup}>
+            onClick={createGroup}
+          >
             <ArrowForwardIcon />
           </button>
         </Animated>
@@ -153,8 +167,8 @@ function LeftSection({ participants, removeResponse, userId, valid, setUser }: L
 
 /**
  * @author Ade Osindero
- * 
- * @param response - The function used to add users to the participants pool. 
+ *
+ * @param response - The function used to add users to the participants pool.
  * @returns The right section of the CreateGroup page.
  */
 function RightSection({ response }: RightSectionArgs) {
@@ -170,12 +184,12 @@ function RightSection({ response }: RightSectionArgs) {
       display="block"
       xs={6}>
       <Box paddingX="20px">
-        <SearchContainer hint="Search users by id" />
+        <SearchContainer
+          hint="Search users by id"
+          searchResponse={(partialId) => setPartialId(partialId)} />
       </Box>
       <Box maxHeight="75vh" overflow="auto" marginY={2}>
-        <ProfileWrack
-          partialId={partialId}
-          response={response} />
+        <ProfileWrack partialId={partialId} response={response} />
       </Box>
     </Grid>
   );
@@ -183,19 +197,24 @@ function RightSection({ response }: RightSectionArgs) {
 
 export default function CreateGroup() {
   const { user, setUser } = useUserStore();
-  const [participants, setParticipants ] = useState<Array<IUser>>([user!]);
+  const [participants, setParticipants] = useState<Array<IUser>>(
+    user ? [user] : []
+  );
   const [valid, setValid] = useState<boolean>(false);
 
   const removeResponse = (selectedUser: IUser) => {
-    setParticipants(participants
-      .filter((user) => user.userId != selectedUser.userId));
-    
+    setParticipants(
+      participants.filter((user) => user.userId != selectedUser.userId)
+    );
+
     setValid(2 < participants.length);
   };
 
   const response = (selectedUser: IUser) => {
-    if (participants.includes(selectedUser) ||
-      selectedUser.userId == user?.userId) {
+    if (
+      participants.includes(selectedUser) ||
+      selectedUser.userId == user?.userId
+    ) {
       return;
     }
 
@@ -208,15 +227,16 @@ export default function CreateGroup() {
     <Box minHeight="100%" bgcolor="#111b21">
       <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
       <ChatroomCreationHeader title="New group" />
       <Grid container direction="row">
         <LeftSection
           participants={participants}
           removeResponse={removeResponse}
-          userId={user!.userId}
+          userId={user?.userId}
           valid={valid}
-          setUser={setUser} />
+          setUser={setUser}
+        />
         <RightSection response={response} />
       </Grid>
     </Box>

@@ -58,7 +58,7 @@ export default function ChatPage() {
         userId: user.userId,
       });
 
-      newRead ||= !data.created;
+      newRead = data.created;
     }); // mark all chat messages as read.
 
     if (newRead) socket.emit("updated-chat");

@@ -166,34 +166,34 @@ export default function InfoPage() {
     getData();
   }
 
-  function clearingField() {
-    const [inputValue, setInputValue] = useState("");
+  // function clearingField() {
+  //   const [inputValue, setInputValue] = useState("");
 
-    const handleClearClick = () => {
-      setInputValue("");
-    };
+  //   const handleClearClick = () => {
+  //     setInputValue("");
+  //   };
 
-    async function getUsers() {
-      try {
-        const response = await axios.get("/api/users/getUsers");
-        const users = response.data;
-        return users;
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  //   async function getUsers() {
+  //     try {
+  //       const response = await axios.get("/api/users/getUsers");
+  //       const users = response.data;
+  //       return users;
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
 
-    return (
-      <div>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <button onClick={handleClearClick}>Clear</button>
-      </div>
-    );
-  }
+  //   return (
+  //     <div>
+  //       <input
+  //         type="text"
+  //         value={inputValue}
+  //         onChange={(e) => setInputValue(e.target.value)}
+  //       />
+  //       <button onClick={handleClearClick}>Clear</button>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -238,23 +238,29 @@ export default function InfoPage() {
                 <Grid wrap="wrap">
                   <p>{chatData?.name}</p>
                   <Grid item paddingTop={1}></Grid>
-                  <TextField
-                    id="proposedName"
-                    name="proposedName"
-                    label="Enter New Chat Name"
-                    variant="outlined"
-                    type="text"
-                    value={name}
-                    size="small"
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    onClick={updateChatName}
-                  >
-                    Submit
-                  </Button>
+                  {user.userId === chatData?.creatorId ? (
+                    <>
+                      <TextField
+                        id="proposedName"
+                        name="proposedName"
+                        label="Enter New Chat Name"
+                        variant="outlined"
+                        type="text"
+                        value={name}
+                        size="small"
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        onClick={updateChatName}
+                      >
+                        Submit
+                      </Button>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -262,44 +268,58 @@ export default function InfoPage() {
           <Grid container direction="column" borderBottom={1} paddingBottom={4}>
             <Grid container direction="row" justifyContent="center">
               <Grid item alignContent={"center"} alignSelf={"center"} xs={4}>
-                <FormControl style={{ minWidth: 230 }} size="small">
-                  <InputLabel id="newMem">Select a User</InputLabel>
-                  <Select
-                    onChange={(e) => setNewMember(e.target.value as string)}
-                    id="newMem"
-                    MenuProps={{
-                      style: { maxHeight: 200 },
-                    }}
-                  >
-                    {filteredUsers.map((option) => (
-                      <MenuItem key={option.userId} value={option.userId}>
-                        {option.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Button variant="contained" onClick={updateMembersList}>
-                  &nbsp; &nbsp; Add &nbsp; &nbsp;
-                </Button>
+                {user.userId === chatData?.creatorId ? (
+                  <>
+                    <FormControl style={{ minWidth: 230 }} size="small">
+                      <InputLabel id="newMem">Select a User</InputLabel>
+                      <Select
+                        onChange={(e) => setNewMember(e.target.value as string)}
+                        id="newMem"
+                        MenuProps={{
+                          style: { maxHeight: 200 },
+                        }}
+                      >
+                        {filteredUsers.map((option) => (
+                          <MenuItem key={option.userId} value={option.userId}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <Button variant="contained" onClick={updateMembersList}>
+                      &nbsp; &nbsp; Add &nbsp; &nbsp;
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
                 <Grid item paddingBottom={2}></Grid>
-                <FormControl style={{ minWidth: 230 }} size="small">
-                  <InputLabel id="removeMem">Select a Member</InputLabel>
-                  <Select
-                    onChange={(e) => setRemoveMember(e.target.value as string)}
-                    id="removeMem"
-                    MenuProps={{ style: { maxHeight: 200 } }}
-                  >
-                    {members.map((option) => (
-                      <MenuItem key={option.userId} value={option.userId}>
-                        {option.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Button variant="contained" onClick={removeMemberFromChat}>
-                  {" "}
-                  Remove{" "}
-                </Button>
+                {user.userId === chatData?.creatorId ? (
+                  <>
+                    <FormControl style={{ minWidth: 230 }} size="small">
+                      <InputLabel id="removeMem">Select a Member</InputLabel>
+                      <Select
+                        onChange={(e) =>
+                          setRemoveMember(e.target.value as string)
+                        }
+                        id="removeMem"
+                        MenuProps={{ style: { maxHeight: 200 } }}
+                      >
+                        {members.map((option) => (
+                          <MenuItem key={option.userId} value={option.userId}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <Button variant="contained" onClick={removeMemberFromChat}>
+                      {" "}
+                      Remove{" "}
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Grid>
 
               <Grid
@@ -311,24 +331,30 @@ export default function InfoPage() {
               >
                 <Grid xs={8}>{chatData?.description}</Grid>
                 <Grid item paddingTop={1}></Grid>
-                <TextField
-                  id="proposedDesc"
-                  name="proposedDesc"
-                  label="Enter New Chat Description"
-                  variant="outlined"
-                  type="text"
-                  value={description}
-                  size="small"
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                {user.userId === chatData?.creatorId ? (
+                  <>
+                    <TextField
+                      id="proposedDesc"
+                      name="proposedDesc"
+                      label="Enter New Chat Description"
+                      variant="outlined"
+                      type="text"
+                      value={description}
+                      size="small"
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
 
-                <Button
-                  type="submit"
-                  variant="contained"
-                  onClick={updateChatDesc}
-                >
-                  Submit
-                </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      onClick={updateChatDesc}
+                    >
+                      Submit
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Grid>
             </Grid>
           </Grid>

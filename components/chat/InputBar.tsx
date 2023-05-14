@@ -1,20 +1,7 @@
-import {
-  Button,
-  CardActionArea,
-  Container,
-  FormControl,
-  Grid,
-  TextField,
-} from "@mui/material";
-import { createElement, useState } from "react";
-import { AiOutlinePaperClip, AiOutlineSend } from "react-icons/ai";
-import { IconType } from "react-icons";
+import { CardActionArea, Grid } from "@mui/material";
 import axios from "axios";
-import { IUser } from "types/User.d";
-import useUserStore from "stores/userStore";
-import router, { Router } from "next/router";
 import { ICreateChatMessage } from "types/ChatMessage.d";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import SendIcon from "@mui/icons-material/Send";
@@ -71,8 +58,8 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         userId: userId,
       }); // mark as read
 
-      socket.emit("send-message", chatId);
-      socket.emit("updated-chat");
+      // socket.emit("send-message", chatId);
+      socket.emit("updated-chat", chatId);
 
       setMessage("");
     } catch (err) {

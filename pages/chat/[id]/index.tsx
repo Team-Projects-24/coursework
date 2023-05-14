@@ -1,28 +1,16 @@
 // import ChatContainer from "../components/chat/ChatContainer";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useChatroom } from "hooks/useChatroom";
-import { IChatMessage } from "types/ChatMessage.d";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Card} from "@mui/material";
 import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
-import { IChatroomInfo } from "types/Chatroom.d";
 import axios from "axios";
 import ChatContainer from "components/chat/ChatContainer";
 import { Chatroom, Message, User } from "@prisma/client";
 import { io, Socket } from "socket.io-client";
 import LoadingScreen from "components/chat/LoadingScreen";
-import LoadingPage from "components/misc/LoadingPage";
-import { result } from "lodash";
 
 let socket: Socket;
 
@@ -61,18 +49,21 @@ export default function ChatPage() {
       newRead = data.created;
     }); // mark all chat messages as read.
 
-    if (newRead) socket.emit("updated-chat");
+    if (newRead) socket.emit("updated-chat", chatroomId);
   };
 
   useEffect(() => {
     socket = io("http://34.175.26.133:4444");
-    getData();
 
-    socket.on("recieve-message", (chatID: number) => {
-      if (chatID === chatroomId) getData();
+    // socket.on("recieve-message", (chatID: number) => {
+    //   if (chatID === chatroomId) getData();
+    // });
+    
+    socket.on("update-chat", (chatID: number) => {
+      if (chatID === chatroomId) { console.log("updating chat: " + chatID); getData() };
     });
-    socket.on("update-chat", getData);
-    socket.emit("updated-chat");
+
+    socket.emit("updated-chat", chatroomId);
 
     return () => {
       socket.disconnect();

@@ -129,12 +129,15 @@ export default function Chat() {
 
   useEffect(() => {
     const socket = io("http://34.175.26.133:4444");
-    socket.on("update-chat", async () => {
+
+    socket.on("update-chat", async (chatID: string) => {
       const { data } = await axios.post("/api/users/getUserInfo", {
         username: user!.name,
       });
 
-      setUser(data as IUser);
+      const chatIDs: string[] = data.chatrooms.map(chat => chat.id);
+
+      if (chatIDs.includes(chatID)) setUser(data as IUser);
     });
 
     return () => {

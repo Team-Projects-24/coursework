@@ -19,47 +19,40 @@ const hardcodedTasks = [
 ];
 
 export default function PerformanceForm() {
-  // const [selectedName, setSelectedName] = useState<string>("");
-  const [selectedName, setSelectedName] = useState<{
-    taskId: string;
-    name: string;
-  } | null>(null);
+    // const [selectedName, setSelectedName] = useState<string>("");
+    const [selectedName, setSelectedName] = useState<{ taskId: string; name: string } | null>(null);
 
-  const [selectedTask, setSelectedTask] = useState<{
-    taskId: string;
-    name: string;
-    manHoursSet: number;
-  } | null>(null);
+    const [selectedTask, setSelectedTask] = useState<{ taskId: string; name: string, manHoursSet: number } | null>(null);
 
-  const [tasks, setTasks] = useState<
-    Array<{ taskId: string; name: string; manHoursSet: number }>
-  >([]); // ADAPT TO ALSO HAVE MAN HOURS SET TO USE IN PF LOG ENTRY
+    const [tasks, setTasks] = useState<Array<{ taskId: string, name: string, manHoursSet: number }>>([]); // ADAPT TO ALSO HAVE MAN HOURS SET TO USE IN PF LOG ENTRY
 
-  const [manHoursCompleted, setManHoursCompleted] = useState<number | null>(
-    null
-  );
-  const HARDCODEDMANHOURSSET = 8000; // can remove this once the task has the number of set hours with it
+    const [manHoursCompleted, setManHoursCompleted] = useState<number | null>(null);
+    const HARDCODEDMANHOURSSET = 8000; // can remove this once the task has the number of set hours with it 
 
 
-  const [manHoursCap, setManHoursCap] = useState<number | null>(null);
+    const [manHoursCap, setManHoursCap] = useState<number | null>(null);
 
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("handle name change called");
+        setSelectedName({ taskId: '', name: event.target.value });
+    };
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handle name change called");
-    setSelectedName({ taskId: "", name: event.target.value });
-  };
+    const handleNameSelect = (
 
-  const handleNameSelect = (
-    event: React.ChangeEvent<{}>,
-    value: { taskId: string; name: string; manHoursSet: number } | null // remove question mark if setselectedtask isn't working properly
-  ) => {
-    if (value) {
-      setSelectedName(value);
-      setSelectedTask(value);
-    } else {
-      setSelectedTask(null);
-    }
-  };
+        event: React.ChangeEvent<{}>,
+        value: { taskId: string; name: string; manHoursSet?: number } | null  // remove question mark if setselectedtask isn't working properly
+    ) => {
+        if (value) {
+            setSelectedName(value);
+            setSelectedTask(value);
+            
+            // do api call and set the cap 
+
+        } else {
+            setSelectedTask(null)
+        }
+    };
+
 
   const filteredNames = tasks.filter((task) =>
     task.name.toLowerCase().includes(selectedName?.name.toLowerCase() || "")
@@ -126,9 +119,12 @@ export default function PerformanceForm() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    
+    function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
-    if (selectedTask && manHoursCompleted > 0 && manHoursCompleted<= manHoursCap && manHoursCompleted!==null) {
-      console.log("use api to update performance log");
+        if (selectedTask && manHoursCompleted !== null) {
+            console.log("use api to update performance log");
 
       // console.log(selectedName);
 
@@ -180,82 +176,111 @@ export default function PerformanceForm() {
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
-  };
+
+
+    const fetchTasks = async () => {
+        try {
+            const response = await axios.get("/api/admin/getTaskIDs");
+            setTasks(response.data);
+            console.log("Fetched tasks:", response.data);
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+
+    const fetchTask = async (taskId: number) => {
+        try {
+            const response = await axios.post("/api/admin/getTask", {
+                taskId: taskId
+            });
+            // setTasks(response.data);
+
+            let totalMH = response.data.manHoursSet;
+            let completedMH = response.data.manHoursCompleted;
+
+            setManHoursCap(totalMH-completedMH);
+
+
+            console.log("Fetched tasks:", response.data);
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    };
+    
+
+    return (
+
+        <Box sx={{ margin: 'auto', maxWidth: 600 }}>
 
 
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+            <Typography variant="h4" sx={{ textAlign: 'center', bgcolor: '#ffbf00', color: 'white', p: 2, borderRadius: 5 }}>
+                Performance Log Form
+            </Typography>
 
-  return (
-    <Box sx={{ margin: "auto", maxWidth: 600 }}>
-      <Typography
-        variant="h4"
-        sx={{
-          textAlign: "center",
-          bgcolor: "#ffbf00",
-          color: "white",
-          p: 2,
-          borderRadius: 5,
-        }}
-      >
-        Performance Log Form
-      </Typography>
+            <Box component="form" onSubmit={handleSubmit}>
+                <Grid container spacing={2} sx={{ my: 2 }}>
+                    <Grid item xs={12}>
+                        <Autocomplete
+                            value={selectedName}
+                            onChange={handleNameSelect}
+                            inputValue={selectedName?.name || ""}
+                            onInputChange={(_, value) => handleNameChange({ target: { value } } as any)}
+                            id="search-name"
+                            options={filteredNames}
+                            getOptionLabel={(task) => task.name}
+                            style={{ width: 300 }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search for a name"
+                                    variant="outlined"
+                                // onChange={handleNameChange}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
 
-      <Box component="form" onSubmit={handleSubmit}>
-        <Grid container spacing={2} sx={{ my: 2 }}>
-          <Grid item xs={12}>
-            <Autocomplete
-              value={selectedName}
-              onChange={handleNameSelect}
-              inputValue={selectedName?.name || ""}
-              onInputChange={(_, value) =>
-                handleNameChange({ target: { value } } as any)
-              }
-              id="search-name"
-              options={filteredNames}
-              getOptionLabel={(task) => task.name}
-              style={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Search for a name"
-                  variant="outlined"
-                // onChange={handleNameChange}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="Man-Hours"
-              label="Man-Hours Completed"
-              placeholder="man hours you've completed"
-              type="number"
-              value={manHoursCompleted || ""}
-              onChange={event => {
-                if (manHoursCap !== null) {
-                  if (Number(event.target.value) <= manHoursCap) {
-                    setManHoursCompleted(Number(event.target.value));
-                  } else {
-                    alert("invalid amount of hours");
-                  }
-                } else {
-                  alert("Man hours cap not set");
-                }
-              }}
-            />
-          </Grid>
+                        <TextField
+                            fullWidth
+                            name="Man-Hours"
+                            label="Man-Hours Completed"
+                            placeholder="man hours you've completed"
+                            type="number"
+                            value={manHoursCompleted || ""}
+                            onChange={event => {
+                                if (manHoursCap !== null) {
+                                    if (Number(event.target.value) <= manHoursCap) {
+                                        setManHoursCompleted(Number(event.target.value));
+                                    } else {
+                                        alert("invalid amount of hours");
+                                    }
+                                } else {
+                                    alert("Man hours cap not set");
+                                }
+                            }}
+                            
 
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Update task
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
-  );
+
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Button type="submit" variant="contained" color="primary">
+                            Update task
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Box>
+
+
+
+    );
 }

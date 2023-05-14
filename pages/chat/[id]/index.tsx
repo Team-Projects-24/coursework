@@ -105,7 +105,11 @@ export default function ChatPage() {
         maxHeight: "100%",
       }}
     >
-      <ChatHeader chatName={chatName} chatId={chatData.id} />
+      <ChatHeader
+        chatName={chatName}
+        chatId={chatData.id}
+        isPrivate={chatData.private}
+      />
       <ChatContainer
         messages={chatData?.messages as unknown as Message[]}
         userId={user?.userId as string}

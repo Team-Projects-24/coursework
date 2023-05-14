@@ -155,10 +155,12 @@ export default function Chat() {
         <Grid item>
           <Box
             sx={{
-              borderRadius: 2,
+              borderRadius: 5,
               cursor: "pointer",
+              ":active": {
+                backgroundColor: "#374248"
+              }
             }}
-            className="icon-container"
             onClick={createChat}
             padding={1.1}
             color="#aebac1"
@@ -169,10 +171,12 @@ export default function Chat() {
         <Grid item>
           <Box
             sx={{
-              borderRadius: 2,
+              borderRadius: 5,
               cursor: "pointer",
+              ":active": {
+                backgroundColor: "#374248"
+              }
             }}
-            className="icon-container"
             padding={1.1}
             onClick={createGroup}
             color="#aebac1"
@@ -212,13 +216,6 @@ export default function Chat() {
         chatData={chatData}
         userId={user?.userId}
       />
-      <style>
-        {`
-          icon-container:active {
-            background-color: "#374248";
-          }
-        `}
-      </style>
     </Box>
   );
 }

@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   CardHeader,
   Grid,
@@ -8,6 +9,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
+import PersonIcon from "@mui/icons-material/Person";
+import GroupIcon from "@mui/icons-material/Group";
 
 /**
  * @author Ben Pritchard
@@ -19,44 +22,54 @@ import { useRouter } from "next/router";
  */
 
 interface ChatHeaderProps {
-  chatName: string;
-  chatId: number;
+  chatName: string,
+  chatId: number,
+  isPrivate: boolean,
 }
 
-export default function ChatHeader({ chatName, chatId }: ChatHeaderProps) {
+export default function ChatHeader({ chatName, chatId, isPrivate }: ChatHeaderProps) {
   const router = useRouter();
 
   const handleClick = async () => router.push(`/chat/${chatId}/info`);
 
   return (
-    <>
-      <CardHeader
-        sx={{
-          backgroundColor: "#202c33",
-          boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.3)",
-          paddingInline: 3,
-          height: 62,
-        }}
-        avatar={
-          <Link href="#" onClick={handleClick}>
-            <Avatar src="" alt={chatName} className="avatar" />
-          </Link>
-        }
-        title={chatName}
-        subheader="Click here for chatroom info"
-      />
-      <style>{`
-        	span.MuiTypography-root.MuiTypography-body2.MuiCardHeader-title.css-et1ao3-MuiTypography-root {
-            font-size: 16px;
-            font-weight: 500;
-            color: #e9edef;
-          }
-
-          .MuiCardHeader-subheader {
-            color: #83939d;
-          }
-      `}</style>
-    </>
+    <CardHeader
+      sx={{
+        backgroundColor: "#202c33",
+        boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.3)",
+        paddingInline: 3,
+        height: 62,
+      }}
+      avatar={
+        <Link href="#" onClick={handleClick}>
+          <Box
+            padding={1.2}
+            borderRadius={20}
+            bgcolor="#6a7175"
+            color="#aebac1"
+          >
+            {isPrivate ? <PersonIcon /> : <GroupIcon />}
+          </Box>
+        </Link>
+      }
+      title={
+        <Link href="#" onClick={handleClick} underline="none">
+          <Typography fontSize={16} fontWeight={500} color="#e9edef">
+            {chatName}
+          </Typography>
+        </Link>
+      }
+      subheader={
+        <Link href="#" onClick={handleClick} underline="none">
+          <Typography
+            fontSize="0.8125rem"
+            color="#8696a0"
+          >
+            Click here for chatroom info
+          </Typography>
+        </Link>
+      }
+    />
   );
 }
 

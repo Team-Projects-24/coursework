@@ -71,7 +71,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         userId: userId,
       }); // mark as read
 
-      socket.emit("send-message");
+      socket.emit("send-message", chatId);
       socket.emit("updated-chat");
 
       setMessage("");
@@ -90,9 +90,9 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
         paddingBottom: 1.2,
         left: `10rem`,
         bottom: 0,
-        backgroundColor: "#202c33",
         cursor: "default",
       }}
+      style={{ backgroundColor: "#202c33", }}
       disableRipple
     >
       <Grid container direction="row" paddingX={5} columnGap={2}>

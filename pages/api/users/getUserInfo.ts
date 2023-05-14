@@ -8,12 +8,12 @@ import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
 import { orderBy } from "lodash";
+import prisma from "../../../lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
   try {
     const { username } = req.body;
     const user = await prisma.user.findFirst({
@@ -26,7 +26,7 @@ export default async function handler(
             members: true,
           },
         },
-      }
+      },
     });
 
     if (!user) {

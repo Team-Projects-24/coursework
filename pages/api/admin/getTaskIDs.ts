@@ -3,13 +3,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Task } from "@prisma/client";
 import { ITask } from "types/Task.d";
+import prisma from "../../../lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
-
   try {
     const results = await prisma.task.findMany();
 

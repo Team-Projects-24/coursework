@@ -9,8 +9,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma, PrismaClient, Team, User } from "@prisma/client";
 import { ITimeFramePerformance } from "types/analysis/TimeFramePerformance.d";
-
-const prisma = new PrismaClient();
+import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,

@@ -8,22 +8,21 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { IUser } from "../../../types/User.d";
 import { PrismaClient } from "@prisma/client";
 import { sendErrorResponse, sendSuccessResponse } from "../responses";
+import prisma from "../../../lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
-
   try {
     const users = await prisma.user.findMany({
       include: {
         chatrooms: {
           include: {
             members: true,
-          }
+          },
         },
-      }
+      },
     });
     if (users) {
       sendSuccessResponse(res, users);

@@ -119,6 +119,9 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
             }}
             value={message}
             onInput={updateMessage}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") onSendMessage();
+            }}
             placeholder="Type a message"
           />
         </Grid>

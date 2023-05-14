@@ -263,7 +263,7 @@ export default function InfoPage() {
             <Grid container direction="row" justifyContent="center">
               <Grid item alignContent={"center"} alignSelf={"center"} xs={4}>
                 <FormControl style={{ minWidth: 230 }} size="small">
-                  <InputLabel id="newMem">Select a Member</InputLabel>
+                  <InputLabel id="newMem">Select a User</InputLabel>
                   <Select
                     onChange={(e) => setNewMember(e.target.value as string)}
                     id="newMem"

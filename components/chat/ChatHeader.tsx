@@ -1,4 +1,11 @@
-import { Avatar, Button, CardHeader, Grid, Link, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  CardHeader,
+  Grid,
+  Link,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -24,23 +31,20 @@ export default function ChatHeader({ chatName, chatId }: ChatHeaderProps) {
   return (
     <>
       <CardHeader
-      sx={{
-        backgroundColor: "#202c33",
-        boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.3)",
-        paddingInline: 3,
-        height: 62,
-      }}
-      avatar={
-        <Link href="#" onClick={handleClick}>
-          <Avatar
-            src=""
-            alt={chatName}
-            className="avatar"
-          />
-        </Link>
-      }
-      title={chatName}
-      subheader="Click here for chatroom info" />
+        sx={{
+          backgroundColor: "#202c33",
+          boxShadow: "0px 10px 10px rgba(0, 0, 0, 0.3)",
+          paddingInline: 3,
+          height: 62,
+        }}
+        avatar={
+          <Link href="#" onClick={handleClick}>
+            <Avatar src="" alt={chatName} className="avatar" />
+          </Link>
+        }
+        title={chatName}
+        subheader="Click here for chatroom info"
+      />
       <style>{`
         	span.MuiTypography-root.MuiTypography-body2.MuiCardHeader-title.css-et1ao3-MuiTypography-root {
             font-size: 16px;
@@ -56,7 +60,8 @@ export default function ChatHeader({ chatName, chatId }: ChatHeaderProps) {
   );
 }
 
-{/* <Grid container>
+{
+  /* <Grid container>
         <Grid
           item
           xs={0.5}
@@ -67,8 +72,10 @@ export default function ChatHeader({ chatName, chatId }: ChatHeaderProps) {
           alignItems="center"
           paddingX={5}>
           
-        </Grid> */}
-        {/* <Grid
+        </Grid> */
+}
+{
+  /* <Grid
           item
           flex={4}
           xs={5.25}
@@ -78,4 +85,5 @@ export default function ChatHeader({ chatName, chatId }: ChatHeaderProps) {
             {props.chatName}
           </Typography>
         </Grid>
-      </Grid> */}
+      </Grid> */
+}

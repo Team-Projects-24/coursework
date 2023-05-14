@@ -69,9 +69,9 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
       await axios.post("/api/chat/seenby", {
         messageId: data.id,
         userId: userId,
-      }); // mark as read
+      }); // mark as read for the sender
 
-      socket.emit("send-message");
+      socket.emit("send-message", chatId);
       socket.emit("updated-chat");
 
       setMessage("");
@@ -115,7 +115,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
               paddingBlock: 10,
               borderRadius: 10,
               width: "100%",
-              color: "#83939d",
+              color: "#aebac1",
             }}
             value={message}
             onInput={updateMessage}

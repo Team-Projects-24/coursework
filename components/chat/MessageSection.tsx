@@ -5,13 +5,13 @@ import viewerTail from "public/images/viewer-tail.svg";
 import Image from "next/image";
 
 interface MessageSectionArgs {
-  content: string,
-  senderID: string,
-  sent: boolean,
-  time: string,
-  read: boolean,
-  isPrivate: boolean,
-  idColour: string,
+  content: string;
+  senderID: string;
+  sent: boolean;
+  time: string;
+  read: boolean;
+  isPrivate: boolean;
+  idColour: string;
 }
 
 export default function MessageSection({
@@ -34,11 +34,13 @@ export default function MessageSection({
       marginBottom={1}
       display="flex"
       justifyContent={sent ? "flex-end" : "flex-start"}
-      xs={12}>
-      {sent ? null :
-          <Grid item marginTop={-0.37} marginRight={-0.8}>
-            <Image width={20} src={viewerTail} alt="" />
-          </Grid>}
+      xs={12}
+    >
+      {sent ? null : (
+        <Grid item marginTop={-0.37} marginRight={-0.8}>
+          <Image width={20} src={viewerTail} alt="" />
+        </Grid>
+      )}
       <Grid
         item
         container
@@ -51,56 +53,62 @@ export default function MessageSection({
         direction="column"
         bgcolor={color}
         borderRadius={2}
-        paddingY={.5}
-        paddingX={1.4}>
-        {isPrivate || sent ? null :
+        paddingY={0.5}
+        paddingX={1.4}
+      >
+        {isPrivate || sent ? null : (
           <Grid item>
             <Typography
               fontSize={15}
               maxWidth="50vw"
               fontWeight={500}
               color={idColour}
-              noWrap>
+              noWrap
+            >
               {senderID}
             </Typography>
           </Grid>
-        }
+        )}
         <Box display="inline-flex">
-            <Typography
-              color="#e9edef"
-              maxWidth="50vw"
-              style={{ wordWrap: "break-word" }}>
-                {content}
-            </Typography>
-            <Grid
-              container
-              direction="row"
-              paddingLeft={1}
-              display="flex"
-              alignItems="flex-end"
-              justifyContent="flex-end"
-              xs="auto">
-              <Grid item xs="auto">
-                <Typography fontSize={11} color="#90b3ad">
-                  {time}
-                </Typography>
-              </Grid>
-              {!sent ? null :
-                <Grid
-                  item
-                  xs="auto"
-                  fontSize={15}
-                  color={read ? "#4eb7e1" : "#81a8a2"}>
-                  <DoneIcon fontSize="inherit"/>
-                </Grid>
-              }
+          <Typography
+            color="#e9edef"
+            maxWidth="50vw"
+            style={{ wordWrap: "break-word" }}
+          >
+            {content}
+          </Typography>
+          <Grid
+            container
+            direction="row"
+            paddingLeft={1}
+            display="flex"
+            alignItems="flex-end"
+            justifyContent="flex-end"
+            xs="auto"
+          >
+            <Grid item xs="auto">
+              <Typography fontSize={11} color="#90b3ad">
+                {time}
+              </Typography>
             </Grid>
-          </Box>
+            {!sent ? null : (
+              <Grid
+                item
+                xs="auto"
+                fontSize={15}
+                color={read ? "#4eb7e1" : "#81a8a2"}
+              >
+                <DoneIcon fontSize="inherit" />
+              </Grid>
+            )}
+          </Grid>
+        </Box>
       </Grid>
-      {!sent ? null :
+      {!sent ? null : (
         <Grid item marginTop={-0.37} marginLeft={-0.8}>
           <Image width={20} src={senderTail} alt="" />
-        </Grid>}
+        </Grid>
+      )}
     </Grid>
   );
 }

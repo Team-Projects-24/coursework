@@ -20,7 +20,7 @@ export default async function handler(
         let task: ITask = {
           taskId: result.taskId,
           name: result.name,
-          manHoursSet: result.manHoursSet
+          manHoursSet: result.manHoursSet,
         };
         tasks.push(task);
       });
@@ -36,5 +36,3 @@ export default async function handler(
     await prisma.$disconnect();
   }
 }
-
-

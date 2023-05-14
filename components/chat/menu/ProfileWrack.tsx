@@ -5,11 +5,14 @@ import { IUser } from "types/User.d";
 import UserCard from "./UserCard";
 
 interface ProfileWrackArgs {
-  partialId: string,
-  response: ((arg0: IUser) => void)
+  partialId: string;
+  response: (arg0: IUser) => void;
 }
 
-export default function ProfileWrack({ partialId, response }: ProfileWrackArgs) {
+export default function ProfileWrack({
+  partialId,
+  response,
+}: ProfileWrackArgs) {
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);
 
@@ -25,16 +28,22 @@ export default function ProfileWrack({ partialId, response }: ProfileWrackArgs) 
   }, []);
 
   useEffect(() => {
-    setFilteredUsers(users
-      .filter(user => user.userId.toUpperCase()
-      .startsWith(partialId.toUpperCase())));
-  }, [users, partialId])
+    setFilteredUsers(
+      users.filter((user) =>
+        user.userId.toUpperCase().startsWith(partialId.toUpperCase())
+      )
+    );
+  }, [users, partialId]);
 
-  return !users ? <></> : (
+  return !users ? (
+    <></>
+  ) : (
     <Box width="100%">
       {filteredUsers.map((user: IUser) => {
-        if (!currentLetter || !user.name.toUpperCase()
-          .startsWith(currentLetter)) {
+        if (
+          !currentLetter ||
+          !user.name.toUpperCase().startsWith(currentLetter)
+        ) {
           currentLetter = user.name.charAt(0).toUpperCase();
           return (
             <Box>

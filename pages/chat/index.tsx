@@ -45,8 +45,9 @@ function ChatContainer({
   return (
     <Box maxHeight="80vh" overflow="auto">
       {chatData
-        .filter((data) => data.title.toLowerCase()
-          .startsWith(searchKey.toLowerCase()))
+        .filter((data) =>
+          data.title.toLowerCase().startsWith(searchKey.toLowerCase())
+        )
         .map((data) => (
           <ChatCard {...data} />
         ))}
@@ -135,7 +136,7 @@ export default function Chat() {
         username: user!.name,
       });
 
-      const chatIDs: string[] = data.chatrooms.map(chat => chat.id);
+      const chatIDs: string[] = data.chatrooms.map((chat) => chat.id);
 
       if (chatIDs.includes(chatID)) setUser(data as IUser);
     });
@@ -162,8 +163,8 @@ export default function Chat() {
               borderRadius: 5,
               cursor: "pointer",
               ":active": {
-                backgroundColor: "#374248"
-              }
+                backgroundColor: "#374248",
+              },
             }}
             onClick={createChat}
             padding={1.1}
@@ -178,8 +179,8 @@ export default function Chat() {
               borderRadius: 5,
               cursor: "pointer",
               ":active": {
-                backgroundColor: "#374248"
-              }
+                backgroundColor: "#374248",
+              },
             }}
             padding={1.1}
             onClick={createGroup}

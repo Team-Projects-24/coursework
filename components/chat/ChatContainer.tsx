@@ -1,4 +1,10 @@
-import { Box, CardContent, DialogContent, DialogContentText, Grid } from "@mui/material";
+import {
+  Box,
+  CardContent,
+  DialogContent,
+  DialogContentText,
+  Grid,
+} from "@mui/material";
 import { IChatMessage } from "types/ChatMessage.d";
 import MessageBubble from "./MessageBubble";
 import { Message, SeenBy } from "@prisma/client";
@@ -18,8 +24,8 @@ import MessageSection from "./MessageSection";
 interface ChatContainerProps {
   messages: Message[];
   userId: string;
-  isPrivate: boolean,
-  chatSize: number,
+  isPrivate: boolean;
+  chatSize: number;
 }
 
 function stringToColor(str: string) {
@@ -28,10 +34,10 @@ function stringToColor(str: string) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  let color = '#';
+  let color = "#";
   for (let i = 0; i < 3; i++) {
     let value = (hash >> (i * 8)) & 0xff;
-    color += value.toString(16).padStart(2, '0');
+    color += value.toString(16).padStart(2, "0");
   }
 
   return color;
@@ -58,20 +64,20 @@ export default function ChatContainer({
         overflow: "auto",
         display: "flex",
         height: "calc(100% - 125px)",
-      }}>
-      <Grid
-        container
-        direction="row"
-        display="block"
-        margin={0}>
+      }}
+    >
+      <Grid container direction="row" display="block" margin={0}>
         {messages?.map(
-          (message: (Message & {
+          (
+            message: Message & {
               seenBy: SeenBy[];
-          })) => {
+            }
+          ) => {
             const time = new Date(message.updatedAt);
 
-            const timeString = time
-              .toLocaleString("en-uk", { timeStyle: "short" });
+            const timeString = time.toLocaleString("en-uk", {
+              timeStyle: "short",
+            });
 
             console.log(message);
 
@@ -83,15 +89,17 @@ export default function ChatContainer({
                 isPrivate={isPrivate}
                 idColour={stringToColor(message.senderId)}
                 time={timeString}
-                read={message.seenBy.length == chatSize} />
-            // <MessageBubble
-            //   key={message.id}
-            //   message={message}
-            //   sent={userId === message.senderId}
-            // />
+                read={message.seenBy.length == chatSize}
+              />
+              // <MessageBubble
+              //   key={message.id}
+              //   message={message}
+              //   sent={userId === message.senderId}
+              // />
             );
-        })}
-        <div style={{ height: 10, }} ref={messagesEndRef} />
+          }
+        )}
+        <div style={{ height: 10 }} ref={messagesEndRef} />
       </Grid>
     </CardContent>
   );

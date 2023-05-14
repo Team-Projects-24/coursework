@@ -19,10 +19,10 @@ export default async function handler(
     //const { teamIDs } = req.body;
     const { query } = req;
     let teamIDs = query.teamIDs;
-    if (typeof teamIDs === 'string' || teamIDs instanceof String){
+    if (typeof teamIDs === "string" || teamIDs instanceof String) {
       teamIDs = teamIDs.split(",");
     }
-  
+
     //console.log(teamIDs);
 
     if (!teamIDs) {

@@ -22,12 +22,16 @@ import GroupIcon from "@mui/icons-material/Group";
  */
 
 interface ChatHeaderProps {
-  chatName: string,
-  chatId: number,
-  isPrivate: boolean,
+  chatName: string;
+  chatId: number;
+  isPrivate: boolean;
 }
 
-export default function ChatHeader({ chatName, chatId, isPrivate }: ChatHeaderProps) {
+export default function ChatHeader({
+  chatName,
+  chatId,
+  isPrivate,
+}: ChatHeaderProps) {
   const router = useRouter();
 
   const handleClick = async () => router.push(`/chat/${chatId}/info`);
@@ -61,10 +65,7 @@ export default function ChatHeader({ chatName, chatId, isPrivate }: ChatHeaderPr
       }
       subheader={
         <Link href="#" onClick={handleClick} underline="none">
-          <Typography
-            fontSize="0.8125rem"
-            color="#8696a0"
-          >
+          <Typography fontSize="0.8125rem" color="#8696a0">
             Click here for chatroom info
           </Typography>
         </Link>

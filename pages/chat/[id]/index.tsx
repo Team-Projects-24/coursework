@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 // import { Box, DialogContent, DialogContentText } from "@material-ui/core";
 import useUserStore from "stores/userStore";
-import { Card} from "@mui/material";
+import { Card } from "@mui/material";
 import InputBar from "components/chat/InputBar";
 import ChatHeader from "components/chat/ChatHeader";
 import axios from "axios";
@@ -58,9 +58,12 @@ export default function ChatPage() {
     // socket.on("recieve-message", (chatID: number) => {
     //   if (chatID === chatroomId) getData();
     // });
-    
+
     socket.on("update-chat", (chatID: number) => {
-      if (chatID === chatroomId) { console.log("updating chat: " + chatID); getData() };
+      if (chatID === chatroomId) {
+        console.log("updating chat: " + chatID);
+        getData();
+      }
     });
 
     socket.emit("updated-chat", chatroomId);

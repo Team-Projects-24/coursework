@@ -1,11 +1,10 @@
 /**
- * 
+ *
  * @asuthor Olivia Gray
- * 
+ *
  * @description Pull all performance metrics of the selected teams in the given timeframe
- * 
+ *
  */
-
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma, PrismaClient, Team, User } from "@prisma/client";
@@ -23,7 +22,7 @@ export default async function handler(
     const { query } = req;
     let teamIDs = query.teamIDs;
     let timeframe = query.timeframe;
-    if (typeof teamIDs === 'string' || teamIDs instanceof String){
+    if (typeof teamIDs === "string" || teamIDs instanceof String) {
       teamIDs = teamIDs.split(",");
     }
 
@@ -35,20 +34,30 @@ export default async function handler(
     }
 
     let results;
-    if (timeframe === "month"){
-      results = await prisma.$queryRaw<ITimeFramePerformance[]>`select teamId as "id", date_format(date, "%m-%Y") as "dateFormatted", sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, dateFormatted having id in (${Prisma.join(teamIDs)}) order by dateFormatted asc;`
-    }
-    else if (timeframe === "week"){
-      results = await prisma.$queryRaw<ITimeFramePerformance[]>`select teamId as "id", concat(date_format(date, "%Y-%m"), "wk", (week(date,1) - (week(date_format(date,"%Y-%m-01")) - 1))) as "dateFormatted", sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, dateFormatted having id in  (${Prisma.join(teamIDs)}) order by dateFormatted asc;`
-    }
-    else {
-      results = await prisma.$queryRaw<ITimeFramePerformance[]>`select teamId as "id", date_format(date, "%d-%m-%Y") as "dateFormatted", sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, dateFormatted having id in (${Prisma.join(teamIDs)}) order by dateFormatted asc;`
+    if (timeframe === "month") {
+      results = await prisma.$queryRaw<
+        ITimeFramePerformance[]
+      >`select teamId as "id", date_format(date, "%m-%Y") as "dateFormatted", sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, dateFormatted having id in (${Prisma.join(
+        teamIDs
+      )}) order by dateFormatted asc;`;
+    } else if (timeframe === "week") {
+      results = await prisma.$queryRaw<
+        ITimeFramePerformance[]
+      >`select teamId as "id", concat(date_format(date, "%Y-%m"), "wk", (week(date,1) - (week(date_format(date,"%Y-%m-01")) - 1))) as "dateFormatted", sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, dateFormatted having id in  (${Prisma.join(
+        teamIDs
+      )}) order by dateFormatted asc;`;
+    } else {
+      results = await prisma.$queryRaw<
+        ITimeFramePerformance[]
+      >`select teamId as "id", date_format(date, "%d-%m-%Y") as "dateFormatted", sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, dateFormatted having id in (${Prisma.join(
+        teamIDs
+      )}) order by dateFormatted asc;`;
     }
 
     //const results = await prisma.$queryRaw<IPerformance[]>`select teamId as "id", date, sum(PerformanceLog.manHoursCompleted) as "manHoursCompleted" from Task inner join PerformanceLog on Task.taskId = PerformanceLog.taskId group by id, date having id in (${Prisma.join(teamIDs)}) order by date asc;`;
 
     //console.log(results);
-    if (results) {    
+    if (results) {
       res.status(200).json(results);
     } else {
       res.status(404).json({ message: "Teams not found" });

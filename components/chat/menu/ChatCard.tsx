@@ -1,10 +1,10 @@
 import { Grid, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import GroupIcon from "@mui/icons-material/Group";
 import { Box } from "@mui/system";
 import { useState } from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
-import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
 import { Animated } from "react-animated-css";
 
@@ -124,7 +124,7 @@ export function ChatCard({
           item
           padding={1.2}
           borderRadius={20}
-          bgcolor="#00a884"
+          bgcolor="#6a7175"
           color="#aebac1"
         >
           {isPrivate ? <PersonIcon /> : <GroupIcon />}

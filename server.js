@@ -12,11 +12,10 @@ var io = new socket_io_1.Server(httpServer, {
 });
 io.on("connection", function (socket) {
   console.log("new connection");
-  socket.on("send-message", function (chatID) {
-    io.emit("receive-message", chatID);
-  });
-  socket.on("updated-chat", function () {
-    io.emit("update-chat");
+
+  socket.on("updated-chat", function (chatID) {
+    console.log("{server} Everyone, update: ".concat(chatID));
+    io.emit("update-chat", chatID);
   });
   socket.on("disconnect", function () {
     console.log("User disconnected");

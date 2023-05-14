@@ -16,15 +16,14 @@ export default function createChat() {
   const router = useRouter();
 
   const response = async (selectedUser: IUser) => {
-    var chat = user?.chatrooms
+    let chat = user?.chatrooms
       .filter(
         (chatroom) =>
           chatroom.private && chatroom
             .members
             .map((member) => member.userId)
             .includes(selectedUser.userId)
-      )
-      .at(0);
+      ).at(0);
 
     if (!chat) {
       const newRoom: ICreateChatroom = {
@@ -35,10 +34,14 @@ export default function createChat() {
         members: [user!.userId, selectedUser.userId],
         description: "Chat between users."
       };
-      chat = await axios.post("/api/chat/", { room: newRoom });
-      const { data } = await axios
+      const { data: createdRoom } = await axios
+        .post("/api/chat", { room: newRoom });
+
+      chat = createdRoom;
+
+      const { data: updatedUser } = await axios
         .post("/api/users/getUserInfo", { username: user?.userId });
-      setUser(data as IUser);
+      setUser(updatedUser as IUser);
     }
 
     router.push(`${chat?.id}`);

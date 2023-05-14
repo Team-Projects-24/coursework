@@ -45,7 +45,8 @@ function ChatContainer({
   return (
     <Box maxHeight="80vh" overflow="auto">
       {chatData
-        .filter((data) => data.title.startsWith(searchKey))
+        .filter((data) => data.title.toLowerCase()
+          .startsWith(searchKey.toLowerCase()))
         .map((data) => (
           <ChatCard {...data} />
         ))}
@@ -128,12 +129,15 @@ export default function Chat() {
 
   useEffect(() => {
     const socket = io("http://34.175.26.133:4444");
-    socket.on("update-chat", async () => {
+
+    socket.on("update-chat", async (chatID: string) => {
       const { data } = await axios.post("/api/users/getUserInfo", {
         username: user!.name,
       });
 
-      setUser(data as IUser);
+      const chatIDs: string[] = data.chatrooms.map(chat => chat.id);
+
+      if (chatIDs.includes(chatID)) setUser(data as IUser);
     });
 
     return () => {
@@ -155,10 +159,12 @@ export default function Chat() {
         <Grid item>
           <Box
             sx={{
-              borderRadius: 2,
+              borderRadius: 5,
               cursor: "pointer",
+              ":active": {
+                backgroundColor: "#374248"
+              }
             }}
-            className="icon-container"
             onClick={createChat}
             padding={1.1}
             color="#aebac1"
@@ -169,10 +175,12 @@ export default function Chat() {
         <Grid item>
           <Box
             sx={{
-              borderRadius: 2,
+              borderRadius: 5,
               cursor: "pointer",
+              ":active": {
+                backgroundColor: "#374248"
+              }
             }}
-            className="icon-container"
             padding={1.1}
             onClick={createGroup}
             color="#aebac1"
@@ -212,13 +220,6 @@ export default function Chat() {
         chatData={chatData}
         userId={user?.userId}
       />
-      <style>
-        {`
-          icon-container:active {
-            background-color: "#374248";
-          }
-        `}
-      </style>
     </Box>
   );
 }

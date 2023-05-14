@@ -57,7 +57,7 @@ export default function ChatContainer({
       sx={{
         overflow: "auto",
         display: "flex",
-        height: "calc(100% - 130px)",
+        height: "calc(100% - 125px)",
       }}>
       <Grid
         container

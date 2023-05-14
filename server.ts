@@ -13,11 +13,8 @@ const io = new IOServer(httpServer, {
 io.on("connection", (socket) => {
   console.log("New connection");
 
-  socket.on("send-message", (chatID: string) => {
-    io.emit("receive-message", chatID);
-  });
-  socket.on("updated-chat", () => {
-    io.emit("update-chat");
+  socket.on("updated-chat", (chatID: string) => {
+    io.emit("update-chat", chatID);
   });
   socket.on("disconnect", () => {
     console.log("User disconnected");

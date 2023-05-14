@@ -38,7 +38,7 @@ export default function UserCard({user, response}: UserCardArgs) {
         <Grid
           item
           padding={1.2}
-          bgcolor="#00a884"
+          bgcolor="#6a7175"
           borderRadius={10}
           color="#aebac1">
           <PersonIcon />

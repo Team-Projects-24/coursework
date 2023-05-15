@@ -8,12 +8,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    //const { leaderID, role } = req.body;
-    const { query } = req;
-    const leaderID = query.leaderID.toString();
-    const role = query.role;
+    const { leaderID, role } = req.body;
 
-    if (!leaderID && !role) {
+    if (!leaderID) {
       res
         .status(400)
         .json({ message: "Required fields are missing in the request." });

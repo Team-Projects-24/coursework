@@ -3,7 +3,7 @@ import { IChatMessage } from "./ChatMessage.d";
 import { IUser, IUserInfo } from "./User.d";
 
 export interface IChatroom {
-  id: string;
+  id: number;
   name: string;
   description: string;
   private: boolean;
@@ -13,7 +13,7 @@ export interface IChatroom {
 }
 
 export interface IChatroomInfo {
-  id: string;
+  id: number;
   name: string;
   description: string;
   private: boolean;

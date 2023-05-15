@@ -6,7 +6,6 @@ import {
 } from "../responses";
 import { PrismaClient } from "@prisma/client";
 import { IUser } from "types/User.d";
-import prisma from "lib/prisma";
 
 /**
  * @author Tom Whitticase
@@ -22,6 +21,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   //get user and password(optional) from request
   const user: IUser = req.body.user;
   const password: string = req.body.password;

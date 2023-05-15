@@ -10,22 +10,22 @@ import NewTaskForm from "components/data-analytics/NewTaskForm";
 function Admin() {
     return (
         <div>
-            <h1 >Admin Page for showing off the functionality of our api</h1>
+            <h1 style={{textAlign: "center"}}>Admin Page for showing off the functionality of our api</h1>
 
-            <div>
+            <div style={{ paddingTop: "20px" }}>
                 <SearchableDropdown />
             </div>
 
             <div>
                 <NewTaskForm/>
             </div>
-
+{/* 
             <div>
                 <TaskForm />
             </div>
             <div>
                 <EmployeeForm />
-            </div>
+            </div> */}
             
 
 

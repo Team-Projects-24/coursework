@@ -109,14 +109,22 @@ export default function NewTaskForm() {
         console.log(deadline2);
 
         console.log(selectedTeam?.id);
-        if (selectedTeam && selectedUser && deadline) {
+        if (selectedTeam && selectedUser && deadline && estimatedManHours > 0) {
 
             console.log(selectedTeam.id);
 
+            console.log("task should be created at this point")
             createTask(selectedTeam.id, estimatedManHours, selectedUser.userId, deadline, taskName);
 
-            
-
+            // resetting the form values
+            setTeamText(null);
+            setUserText(null);
+            setTaskName("");
+            setDeadline(null);
+            setEstimatedManHours(0);
+            setSelectedTeam(null);
+            setSelectedUser(null);
+            setSubmitted(false);
             //RESET VALUES IN FORM
 
 
@@ -184,7 +192,7 @@ export default function NewTaskForm() {
             console.log('New task entry created:', response.data)
 
             const taskId = response.data.taskId;
-         
+
             createPerformanceEntry(taskId, estimatedManHours, 0);
 
 

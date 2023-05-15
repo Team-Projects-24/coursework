@@ -14,7 +14,7 @@ import useUserStore from "stores/userStore";
 import axios from "axios";
 
 export default function DataAnalyticsWindow() {
-  const [teams, setTeams] = useState();
+  const [teams, setTeams] = useState(null);
   const [members, setMembers] = useState<any>();
   const [teamUserState, setTeamUserState] = useState(-1);
   const [selectedTeams, setSelectedTeams] = useState<boolean[] | null>(null);
@@ -43,26 +43,24 @@ export default function DataAnalyticsWindow() {
 
   async function loadData() {
     axios
-      .post("api/analysis/getTeamIDs", {
-        leaderID: loggedInUserID,
-        role: loggedInUserRole,
-      })
+      .get(
+        "api/analysis/getTeamIDs?leaderID=" +
+          loggedInUserID +
+          "&role=" +
+          loggedInUserRole
+      )
       .then((responseIDs) => {
         axios
-          .post("api/analysis/getTeams", {
-            teamID: responseIDs.data,
-          })
+          .get("api/analysis/getTeams?teamID=" + responseIDs.data)
           .then((responseTeams) => {
             //console.log(responseTeams.data);
             setTeams(responseTeams.data);
-            axios
-              .post("api/analysis/getTeamMembers", {
-                teamID: responseIDs.data,
-              })
-              .then((responseMembers) => {
-                //console.log(responseMembers.data);
-                setMembers(responseMembers.data);
-              });
+          });
+        axios
+          .get("api/analysis/getTeamMembers?teamID=" + responseIDs.data)
+          .then((responseMembers) => {
+            //console.log(responseMembers.data);
+            setMembers(responseMembers.data);
           });
       });
   }
@@ -78,14 +76,19 @@ export default function DataAnalyticsWindow() {
     console.log(userInputs);
     console.log(timeFrameState);
     console.log(timeFrame);
+
+    // Format arrays into string for URL GET request
+    const teamInputsString = teamInputs.join(",");
+    const userInputsString = userInputs.join(",");
+
     if (teamInputs.length === 1 && !timeFrameState) {
       // Get a single team's performance
       console.log("single team");
       setGraphState(0);
       axios
-        .post("api/analysis/getTeamPerformanceMetrics", {
-          teamIDs: teamInputs,
-        })
+        .get(
+          "api/analysis/getTeamPerformanceMetrics?teamIDs=" + teamInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
@@ -97,9 +100,9 @@ export default function DataAnalyticsWindow() {
       //let requestedUsers = getSelectedUserIDs();
       //console.log(requestedUsers);
       axios
-        .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: userInputs,
-        })
+        .get(
+          "api/analysis/getUserPerformanceMetrics?userIDs=" + userInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
@@ -109,9 +112,9 @@ export default function DataAnalyticsWindow() {
       setGraphState(1);
       // Compare teams in a bar chart
       axios
-        .post("api/analysis/getTeamPerformanceMetrics", {
-          teamIDs: teamInputs,
-        })
+        .get(
+          "api/analysis/getTeamPerformanceMetrics?teamIDs=" + teamInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
@@ -121,9 +124,9 @@ export default function DataAnalyticsWindow() {
       setGraphState(1);
       // Compare users in a bar chart
       axios
-        .post("api/analysis/getUserPerformanceMetrics", {
-          userIDs: userInputs,
-        })
+        .get(
+          "api/analysis/getUserPerformanceMetrics?userIDs=" + userInputsString
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
@@ -133,10 +136,12 @@ export default function DataAnalyticsWindow() {
       setGraphState(2);
       // View / display performance over a time period for teams
       axios
-        .post("api/analysis/getTeamTimePerformanceMetrics", {
-          teamIDs: teamInputs,
-          timeframe: timeFrame,
-        })
+        .get(
+          "api/analysis/getTeamTimePerformanceMetrics?teamIDs=" +
+            teamInputsString +
+            "&timeframe=" +
+            timeFrame
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);
@@ -146,10 +151,12 @@ export default function DataAnalyticsWindow() {
       setGraphState(2);
       // View / display performance over a time period for users
       axios
-        .post("api/analysis/getUserTimePerformanceMetrics", {
-          userIDs: userInputs,
-          timeframe: timeFrame,
-        })
+        .get(
+          "api/analysis/getUserTimePerformanceMetrics?userIDs=" +
+            userInputsString +
+            "&timeframe=" +
+            timeFrame
+        )
         .then((response) => {
           //console.log(response.data);
           setPerformanceData(response.data);

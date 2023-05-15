@@ -24,7 +24,7 @@ export default async function handler(
           leaderId: leaderID,
         },
       });
-    } else {
+    } else if (role === "MANAGER") {
       results = await prisma.team.findMany({});
     }
 

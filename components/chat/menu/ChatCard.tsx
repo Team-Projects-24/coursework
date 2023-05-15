@@ -1,26 +1,24 @@
-/**
- * @author Ade Osindero
- *
- * @description Implements react component which serves to display the
- * chat rooms of the current user, on the menu of the text chat subsytem.
- */
-
 import { Grid, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+import GroupIcon from "@mui/icons-material/Group";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
-import GroupIcon from "@mui/icons-material/Group";
 import { useRouter } from "next/router";
-import { Chatroom, SeenBy, User } from "@prisma/client";
-import { Message } from "@prisma/client";
 import { Animated } from "react-animated-css";
 
-interface ChatCardArgs {
-  chatId: number;
-  userId: string;
+export interface ChatCardArgs {
+  lastMessage?: string;
+  sentByUser: boolean;
+  unreadCount: number;
+  isPrivate: boolean;
+  senderId?: string;
+  lastUpdated: Date;
+  read: boolean;
+  image: string;
+  title: string;
+  id: string;
 }
 
 /**
@@ -29,161 +27,90 @@ interface ChatCardArgs {
  * @param updatedAt - The last time the current chat was updated.
  * @returns A formatted string depiction of the last time the chat was updated.
  */
-function getChatDate(updatedAt: Date) {
+function formatDate(updatedAt: Date) {
   const dateDifference = Math.floor(
     (new Date().getTime() - updatedAt.getTime()) / 86400000
   );
 
-  if (dateDifference === 0) {
-    return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
-  } else if (dateDifference === 1) {
-    return "Yesterday";
-  } else if (dateDifference < 7) {
-    return updatedAt.toLocaleString("en-uk", { weekday: "long" });
-  } else {
-    return updatedAt.toLocaleDateString("en-uk");
+  switch (dateDifference) {
+    case 0:
+      return updatedAt.toLocaleString("en-uk", { timeStyle: "short" });
+    case 1:
+      return "Yesterday";
+    default:
+      return dateDifference < 7
+        ? updatedAt.toLocaleString("en-uk", { weekday: "long" })
+        : updatedAt.toLocaleDateString("en-uk");
   }
 }
 
 /**
  * @author Ade Osindero
  *
- * @param lastMessage - Last message sent on the chat.
+ * @param message - The last message sent on the chat.
  * @param isPrivate - Boolean confirming if the current chat is private.
- * @param id - The id of the current user.
+ * @param sentByUser - Boolean confirming whether or not the current user sent the message.
+ * @param senderId - The id of the sender of the message.
+ * @param read - Boolean confirming whether or not the message was read.
  * @returns A react component which formats the display of the last message sent in the chat.
  */
-function getChatLastMessage(
-  lastMessage:
-    | (Message & {
-        seenBy: SeenBy[];
-      })
-    | null,
+function formatMessage(
+  message: string,
   isPrivate: boolean,
-  id: string
+  senderId: string,
+  sentByUser: boolean,
+  read: boolean
 ) {
-  if (!lastMessage) {
-    return (
-      <Box>
-        <Typography>Start a conversation</Typography>
-      </Box>
-    );
-  }
-
-  if (lastMessage.senderId === id) {
-    return (
-      <Grid item container>
-        <Grid
-          item
-          paddingRight={0.5}
-          color={lastMessage.seenBy ? "#53bdeb" : "inherit"}
-        >
-          <DoneIcon fontSize="small" />
-        </Grid>
-        <Grid item xs zeroMinWidth>
-          <Typography noWrap>{lastMessage.content}</Typography>
-        </Grid>
+  return sentByUser ? (
+    <Grid item container>
+      <Grid item paddingRight={0.5} color={read ? "#53bdeb" : "inherit"}>
+        <DoneIcon fontSize="small" />
       </Grid>
-    );
-  }
-  return (
+      <Grid item xs zeroMinWidth>
+        <Typography noWrap>{message}</Typography>
+      </Grid>
+    </Grid>
+  ) : (
     <Box>
       <Typography>
-        {`${!isPrivate ? `${lastMessage.senderId}: ` : ""}${
-          lastMessage.content
-        }`}
+        {`${!isPrivate ? `${senderId}: ` : ""}${message}`}
       </Typography>
     </Box>
   );
 }
 
-/**
- * @author Ade Osindero
- *
- * @param isPrivate - Whether or not the chat is private.
- * @param image - The location of the image.
- * @returns A grid component having the chat image.
- */
-function getImage(isPrivate: boolean, image: string | null) {
-  // if (image) {
-  //   return <></>;
-  // }
-
-  return (
-    <Grid
-      item
-      padding={1.2}
-      borderRadius={20}
-      bgcolor="#00a884"
-      color="#aebac1"
-    >
-      {isPrivate ? <PersonIcon /> : <GroupIcon />}
-    </Grid>
-  );
-}
-
-/**
- * @author Ade Osindero
- *
- * @param chatId - The id of the chat being formatted into a card.
- * @param userId - The id of the current user.
- * @returns A react component (the card) detailing information of the chat.
- */
-export default function ChatCard({ chatId, userId }: ChatCardArgs) {
-  const [lastMessage, setLastMessage] = useState<
-    (Message & { seenBy: SeenBy[] }) | null
-  >(null);
-  const [chat, setChat] = useState<
-    | (Chatroom & {
-        members: User[];
-        messages: Message[];
-      })
-    | null
-  >();
+export function ChatCard({
+  lastMessage,
+  lastUpdated,
+  read,
+  title,
+  senderId,
+  sentByUser,
+  unreadCount,
+  id,
+  isPrivate,
+}: ChatCardArgs) {
   const [hover, setHover] = useState<boolean>(false);
+  const [crossDisplay, setCrossDisplay] = useState<string>("none");
   const router = useRouter();
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const chatResponse = await axios.get(`/api/chat/${chatId}`);
+  const enterChat = () => router.push("/chat/".concat(id));
 
-        setChat(chatResponse.data);
-
-        if (chatResponse.data.messages.length) {
-          const lastId = chatResponse.data.messages.at(-1)!.id;
-
-          const messageResponse = await axios.get(
-            `/api/chat/message/${lastId}`
-          );
-
-          setLastMessage(messageResponse.data);
-        }
-      } catch (error) {
-        console.error("Error fetching chat data:", error);
-      }
-    }
-
-    getData();
-  }, [chatId]);
-
-  if (!chat || (chat.private && !chat.messages.length)) {
-    return <></>;
-  }
-
-  const chatTitle = chat.private
-    ? chat.members.filter((member) => member.userId !== userId).pop()?.name ??
-      `${chat.members.at(0)?.name} (You)`
-    : chat.name;
-
-  const enterChat = () => router.push(`/chat/${chat.id}`);
+  const onHover = () => {
+    setCrossDisplay("flex");
+    setHover(true);
+  };
+  const onBlur = async () => {
+    setHover(false);
+    setCrossDisplay("none");
+  };
 
   return (
     <Grid
       sx={{ cursor: "pointer" }}
       bgcolor={hover ? "#2a3942" : "inherit"}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={onHover}
+      onMouseLeave={onBlur}
       color={hover ? "#e9edef" : "#8696a0"}
       paddingRight={1}
       container
@@ -193,7 +120,15 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
       />
       <Grid item container xs="auto" padding={2} onClick={enterChat}>
-        {getImage(chat.private, chat.chatImage)}
+        <Grid
+          item
+          padding={1.2}
+          borderRadius={20}
+          bgcolor="#6a7175"
+          color="#aebac1"
+        >
+          {isPrivate ? <PersonIcon /> : <GroupIcon />}
+        </Grid>
       </Grid>
       <Grid
         item
@@ -214,26 +149,68 @@ export default function ChatCard({ chatId, userId }: ChatCardArgs) {
           >
             <Grid item xs="auto">
               <Typography color="#e9edef" fontSize={18}>
-                {chatTitle}
+                {title}
               </Typography>
             </Grid>
             <Grid item xs="auto">
-              <Typography fontSize={15} color="#8696a0">
-                {getChatDate(new Date(chat.updatedAt))}
+              <Typography
+                fontSize={15}
+                color={0 < unreadCount ? "#03a987" : "#8696a0"}
+              >
+                {formatDate(lastUpdated)}
               </Typography>
             </Grid>
           </Grid>
           <Grid item container justifyContent="space-between">
             <Grid item container onClick={enterChat} xs>
-              {getChatLastMessage(lastMessage, chat.private, userId)}
+              {!lastMessage ? (
+                <Box>
+                  <Typography>Start a conversation</Typography>
+                </Box>
+              ) : (
+                formatMessage(
+                  lastMessage,
+                  isPrivate,
+                  senderId,
+                  sentByUser,
+                  read
+                )
+              )}
             </Grid>
-            <Grid item alignContent="center" color="#8696a0" xs="auto">
+            {unreadCount < 1 ? null : (
+              <Grid
+                item
+                bgcolor="#03a987"
+                xs="auto"
+                justifyContent="center"
+                display="flex"
+                borderRadius={10}
+              >
+                <Box
+                  width={25}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography fontSize={15} color="#121b22" noWrap>
+                    {unreadCount}
+                  </Typography>
+                </Box>
+              </Grid>
+            )}
+            <Grid
+              item
+              color="#8696a0"
+              display={crossDisplay}
+              paddingLeft={1}
+              xs="auto"
+            >
               {/* @ts-ignore */}
               <Animated
                 animationIn="fadeInRight"
                 animationOut="fadeOutRight"
-                animationInDuration={400}
-                animationOutDuration={400}
+                animationInDuration={100}
+                animationOutDuration={100}
                 isVisible={hover}
               >
                 <CloseIcon />

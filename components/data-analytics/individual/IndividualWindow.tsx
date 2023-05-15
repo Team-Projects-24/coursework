@@ -49,7 +49,7 @@ function IndividualUserView() {
       console.log(response.data);
       setTaskData(response.data);
 
-      /*let totalHours = 0;
+      let totalHours = 0;
       let totalCompleted = 0;
       taskData?.map((data: Task) => (
         totalHours += data?.manHoursSet
@@ -59,33 +59,14 @@ function IndividualUserView() {
         totalCompleted += data?.manHoursCompleted
       ));
       
+      console.log(totalHours, totalCompleted)
       setTotalHours(totalHours);
       setCompleted(totalCompleted);
-      setDifference(totalHours - totalCompleted);*/
+      setDifference(totalHours - totalCompleted);
     }
 
     loadIndividualProgress();
   }, [user]);
-
-  useEffect(() =>{
-    const response = axios.post("api/analysis/getTasks", {
-      userID: user?.userId, // Assuming `user` object has an `id` property.
-    });
-    let totalHours = 0;
-    let totalCompleted = 0;
-    taskData?.map((data: Task) => (
-      totalHours += data?.manHoursSet
-    ));
-
-    taskData?.map((data: Task) => (
-      totalCompleted += data?.manHoursCompleted
-    ));
-    
-    setTotalHours(totalHours);
-    setCompleted(totalCompleted);
-    setDifference(totalHours - totalCompleted);
-
-  })
 
   return (
     <div id="UserView" className="flex w-full">
@@ -128,7 +109,7 @@ function IndividualUserView() {
             data={[{
               id: "To-do",
               label: "To-do",
-              value: totalHoursDifference ,
+              value: totalHoursDifference,
               color: "hsl(339, 70%, 50%)",
             },
             {

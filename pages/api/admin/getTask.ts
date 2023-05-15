@@ -1,14 +1,13 @@
 /**
  *
- * @asuthor Euan Hall
+ * @author Yahya Dookanwala
  *
- * @description Pull all tasks of the selected user
+ * @description Pull task given id
  *
  */
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { Prisma, PrismaClient, Task, Team, User } from "@prisma/client";
-import { ITask } from "types/analysis/Task.d";
+import { Task  } from "@prisma/client";
 import prisma from "lib/prisma";
 
 export default async function handler(

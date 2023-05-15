@@ -1,7 +1,6 @@
 // api for getting all the task IDs
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, Task } from "@prisma/client";
 import { ITask } from "types/Task.d";
 import prisma from "../../../lib/prisma";
 

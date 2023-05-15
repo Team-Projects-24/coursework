@@ -1,6 +1,5 @@
 // api for getting all team ids and names
 
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 

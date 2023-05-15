@@ -1,7 +1,6 @@
 // api for updating the number of completed hours to be the same as current plus extra amount
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
 import prisma from "lib/prisma";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

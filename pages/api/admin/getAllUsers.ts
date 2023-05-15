@@ -1,6 +1,5 @@
 // api for getting all user ids and user names
 
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 

@@ -1,14 +1,13 @@
 /**
  *
- * @asuthor Euan Hall
+ * @author Yahya Dookanwala
  *
- * @description Pull all tasks of the selected user
+ * @description Pull task given id
  *
  */
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { Prisma, PrismaClient, Task, Team, User } from "@prisma/client";
-import { ITask } from "types/analysis/Task.d";
+import { Task  } from "@prisma/client";
 import prisma from "lib/prisma";
 
 export default async function handler(
@@ -16,10 +15,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { userID } = req.body;
+    const { taskId } = req.body;
     // console.log(userID, typeof userID);
 
-    if (!userID) {
+    if (!taskId) {
       res
         .status(400)
         .json({ message: "Required fields are missing in the request." });
@@ -34,7 +33,7 @@ export default async function handler(
 
     const tasks: Task[] = await prisma.task.findMany({
       where: {
-        userId: userID,
+        taskId: taskId,
       },
     });
 

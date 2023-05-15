@@ -197,7 +197,7 @@ export default function NewTaskForm() {
             console.log('New task entry created:', response.data)
 
             const taskId = response.data.taskId;
-
+         
             createPerformanceEntry(taskId, estimatedManHours, 0);
 
 

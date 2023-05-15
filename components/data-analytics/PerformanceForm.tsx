@@ -28,7 +28,7 @@ export default function PerformanceForm() {
   const [selectedTask, setSelectedTask] = useState<{
     taskId: string;
     name: string;
-    manHoursSet: number;
+    manHoursSet?: number;
   } | null>(null);
 
   const [tasks, setTasks] = useState<
@@ -40,9 +40,7 @@ export default function PerformanceForm() {
   );
   const HARDCODEDMANHOURSSET = 8000; // can remove this once the task has the number of set hours with it
 
-
   const [manHoursCap, setManHoursCap] = useState<number | null>(null);
-
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handle name change called");
@@ -51,11 +49,13 @@ export default function PerformanceForm() {
 
   const handleNameSelect = (
     event: React.ChangeEvent<{}>,
-    value: { taskId: string; name: string; manHoursSet: number } | null // remove question mark if setselectedtask isn't working properly
+    value: { taskId: string; name: string; manHoursSet?: number } | null // remove question mark if setselectedtask isn't working properly
   ) => {
     if (value) {
       setSelectedName(value);
-      setSelectedTask(value);
+      setSelectedTask(value.manHoursSet ? value : null);
+
+      // do api call and set the cap
     } else {
       setSelectedTask(null);
     }
@@ -67,18 +67,7 @@ export default function PerformanceForm() {
 
   useEffect(() => {
     console.log("selectedName set as: ", selectedName);
-
-    if (selectedTask) {
-      console.log("selectedTask set as: ", selectedTask);
-
-      console.log("selected task id is: ", selectedTask.taskId);
-
-      console.log(Number(selectedTask.taskId));
-
-      fetchTask(Number(selectedTask.taskId));
-    }
-
-
+    console.log("selectedTask set as: ", selectedTask);
   }, [selectedName, selectedTask]);
 
   const updateTaskCompletedHours = async (
@@ -127,7 +116,7 @@ export default function PerformanceForm() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (selectedTask && manHoursCompleted > 0 && manHoursCompleted<= manHoursCap && manHoursCompleted!==null) {
+    if (selectedTask && manHoursCompleted !== null) {
       console.log("use api to update performance log");
 
       // console.log(selectedName);
@@ -143,7 +132,7 @@ export default function PerformanceForm() {
 
       updateTaskCompletedHours(selectedTask.taskId, manHoursCompleted);
     } else {
-      console.log("one of man hours or selected task is null or invalid");
+      console.log("one of man hours or selected task is null");
     }
   }
 
@@ -157,36 +146,27 @@ export default function PerformanceForm() {
     }
   };
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
   const fetchTask = async (taskId: number) => {
     try {
       const response = await axios.post("/api/admin/getTask", {
-        taskId: taskId
+        taskId: taskId,
       });
       // setTasks(response.data);
 
-      let task = response.data[0];
-      let totalMH = task.manHoursSet;
-      let completedMH = task.manHoursCompleted;
-
-      console.log(response.data);
-      console.log("total MH is: ", totalMH);
-      console.log("completed MH is: ", completedMH);
-      console.log("difference is: ", (totalMH - completedMH));
+      let totalMH = response.data.manHoursSet;
+      let completedMH = response.data.manHoursCompleted;
 
       setManHoursCap(totalMH - completedMH);
-
 
       console.log("Fetched tasks:", response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
   };
-
-
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   return (
     <Box sx={{ margin: "auto", maxWidth: 600 }}>
@@ -222,7 +202,7 @@ export default function PerformanceForm() {
                   {...params}
                   label="Search for a name"
                   variant="outlined"
-                // onChange={handleNameChange}
+                  // onChange={handleNameChange}
                 />
               )}
             />
@@ -235,7 +215,7 @@ export default function PerformanceForm() {
               placeholder="man hours you've completed"
               type="number"
               value={manHoursCompleted || ""}
-              onChange={event => {
+              onChange={(event) => {
                 if (manHoursCap !== null) {
                   if (Number(event.target.value) <= manHoursCap) {
                     setManHoursCompleted(Number(event.target.value));

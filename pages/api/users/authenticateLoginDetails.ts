@@ -7,6 +7,7 @@ import {
   sendUnauthorizedResponse,
 } from "../responses";
 import bcrypt from "bcrypt";
+import prisma from "../../../lib/prisma";
 
 /**
  * @author Tom Whitticase
@@ -22,8 +23,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const prisma = new PrismaClient();
-
   const { username, password } = req.body;
 
   if (!username || !password) {

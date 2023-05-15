@@ -40,7 +40,7 @@ export default function ParticipantToken({
         <Grid
           item
           padding={1.2}
-          bgcolor="#6a7175"
+          bgcolor="#00a884"
           borderRadius={10}
           color="#aebac1"
         >

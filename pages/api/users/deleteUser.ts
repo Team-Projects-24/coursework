@@ -11,12 +11,13 @@ import {
 import { PrismaClient } from "@prisma/client";
 // import Tasks from "pages/tasks";
 // import Task from "components/tasks/Task";
-import prisma from "lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   const { username } = req.body; //task
   if (!username) sendBadRequestResponse(res, "No user provided");
 

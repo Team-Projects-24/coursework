@@ -11,7 +11,7 @@ import TimeFrameToggle from "./TimeFrameToggle";
 
 interface Props {
   onToggleTimeFrame: (useTimeFrame: boolean) => void;
-  onChangeTimeFrame?: (timeframe: number) => void;
+  onChangeTimeFrame: (timeframe: number) => void;
 }
 
 function TimeFrameContainer({ onToggleTimeFrame, onChangeTimeFrame }: Props) {

@@ -3,12 +3,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, Task } from "@prisma/client";
 import { ITask } from "types/Task.d";
-import prisma from "../../../lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const prisma = new PrismaClient();
+
   try {
     const results = await prisma.task.findMany();
 
@@ -19,7 +20,7 @@ export default async function handler(
         let task: ITask = {
           taskId: result.taskId,
           name: result.name,
-          manHoursSet: result.manHoursSet,
+          manHoursSet: result.manHoursSet
         };
         tasks.push(task);
       });
@@ -35,3 +36,5 @@ export default async function handler(
     await prisma.$disconnect();
   }
 }
+
+

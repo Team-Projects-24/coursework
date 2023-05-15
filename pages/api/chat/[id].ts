@@ -33,11 +33,7 @@ async function handleGet(id: number, res: NextApiResponse) {
       },
       include: {
         members: true,
-        messages: {
-          include: {
-            seenBy: true,
-          }
-        },
+        messages: true,
       },
     });
     if (chat) {

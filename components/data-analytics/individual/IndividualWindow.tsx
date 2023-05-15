@@ -10,7 +10,6 @@ import useUserStore from "stores/userStore";
 import { Box, Card, CardContent, Divider, Typography } from "@mui/material";
 // import { BarCard } from "components/dashboard/BarCard";
 import { ResponsivePie } from "@nivo/pie";
-import ProgressCard from "./ProgressCard";
 import axios from "axios";
 import { Task } from "@prisma/client";
 
@@ -18,10 +17,27 @@ function IndividualUserView() {
   const { user } = useUserStore();
   const [taskData, setTaskData] = useState<Task[] | null>(null);
   const [isScreenLarge, setIsScreenLarge] = useState(true);
-  const [totalHours, setTotalHours] = useState(0);
-  const [totalCompleted, setCompleted] = useState(0);
-  const [totalHoursDifference, setDifference] = useState(0);
-  const [pieChartData, setPieChartData] = useState<[] | null>(null);
+
+  const pieChartData = [
+    {
+      id: "To-do",
+      label: "To-do",
+      value: 20,
+      color: "hsl(339, 70%, 50%)",
+    },
+    {
+      id: "Doing",
+      label: "in-Progress",
+      value: 10,
+      color: "hsl(330, 70%, 50%)",
+    },
+    {
+      id: "Completed",
+      label: "Completed",
+      value: 4,
+      color: "hsl(299, 70%, 50%)",
+    },
+  ];
 
   useEffect(() => {
     const updateScreenSize = () => {
@@ -48,21 +64,6 @@ function IndividualUserView() {
       });
       console.log(response.data);
       setTaskData(response.data);
-
-      let totalHours = 0;
-      let totalCompleted = 0;
-      taskData?.map((data: Task) => (
-        totalHours += data?.manHoursSet
-      ));
-
-      taskData?.map((data: Task) => (
-        totalCompleted += data?.manHoursCompleted
-      ));
-      
-      console.log(totalHours, totalCompleted)
-      setTotalHours(totalHours);
-      setCompleted(totalCompleted);
-      setDifference(totalHours - totalCompleted);
     }
 
     loadIndividualProgress();
@@ -74,15 +75,18 @@ function IndividualUserView() {
         <div>
           <div className="md:flex flex-row py-4 shadow-lg justify-between">
             <h1 className="px-4 text-2xl ">{user?.name}'s Task list</h1>
-            <label className="switch">
-              Hide from other managers (manager only)
-              <input type="checkbox"></input>
-              <span className="slider round"></span>
-            </label>
           </div>
-          { taskData?.map((data: Task) => (
-              <ProgressCard data={data}></ProgressCard>
-          ))}
+          {/* {taskData?.map((data: Task) => (
+            <Box className="flex desktop-only:flex-row py-2 px-4 w-full mobile-only:flex-col">
+              <BarCard
+                title={data.name}
+                total={data.manHoursSet}
+                completed={data.manHoursCompleted}
+                totalLabel={"Total"}
+                isHours={true}
+              />
+            </Box>
+          ))} */}
         </div>
       </div>
       <Card
@@ -106,25 +110,7 @@ function IndividualUserView() {
           <Divider />
           <ResponsivePie
             enableArcLinkLabels={true}
-            data={[{
-              id: "To-do",
-              label: "To-do",
-              value: totalHoursDifference,
-              color: "hsl(339, 70%, 50%)",
-            },
-            {
-              id: "Doing",
-              label: "Total Hours",
-              value: totalCompleted,
-              color: "hsl(330, 70%, 50%)",
-            },
-            {
-              id: "Total Hours",
-              label: "Total Hours",
-              value: totalHours,
-              color: "hsl(299, 70%, 50%)",
-            },
-          ]}
+            data={pieChartData}
             margin={{ top: 20, right: 40, bottom: 100, left: 20 }}
             innerRadius={0.4}
             padAngle={0.7}

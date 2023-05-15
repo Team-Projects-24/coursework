@@ -11,8 +11,8 @@ import { IUser } from "types/User.d";
 import { useState } from "react";
 
 interface UserCardArgs {
-  user: IUser;
-  response: (arg0: IUser) => void;
+  user: IUser,
+  response: ((arg0: IUser) => void)
 }
 
 /**
@@ -22,27 +22,25 @@ interface UserCardArgs {
  * @param response - The behaviour of the card upon being selected.
  * @returns A react component (the card) detailing information of the user.
  */
-export default function UserCard({ user, response }: UserCardArgs) {
+export default function UserCard({user, response}: UserCardArgs) {
   const [hover, setHover] = useState<boolean>(false);
 
   return (
     <Grid
       container
-      sx={{ cursor: "pointer" }}
+      sx={{ cursor: "pointer", }}
       bgcolor={hover ? "#2a3942" : "inherit"}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       color={hover ? "#e9edef" : "#8696a0"}
-      onClick={() => response(user)}
-    >
+      onClick={() => response(user)}>
       <Grid item container xs="auto" padding={2}>
         <Grid
           item
           padding={1.2}
-          bgcolor="#6a7175"
+          bgcolor="#00a884"
           borderRadius={10}
-          color="#aebac1"
-        >
+          color="#aebac1">
           <PersonIcon />
         </Grid>
       </Grid>
@@ -53,8 +51,7 @@ export default function UserCard({ user, response }: UserCardArgs) {
         borderColor="#222d34"
         alignItems="center"
         display="flex"
-        xs
-      >
+        xs>
         <Grid container direction="column">
           <Grid item xs="auto">
             <Typography color="#e9edef" fontSize={18} noWrap>

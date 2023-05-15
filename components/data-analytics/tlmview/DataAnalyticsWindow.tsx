@@ -44,22 +44,20 @@ export default function DataAnalyticsWindow() {
   async function loadData() {
     if (loggedInUserRole === "MANAGER" || loggedInUserRole === "TEAMLEADER") {
       axios
-        .post("api/analysis/getTeamIDs", {
-          leaderID: loggedInUserID,
-          role: loggedInUserRole,
-        })
+        .get(
+          "api/analysis/getTeamIDs?leaderID=" +
+            loggedInUserID +
+            "&role=" +
+            loggedInUserRole
+        )
         .then((responseIDs) => {
           axios
-            .post("api/analysis/getTeams", {
-              teamID: responseIDs.data,
-            })
+            .get("api/analysis/getTeams?teamID=" + responseIDs.data)
             .then((responseTeams) => {
               //console.log(responseTeams.data);
               setTeams(responseTeams.data);
               axios
-                .post("api/analysis/getTeamMembers", {
-                  teamID: responseIDs.data,
-                })
+                .get("api/analysis/getTeamMembers?teamID=" + responseIDs.data)
                 .then((responseMembers) => {
                   //console.log(responseMembers.data);
                   setMembers(responseMembers.data);

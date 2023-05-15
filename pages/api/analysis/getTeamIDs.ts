@@ -19,7 +19,7 @@ export default async function handler(
         .json({ message: "Required fields are missing in the request." });
       return;
     }
-
+    console.log(role);
     let results;
     if (role === "TEAMLEADER") {
       results = await prisma.team.findMany({
@@ -27,7 +27,8 @@ export default async function handler(
           leaderId: leaderID,
         },
       });
-    } else {
+    } 
+    else {
       results = await prisma.team.findMany({});
     }
 

@@ -1,3 +1,4 @@
+
 import "../styles/RESET.css";
 
 import type { AppProps } from "next/app";
@@ -17,7 +18,6 @@ import { theme } from "styles/theme";
 import CssBaseline from "@mui/material/CssBaseline";
 import useUserStore from "../stores/userStore";
 import UserAvatar from "components/user/UserAvatar";
-import "styles/chatMenu.css";
 import axios from "axios";
 import "styles/bubblestyle.css";
 

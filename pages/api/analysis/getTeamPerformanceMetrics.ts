@@ -16,7 +16,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { teamIDs } = req.body;
+    //const { teamIDs } = req.body;
+    const { query } = req;
+    let teamIDs = query.teamIDs;
+    if (typeof teamIDs === "string" || teamIDs instanceof String) {
+      teamIDs = teamIDs.split(",");
+    }
+
+    //console.log(teamIDs);
 
     if (!teamIDs) {
       res

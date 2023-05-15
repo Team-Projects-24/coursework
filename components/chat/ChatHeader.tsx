@@ -34,7 +34,11 @@ export default function ChatHeader({
 }: ChatHeaderProps) {
   const router = useRouter();
 
-  const handleClick = async () => router.push(`/chat/${chatId}/info`);
+  const subheading = isPrivate ? null : "Click here for chatroom info";
+
+  const handleClick = async () => {
+    if (!isPrivate) router.push(`/chat/${chatId}/info`); // made it so that only groups let you view the info
+  };
 
   return (
     <CardHeader
@@ -66,7 +70,7 @@ export default function ChatHeader({
       subheader={
         <Link href="#" onClick={handleClick} underline="none">
           <Typography fontSize="0.8125rem" color="#8696a0">
-            Click here for chatroom info
+            {subheading}
           </Typography>
         </Link>
       }

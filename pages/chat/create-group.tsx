@@ -68,6 +68,8 @@ function LeftSection({
       description: chatDescription,
     };
 
+    await axios.post("/api/chat", { room: newGroup }); // fixed the chat group thing
+
     const { data } = await axios.post("/api/users/getUserInfo", {
       username: userId,
     });

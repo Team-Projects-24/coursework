@@ -50,6 +50,8 @@ export default function ChatPage() {
     }); // mark all chat messages as read.
 
     if (newRead) socket.emit("updated-chat", chatroomId);
+
+    console.log(data.messages);
   };
 
   useEffect(() => {

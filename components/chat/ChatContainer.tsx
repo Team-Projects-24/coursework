@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogContentText,
   Grid,
+  Typography,
 } from "@mui/material";
 import { IChatMessage } from "types/ChatMessage.d";
 import MessageBubble from "./MessageBubble";
@@ -43,6 +44,26 @@ function stringToColor(str: string) {
   return color;
 }
 
+function classifyDate(date: Date) {
+  const dateDifference = Math.floor(
+    (new Date().getTime() - date.getTime()) / 86400000
+  );
+
+  switch (dateDifference) {
+    case 0:
+      return "Today";
+    case 1:
+      return "Yesterday";
+    default: {
+      return date.toLocaleString("en-uk", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+      });
+    }
+  }
+}
+
 export default function ChatContainer({
   messages,
   userId,
@@ -54,6 +75,9 @@ export default function ChatContainer({
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  let currentTime;
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -79,7 +103,41 @@ export default function ChatContainer({
               timeStyle: "short",
             });
 
-            console.log(message);
+            const classification = classifyDate(time);
+
+            if (classification !== currentTime) {
+              currentTime = classification;
+
+              return (
+                <>
+                  <Box
+                    paddingY={5}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Typography
+                      bgcolor="#182229"
+                      paddingX="12px"
+                      paddingY="5px"
+                      color="#8696a0"
+                      borderRadius="7.5px"
+                    >
+                      {classification}
+                    </Typography>
+                  </Box>
+                  <MessageSection
+                    senderID={message.senderId}
+                    content={message.content}
+                    sent={userId === message.senderId}
+                    isPrivate={isPrivate}
+                    idColour={stringToColor(message.senderId)}
+                    time={timeString}
+                    read={message.seenBy.length == chatSize}
+                  />
+                </>
+              );
+            }
 
             return (
               <MessageSection

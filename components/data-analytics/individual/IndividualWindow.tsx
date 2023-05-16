@@ -68,6 +68,27 @@ function IndividualUserView() {
     loadIndividualProgress();
   }, [user]);
 
+
+  useEffect(() => {
+    const response = axios.post("api/analysis/getTasks", {
+      userID: user?.userId, // Assuming `user` object has an `id` property.
+    });
+
+    let totalHours = 0;
+    let totalCompleted = 0;
+    taskData?.map((data: Task) => (
+      totalHours += data?.manHoursSet
+    ));
+
+    taskData?.map((data: Task) => (
+      totalCompleted += data?.manHoursCompleted
+    ));
+    
+    console.log(totalHours, totalCompleted)
+    setTotalHours(totalHours);
+    setCompleted(totalCompleted);
+    setDifference(totalHours - totalCompleted);
+  });
   return (
     <div id="UserView" className="flex w-full">
       <div className="overflow-x-auto w-full mobile-only:pb-[4rem]">
@@ -153,3 +174,4 @@ function IndividualUserView() {
 }
 
 export default IndividualUserView;
+

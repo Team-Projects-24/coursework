@@ -12,7 +12,7 @@ interface Props {
   }
   
   function ProgressCard({ data }: Props) {
-    let percentage = (data?.manHoursCompleted / data?.manHoursSet) * 100;
+    let percentage = Math.trunc((data?.manHoursCompleted / data?.manHoursSet) * 100);
 
     const containerStyles = {
         height: 20,
@@ -24,7 +24,7 @@ interface Props {
 
     const fillerStyles = {
         height: '100%',
-        width: percentage,
+        width: percentage * 10,
         backgroundColor: '#6a1b9a',
         borderRadius: 'inherit',
     }
@@ -52,7 +52,7 @@ interface Props {
                 </div>
                 <div style={containerStyles}>
                     <div style={fillerStyles}>
-                        <span style={labelStyles}>{`${data?.manHoursCompleted}%`}</span>
+                        <span style={labelStyles}>{`${percentage}%`}</span>
                     </div>
                 </div>
             </div>

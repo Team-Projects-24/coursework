@@ -91,7 +91,7 @@ export default function InputBar({ chatId, userId }: IInputBarProps) {
           alignItems="flex-end"
           color="#aebac1"
         >
-          <AttachFileOutlinedIcon />
+          {/* <AttachFileOutlinedIcon /> */}
         </Grid>
         <Grid item display="flex" xs>
           <input

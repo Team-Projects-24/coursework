@@ -7,7 +7,7 @@ The Make-it-All Staff Portal is a web-based application that allows staff to tra
 
 ## Features
 
-- Subsystem containing a Text-Chat
+- Subsystem containing a real-time Text-Chat
 - Subsystem containing data analysical software
 
 
